@@ -15,8 +15,8 @@ function ns:updateGold()
 	--Date history data
 	local curTime = time();
 	local curGold = ns:GetTotalGold(false);
-	local resetDay = curTime + C_DateAndTime.GetSecondsUntilDailyReset()
-	local resetWeek = curTime + C_DateAndTime.GetSecondsUntilWeeklyReset()
+	local resetDay = curTime + C_DateAndTime.GetSecondsUntilDailyReset();
+	local resetWeek = curTime + C_DateAndTime.GetSecondsUntilWeeklyReset();
 	
 	--Initialize tables in a new database
 	GoldCoffer.History = GoldCoffer.History or {};
@@ -38,17 +38,7 @@ function ns:updateGold()
 	if GoldCoffer.History.Resets.Week < resetWeek then		
 		GoldCoffer.History.LastWeek = GoldCoffer.History.Today;		
 		GoldCoffer.History.Resets.Week = resetWeek;
-	end	
-
---[[
-		["Today"] = Total Gold on first login of the day,
-		["Yesterday"] = Total Gold on last login of the last day you were online,
-		["LastWeek"] = Total Gold on last login prior to weekly reset,
-		["Resets"] = {
-			["Day"] = ###,
-			["Week"] = ##,
-		}
-]]
+	end;
 end;
 
 function ns:GetServers()
@@ -86,32 +76,25 @@ function ns:GetServerGold(s, iconFlag)
 	return sg;
 end;
 
+local function ProfitLossColoring(gold)
+	if gold < 0 then return ns:colorString("red", ns:GoldSilverCopper(diff)); end;
+	return ns:colorString("green", ns:GoldSilverCopper(diff));
+end;
+
 function ns:GetTodaysChange()
 	local curGold = ns:GetTotalGold(false);
 	local diff = curGold - GoldCoffer.History.Today or curGold;
-	if diff < 0 then
-		return ns:colorString("red", ns:GoldSilverCopper(diff));
-	else
-		return ns:colorString("green", ns:GoldSilverCopper(diff));
-	end;
+	return ProfitLossColoring(diff);
 end;
 
 function ns:GetYesterdaysChange()
 	local curGold = ns:GetTotalGold(false);
 	local diff = curGold - GoldCoffer.History.Yesterday or curGold;
-	if diff < 0 then
-		return ns:colorString("red", ns:GoldSilverCopper(diff));
-	else
-		return ns:colorString("green", ns:GoldSilverCopper(diff));
-	end;
+	return ProfitLossColoring(diff);
 end;
 
 function ns:GetWeeksChange()
 	local curGold = ns:GetTotalGold(false);
 	local diff = curGold - GoldCoffer.History.LastWeek or curGold;
-	if diff < 0 then
-		return ns:colorString("red", ns:GoldSilverCopper(diff));
-	else
-		return ns:colorString("green", ns:GoldSilverCopper(diff));
-	end;	
+	return ProfitLossColoring(diff);	
 end;
