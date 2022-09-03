@@ -26,7 +26,7 @@ It will only track the gold you have on a single account.
 - Left Click
 	- No modifier
 		- Open the report Window
-	- <shift>
+	- SHIFT key down
 		- Hide this button
 - Right Click 
 	- Center Window
