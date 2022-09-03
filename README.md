@@ -1,2 +1,3 @@
 # GoldCoffer
-Track WoW gold across your account
+Track WoW gold across your account.
+
