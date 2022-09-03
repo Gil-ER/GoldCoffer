@@ -7,8 +7,10 @@ As you log into your characters this addon saves the gold they posess. When you 
 It will only track the gold you have on a single account.
 
 # Commands
-/goldcoffer   Opens the report window.\n
+/goldcoffer   Opens the report window.
+
 /gc           Same as above.
+
 /gc mm        Shows of hides the minimap button.
 /gc button    Same as above.
 /gc c         Center the report window.
