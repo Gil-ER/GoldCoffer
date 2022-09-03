@@ -8,7 +8,6 @@ It will only track the gold you have on a single account.
 
 # Commands
 /goldcoffer   Opens the report window.
-
 /gc           Same as above.
 
 /gc mm        Shows of hides the minimap button.
