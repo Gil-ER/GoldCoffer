@@ -77,8 +77,8 @@ function ns:GetServerGold(s, iconFlag)
 end;
 
 local function ProfitLossColoring(gold)
-	if gold < 0 then return ns:colorString("red", ns:GoldSilverCopper(diff)); end;
-	return ns:colorString("green", ns:GoldSilverCopper(diff));
+	if gold < 0 then return ns:colorString("red", ns:GoldSilverCopper(gold)); end;
+	return ns:colorString("green", ns:GoldSilverCopper(gold));
 end;
 
 function ns:GetTodaysChange()

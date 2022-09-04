@@ -41,7 +41,6 @@ function ns:GoldSilverCopper(copper)
 	if gt == "" then gt = "0"; end;
 	if neg then gt = "-" .. gt; end;
 	return strjoin("", gt, gIcon, s, sIcon, c, cIcon);
-	--return strjoin("", gt, "g ", s, "s ", c, "c");
 end
 
 --		CREATE A FRAME

@@ -21,19 +21,21 @@ local params = {			--Parameters for the main frame
 }
 local goldFrame = ns:createFrame(params)	--main frame 
 
-local function cbClick(idx)
-	local idx = 1;	-- current text row
-	
-	for i=1, 100 do
+local function cbClick(index)
+	--called by the OnClick event all 50 checkboxes
+	--index is the index of the box clicked (not currently using the info)
+	local idx = 1;	-- current text row	
+	--Remove old data
+	for i=1, 100 do					
 		leftTxt[i]:SetText("");
 		rightTxt[i]:SetText("");
 	end;
-	
+	--Update gold reported
 	goldTitle[1]:SetText("Todays profit/loss = " .. ns:GetTodaysChange());
 	goldTitle[2]:SetText("Since yesterday = " .. ns:GetYesterdaysChange());
 	goldTitle[3]:SetText("This week = " .. ns:GetWeeksChange());
 	goldTitle[4]:SetText("Total gold = " .. ns:GetTotalGold(true));
-	
+	--Update the report with data requested by selecting checkboxes
 	for i=1, 50 do
 		if cb[i]:GetChecked() then
 			local s = cbText[i]:GetText();		--  Server - 12345g 67s 89c
@@ -74,11 +76,11 @@ local function cbClick(idx)
 end;
 
 function ns:ShowReport()
-	local idx = 1;
-	
+	--toggles the visibility of the report frame 
 	if goldFrame:IsVisible() then
 		goldFrame:Hide()
 	else
+		--When showing the frame initialize the frame
 		goldFrame.Title:SetText( "Gold Coffer" );
 		local s = ns:GetServers();
 		for i=1, #s do
@@ -87,17 +89,21 @@ function ns:ShowReport()
 			cbText[i]:SetText(s[i] .. " - " ..  ns:GoldSilverCopper(ns:GetServerGold(s[i])));
 			cb[i]:Show();
 		end;
-		for i=#s+1, 50 do cb[i]:SetChecked(false); cb[i]:Hide(); end;	
+		--Hide unused checkboxes
+		for i=#s+1, 50 do cb[i]:SetChecked(false); cb[i]:Hide(); end;
+		--Show selected servers
 		cbClick();
 		goldFrame:Show();
 	end;
 end;
 
 function ns:CenterGoldReport()
+	--Centers the frame on the screen
 	goldFrame:ClearAllPoints();
 	goldFrame:SetPoint("CENTER",UIParent);
 end;
 
+--Create the frame and its elements
 local scrollFrame = ns:CreateScrollFrame (goldFrame);
 local scrollWindow = CreateFrame("Frame", nil, scrollFrame, "InsetFrameTemplate");
 
