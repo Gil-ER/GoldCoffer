@@ -15,15 +15,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
         
-      - name: Copy Readme
-        run: cp -u README.md KeyKeeper 
-
-      - name: Copy License
-        run: cp -u LICENSE KeyKeeper
-
       - name: Package Project
         run: |
-          zip -r KeyKeeper.zip KeyKeeper 
+          zip -r GoldCoffer.zip GoldCoffer 
           
       - name: Create Release
         id: create_release
@@ -43,6 +37,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./KeyKeeper.zip
-          asset_name: KeyKeeper.zip
+          asset_path: ./GoldCoffer.zip
+          asset_name: GoldCoffer.zip
           asset_content_type: application/zip
