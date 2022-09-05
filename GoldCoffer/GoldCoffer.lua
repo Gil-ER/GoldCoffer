@@ -60,7 +60,8 @@ function gcLDB:OnTooltipShow()
 	self:AddLine("Total gold(all servers) = " .. ns:GetTotalGold(true));
 	
 end
-function gcLDB:OnEnter()
+function gcLDB:OnEnter()	
+	ns:updateGold();
 	GameTooltip:SetOwner(self, "ANCHOR_NONE");
 	GameTooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT");
 	GameTooltip:ClearLines();
@@ -78,7 +79,7 @@ SLASH_GOLDCOFFER2 = "/gc";
 SlashCmdList.GOLDCOFFER = function(arg)
 	local arg1, arg2, arg3, arg4 = strsplit(" ", arg);
 	msg = strlower(arg1);
-	if msg == "" then
+	if msg == "" then	
 		ns:ShowReport();
 	elseif msg == "mm" or msg == "button" then
 		minimapButtonShowHide(true);
