@@ -6,7 +6,7 @@ local leftTxt = {};			--Textboxes for left side
 local rightTxt = {};		--Textboxes for left side
 
 local params = {			--Parameters for the main frame
-	name = nil,	
+	name = "GoldCofferOutputFrame",	
 	title = "Gold Coffer",
 	anchor = "CENTER",
 	parent = UIParent,
@@ -20,6 +20,7 @@ local params = {			--Parameters for the main frame
 	isSizable = false
 }
 local goldFrame = ns:createFrame(params)	--main frame 
+tinsert(UISpecialFrames, "GoldCofferOutputFrame");
 
 local function cbClick(index)
 	--called by the OnClick event all 50 checkboxes
