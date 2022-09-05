@@ -132,6 +132,8 @@ function f:OnEvent(event, ...)
 		icon:Register(addon, gcLDB, GoldCofferIcon);
 		minimapButtonShowHide(false);
 		ns:updateGold();	--initialize data
+		
+		f:UnregisterEvent("PLAYER_ENTERING_WORLD");
 	end;	
 	if event == "PLAYER_MONEY" then
 		ns:updateGold();	--update player gold
