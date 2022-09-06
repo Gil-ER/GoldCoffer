@@ -54,7 +54,7 @@ function gcLDB:OnTooltipShow()
 	self:AddLine(ns.player .. " - " .. ns:GoldSilverCopper(GetMoney()));
 	self:AddLine(ns.srv .. " - " .. ns:GetServerGold(ns.srv, true) .. "\n\n");
 	
-	self:AddLine("Todays profit/loss = " .. ns:GetTodaysChange());
+	self:AddLine("Profit/loss this session = " .. ns:GetTodaysChange());
 	self:AddLine("Since yesterday = " .. ns:GetYesterdaysChange());
 	self:AddLine("This week = " .. ns:GetWeeksChange() .. "\n\n");
 	self:AddLine("Total gold(all servers) = " .. ns:GetTotalGold(true));

@@ -1,3 +1,4 @@
+
 ## Interface: 90207
 ## Title: Gold Coffer
 ## DefaultState: disabled

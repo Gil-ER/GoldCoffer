@@ -29,14 +29,14 @@ function ns:updateGold()
 	
 	--Check to see if we have passed a daily reset and advance data if we have
 	if GoldCoffer.History.Resets.Day < resetDay then
-		GoldCoffer.History.Yesterday = GoldCoffer.History.Today;
+		GoldCoffer.History.Yesterday = curGold;
 		GoldCoffer.History.Today = curGold;		
 		GoldCoffer.History.Resets.Day = resetDay;
 	end;
 
 	--Check to see if we have passed a weekly reset and advance data if we have
 	if GoldCoffer.History.Resets.Week < resetWeek then		
-		GoldCoffer.History.LastWeek = GoldCoffer.History.Today;		
+		GoldCoffer.History.LastWeek = curGold;		
 		GoldCoffer.History.Resets.Week = resetWeek;
 	end;
 end;
@@ -54,7 +54,7 @@ end;
 function ns:GetTotalGold(iconFlag)
 	--iconFlag:	- true return is formated with icons for gold silver copper
 	--			- false of nil returns total in copper
-	local tg = 0;
+	local tg = 0;	
 	local s = ns:GetServers();
 	for k, v in pairs(GoldCoffer.Servers) do
 		for t, g in pairs(GoldCoffer.Servers[k]) do
