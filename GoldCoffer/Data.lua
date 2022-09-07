@@ -30,7 +30,7 @@ function ns:updateGold()
 	--Check to see if we have passed a daily reset and advance data if we have
 	if GoldCoffer.History.Resets.Day < resetDay then
 		GoldCoffer.History.Yesterday = curGold;
-		GoldCoffer.History.Today = curGold;		
+		--GoldCoffer.History.Today = curGold;		--	when the day advances don't advance Today (This session)
 		GoldCoffer.History.Resets.Day = resetDay;
 	end;
 
