@@ -133,7 +133,7 @@ function f:OnEvent(event, ...)
 		icon:Register(addon, gcLDB, GoldCofferIcon);
 		minimapButtonShowHide(false);
 		ns:updateGold();	--initialize data
-		
+		GoldCoffer.History.Today = ns:GetTotalGold(false);
 		f:UnregisterEvent("PLAYER_ENTERING_WORLD");
 	end;	
 	if event == "PLAYER_MONEY" then
