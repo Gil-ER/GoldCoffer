@@ -5,5 +5,9 @@
 <Script file="CallbackHandler-1.0\CallbackHandler-1.0.lua"/>
 <Script file="LibDataBroker-1.1\LibDataBroker-1.1.lua"/>
 
+<!--@no-lib-strip@-->
+<Include file="LibDBIcon-1.0\lib.xml"/>
+<Include file="LibSharedMedia-3.0\lib.xml"/>
+<!--@end-no-lib-strip@-->
 </Ui>
 
