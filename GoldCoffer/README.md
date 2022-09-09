@@ -2,7 +2,13 @@
 Track WoW gold across your account.
 
 # What it Does:
-As you log into your characters this addon saves the gold they poses. When you gain or loose gold the total will be updated. You can mouse over the minimap button to get some totals and help information. Opening the GoldCoffer window will present you with your total gold your profit loss for the day, from the previous day and the week. You are also given checkboxes for each realm you have characters on. Selecting a checkbox opens an expanded list of the server showing the gold each character has.
+As you log into your characters this addon saves the gold they poses. When you gain or loose gold the total will be updated.
+
+You can mouse over the minimap button to get totals and help information.
+
+Opening the GoldCoffer window will present you with your total gold profit/loss for the day, the previous day and the week. Day and week will reset the same time your server resets dailies and weekly events. 
+
+You are also given checkboxes for each realm you have characters on. Selecting a checkbox opens an expanded list of the server showing an expanded list of the characters on the server and the total gold they own.
 
 It will only track the gold you have on a single account.
 
@@ -26,8 +32,8 @@ It will only track the gold you have on a single account.
 - Left Click
 	- No modifier
 		- Open the report Window
-	- SHIFT key down
-		- Hide this button
+	- With SHIFT key down
+		- Hides minimap button
 - Right Click 
 	- Center Window
 - Info displayed when the button is moused over
