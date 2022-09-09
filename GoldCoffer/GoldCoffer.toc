@@ -1,7 +1,7 @@
 ## Interface: 90207
 ## Title: Gold Coffer
 ## DefaultState: enabled
-## Version: 0.1.0
+## Version: 1.0.2
 ## Author: Gildina
 ## SavedVariables: GoldCoffer, GoldCofferIcon
 
