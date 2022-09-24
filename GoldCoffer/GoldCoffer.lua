@@ -120,7 +120,7 @@ SlashCmdList.GOLDCOFFER = function(arg)
 			.. "/gc ?  - Show help."		
 		print (s);
 	end;
-end
+end; --/ Slash Commands
 
 --event frame
 local f = CreateFrame("FRAME");
