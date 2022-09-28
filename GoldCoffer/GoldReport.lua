@@ -43,6 +43,7 @@ local function cbClick(index)
 			local g = "";
 			s,g = strsplit("-", s, 2);			--  Split at the '-'
 			s = strtrim(s, " ");				--  'Server'
+			g = g or " ";
 			g = strtrim(g, " -");				--  '12345g67s89c'
 			leftTxt[idx]:SetText(s);			--  Show values
 			rightTxt[idx]:SetText(g);
@@ -57,8 +58,10 @@ local function cbClick(index)
 			local stepIn = 10;		-- Indent first toon of the server
 			local stepDown = -20;
 			local list = {};
-			for k, v in pairs (GoldCoffer.Servers[s]) do		-- copy server data
-				list [#list+1] = {["name"] = k; ["gold"] = v};
+			if GoldCoffer.Servers[s] ~= nil
+				for k, v in pairs (GoldCoffer.Servers[s]) do		-- copy server data
+					list [#list+1] = {["name"] = k; ["gold"] = v};
+				end;
 			end;
 			table.sort (list, function(a,b) return a.gold > b.gold; end);
 			for k, v in pairs(list) do							-- display server data
