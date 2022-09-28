@@ -58,7 +58,7 @@ local function cbClick(index)
 			local stepIn = 10;		-- Indent first toon of the server
 			local stepDown = -20;
 			local list = {};
-			if GoldCoffer.Servers[s] ~= nil
+			if GoldCoffer.Servers[s] ~= nil then
 				for k, v in pairs (GoldCoffer.Servers[s]) do		-- copy server data
 					list [#list+1] = {["name"] = k; ["gold"] = v};
 				end;
