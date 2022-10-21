@@ -18,7 +18,7 @@ local function padString(s, pad, lead, len)
 -- pads string 's' with character 'pad' to 'len' characters in length
 -- if lead is true characters are added before 's' otherwise they are added after
 	local ret = s;
-	if lead == nil then lead = false;
+	if lead == nil then lead = false; end;
 	while (strlen(ret) < len) do
 		if lead then
 			ret = pad .. ret;
@@ -39,20 +39,19 @@ function ns:GoldSilverCopper(copper)
 	local cIcon = "|TInterface\\MoneyFrame\\UI-CopperIcon:0:0:2:0|t"
 
 	local c = padString(copper % 100, "0", true, 2);
-	--if c<10 then c = "0" .. c; end;
-	--if c == 0 then c = "00"; end;
-	local s = floor(copper / 100) % 100;
-	if s<10 then s = "0" .. s; end;
-	if s == 0 then s = "00"; end;	
+	local s = padString(floor(copper / 100) % 100, "0", true, 2);
 	local g = floor(copper / 10000);
 	local gt = "";
 	while (g > 0) do
-		local temp = tostring(g % 1000);
+		local temp = g % 1000;		
 		g = floor(g / 1000);
-		if g > 0 then while (strlen(temp) < 3) do temp = "0" .. temp; end; end;
-		gt = temp .. gt
-		if g > 0 then gt = "," .. gt; end;
-	end
+		if g > 0 then 
+			temp = padString(temp, "0", true, 3);
+			gt = "," .. temp .. gt;
+		else
+			gt = temp .. gt;
+		end;
+	end;
 	if gt == "" then gt = "0"; end;
 	if neg then gt = "-" .. gt; end;
 	return strjoin("", gt, gIcon, s, sIcon, c, cIcon);
