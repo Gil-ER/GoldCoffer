@@ -14,6 +14,21 @@ function ns:colorString(c, str)
 	return string.format("|cff%s%s|r", color[c], str);
 end
 
+local function padString(s, pad, lead, len)
+-- pads string 's' with character 'pad' to 'len' characters in length
+-- if lead is true characters are added before 's' otherwise they are added after
+	local ret = s;
+	if lead == nil then lead = false;
+	while (strlen(ret) < len) do
+		if lead then
+			ret = pad .. ret;
+		else
+			ret = ret .. pad;
+		end;
+	end;
+	return ret;
+end;
+
 function ns:GoldSilverCopper(copper)
 	copper = tonumber(copper);
 	if copper == nil then return 0; end;
@@ -23,9 +38,9 @@ function ns:GoldSilverCopper(copper)
 	local sIcon = "|TInterface\\MoneyFrame\\UI-SilverIcon:0:0:2:0|t "
 	local cIcon = "|TInterface\\MoneyFrame\\UI-CopperIcon:0:0:2:0|t"
 
-	local c = copper % 100;
-	if c<10 then c = "0" .. c; end;
-	if c == 0 then c = "00"; end;
+	local c = padString(copper % 100, "0", true, 2);
+	--if c<10 then c = "0" .. c; end;
+	--if c == 0 then c = "00"; end;
 	local s = floor(copper / 100) % 100;
 	if s<10 then s = "0" .. s; end;
 	if s == 0 then s = "00"; end;	
