@@ -9,7 +9,7 @@ ns.totalGold = 0;
 local function minimapButtonShowHide(toggle)
 	--if toggle is true just flip visibility.
 	if toggle then mmButtonShown = not mmButtonShown; end;
-	--if toggle is false adjust vivibility to saved ststus
+	--if toggle is false adjust visibility to saved status
 	if toggle == false then
 		if GoldCofferIcon.Visible == nil then  GoldCofferIcon.Visible = true; end;
 		mmButtonShown = GoldCofferIcon.Visible;
@@ -56,11 +56,11 @@ function gcLDB:OnTooltipShow()
 	
 	self:AddLine("Profit/loss this session = " .. ns:GetTodaysChange());
 	self:AddLine("Today = " .. ns:GetYesterdaysChange());
-	self:AddLine("This week = " .. ns:GetWeeksChange());
+	self:AddLine("This Week = " .. ns:GetWeeksChange());
 	self:AddLine("This Month = " .. ns:GetMonthsChange());
 	self:AddLine("This Year = " .. ns:GetYearsChange() .. "\n\n");	
 	
-	self:AddLine("Profit/loss Yesterday = " .. ns:GetYesterdayPL());
+	self:AddLine("Total Gold Yesterday = " .. ns:GetYesterdayPL());
 	self:AddLine("Last Week = " .. ns:GetLastWeekPL());
 	self:AddLine("Last Month = " .. ns:GetLastMonthPL());
 	self:AddLine("Last Year = " .. ns:GetLastYearPL());

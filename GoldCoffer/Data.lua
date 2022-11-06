@@ -1,5 +1,19 @@
 
 local addon, ns = ...
+local month = {
+	[1] = "January ",
+	[2] = "February ",
+	[3] = "March ",
+	[4] = "April ",
+	[5] = "May ",
+	[6] = "June ",
+	[7] = "July ",
+	[8] = "August ",
+	[9] = "September ",
+	[10] = "October ",
+	[11] = "November ",
+	[12] = "December "
+}
 
 local function GetNextMonthTime(t)
 	local ret = t;
@@ -32,43 +46,39 @@ local function GetNextYearTime(t)
 end;
 
 local function UpdateMonthDetail(curGold)
+	local my = month[tonumber(date("%m"))] .. date("%d");
 	if GoldCoffer.History.Month[1] ~= nil then
 		for k,v in pairs(GoldCoffer.History.Month[1]) do
-			if k == date("%m/%d/%y") then 
-				GoldCoffer.History.Month[1] = {[date("%m/%d/%y")] = curGold}
+			if k == my then 
+				GoldCoffer.History.Month[1] = {[my] = curGold};
 				return; 
 			end;
 		end;
-	end;
-	if GoldCoffer.History.Month[1] ~= nil then
 		local i = 30
 		while i > 1 do
 			if GoldCoffer.History.Month[i] ~= nil then GoldCoffer.History.Month[i + 1] = GoldCoffer.History.Month[i]; end;
 			i = i - 1;
 		end;
 	end;
-	print(date("%m/%d,%y"), " = ",curGold)
-	GoldCoffer.History.Month[1] = {[date("%m/%d/%y")] = curGold};
+	GoldCoffer.History.Month[1] = {[my] = curGold};
 end;
 
 local function UpdateYearDetail(curGold)
+	local my = month[tonumber(date("%m"))] .. date("%Y");
 	if GoldCoffer.History.Year[1] ~= nil then
 		for k,v in pairs(GoldCoffer.History.Year[1]) do
-			if k == date("%m/%d/%y") then 
-				GoldCoffer.History.Year[1] = {[date("%m/%d/%y")] = curGold}
+			if k == my then 
+				GoldCoffer.History.Year[1] = {[my] = curGold}
 				return; 
 			end;
 		end;
-	end;
-	if GoldCoffer.History.Year[1] ~= nil then
-		local i = 30
+		local i = 12
 		while i > 1 do
 			if GoldCoffer.History.Year[i] ~= nil then GoldCoffer.History.Year[i + 1] = GoldCoffer.History.Year[i]; end;
 			i = i - 1;
 		end;
 	end;
-	print(date("%m/%d,%y"), " = ",curGold)
-	GoldCoffer.History.Year[1] = {[date("%m/%d/%y")] = curGold};
+	GoldCoffer.History.Year[1] = {[my] = curGold};
 end;
 
 function ns:updateGold()
@@ -93,7 +103,7 @@ function ns:updateGold()
 	
 	--Initialize tables in a new database
 	GoldCoffer.History = GoldCoffer.History or {};
-	GoldCoffer.History.Today = GoldCoffer.History.Today or 0;
+	GoldCoffer.History.Today = GoldCoffer.History.Today or curGold;
 	GoldCoffer.History.Yesterday = GoldCoffer.History.Yesterday or GoldCoffer.History.Today;
 	GoldCoffer.History.LastWeek = GoldCoffer.History.LastWeek or GoldCoffer.History.Yesterday;
 	GoldCoffer.History.LastMonth = GoldCoffer.History.LastMonth or GoldCoffer.History.LastWeek;
@@ -118,27 +128,27 @@ function ns:updateGold()
 	UpdateYearDetail(curGold);	
 	
 	--Check to see if we have passed a daily reset and advance data if we have
-	if GoldCoffer.History.Resets.Day < resetDay then
-		GoldCoffer.History.Previous.Day = curGold - GoldCoffer.History.Yesterday;
+	if GoldCoffer.History.Resets.Day > GoldCoffer.History.Resets.Day then
+		GoldCoffer.History.Previous.Day = GoldCoffer.History.Yesterday;
 		GoldCoffer.History.Yesterday = GoldCoffer.History.Today;
 		GoldCoffer.History.Today = curGold;
 		GoldCoffer.History.Resets.Day = resetDay;
 	end;
 	--Check to see if we have passed a weekly reset and advance data if we have
-	if GoldCoffer.History.Resets.Week < resetWeek then	
-		GoldCoffer.History.Previous.Week = curGold - GoldCoffer.History.LastWeek;
+	if GoldCoffer.History.Resets.Week > GoldCoffer.History.Resets.Week then	
+		GoldCoffer.History.Previous.Week = GoldCoffer.History.LastWeek;
 		GoldCoffer.History.LastWeek = curGold;		
 		GoldCoffer.History.Resets.Week = resetWeek;
 	end;
 	--Check to see if we have passed a daily reset and advance data if we have
-	if GoldCoffer.History.Resets.Month < resetMonth then
-		GoldCoffer.History.Previous.Month = curGold - GoldCoffer.History.LastMonth
+	if GoldCoffer.History.Resets.Month > GoldCoffer.History.Resets.Month then
+		GoldCoffer.History.Previous.Month = GoldCoffer.History.LastMonth
 		GoldCoffer.History.LastMonth = curGold;
 		GoldCoffer.History.Resets.Month = resetMonth;
 	end;
 	--Check to see if we have passed a weekly reset and advance data if we have
-	if GoldCoffer.History.Resets.Year < resetYear then		
-		GoldCoffer.History.Previous.Year = curGold - GoldCoffer.History.LastYear;		
+	if GoldCoffer.History.Resets.Year > GoldCoffer.History.Resets.Year then
+		GoldCoffer.History.Previous.Year = GoldCoffer.History.LastYear;		
 		GoldCoffer.History.LastYear = curGold;
 		GoldCoffer.History.Resets.Year = resetYear;
 	end;
@@ -186,31 +196,31 @@ end;
 
 function ns:GetTodaysChange()
 	local curGold = ns:GetTotalGold(false);
-	local diff = curGold - GoldCoffer.History.Today or curGold;
+	local diff = curGold - GoldCoffer.History.Today;
 	return ProfitLossColoring(diff);
 end;
 
 function ns:GetYesterdaysChange()
 	local curGold = ns:GetTotalGold(false);
-	local diff = curGold - GoldCoffer.History.Yesterday or curGold;
+	local diff = curGold - GoldCoffer.History.Yesterday;
 	return ProfitLossColoring(diff);
 end;
 
 function ns:GetWeeksChange()
 	local curGold = ns:GetTotalGold(false);
-	local diff = curGold - GoldCoffer.History.LastWeek or curGold;
+	local diff = curGold - GoldCoffer.History.LastWeek;
 	return ProfitLossColoring(diff);	
 end;
 
 function ns:GetMonthsChange()
 	local curGold = ns:GetTotalGold(false);
-	local diff = curGold - GoldCoffer.History.LastMonth or curGold;
+	local diff = curGold - GoldCoffer.History.LastMonth;
 	return ProfitLossColoring(diff);	
 end;
 
 function ns:GetYearsChange()
 	local curGold = ns:GetTotalGold(false);
-	local diff = curGold - GoldCoffer.History.LastYear or curGold;
+	local diff = curGold - GoldCoffer.History.LastYear;
 	return ProfitLossColoring(diff);
 end;
 
@@ -227,10 +237,6 @@ function ns:GetLastMonthPL()
 end;
 
 function ns:GetLastYearPL()
-	if GoldCoffer.History.Previous.Year == ".." then 
-		return GoldCoffer.History.Previous.Year
-	else
-		return ProfitLossColoring(GoldCoffer.History.Previous.Year);	
-	end;
+	return ProfitLossColoring(GoldCoffer.History.Previous.Year);	
 end;
 
