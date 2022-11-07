@@ -48,19 +48,12 @@ end;
 local function UpdateMonthDetail(curGold)
 	local my = month[tonumber(date("%m"))] .. date("%d");
 	if GoldCoffer.History.Month[1] ~= nil then
-		print("Update month")
 		for k,v in pairs(GoldCoffer.History.Month[1]) do
-			print(k,v);
-			if k == my then 
-				GoldCoffer.History.Month[1] = {[my] = curGold};
-				print("Same day")
-				return; 
-			end;
+			if k == my then GoldCoffer.History.Month[1] = {[my] = curGold};	return; end;
 		end;
 		local i = 30
-		print("bumping days")
-		while i > 1 do
-			if GoldCoffer.History.Month[i] ~= nil then GoldCoffer.History.Month[i + 1] = GoldCoffer.History.Month[i]; print("Moving ",i , " to ", i+1 ); end;
+		while i > 0 do
+			if GoldCoffer.History.Month[i] ~= nil then GoldCoffer.History.Month[i + 1] = GoldCoffer.History.Month[i]; end;
 			i = i - 1;
 		end;
 	end;
@@ -71,13 +64,10 @@ local function UpdateYearDetail(curGold)
 	local my = month[tonumber(date("%m"))] .. date("%Y");
 	if GoldCoffer.History.Year[1] ~= nil then
 		for k,v in pairs(GoldCoffer.History.Year[1]) do
-			if k == my then 
-				GoldCoffer.History.Year[1] = {[my] = curGold}
-				return; 
-			end;
+			if k == my then GoldCoffer.History.Year[1] = {[my] = curGold}; return; end;
 		end;
 		local i = 12
-		while i > 1 do
+		while i > 0 do
 			if GoldCoffer.History.Year[i] ~= nil then GoldCoffer.History.Year[i + 1] = GoldCoffer.History.Year[i]; end;
 			i = i - 1;
 		end;
