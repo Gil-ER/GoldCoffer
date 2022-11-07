@@ -54,16 +54,16 @@ function gcLDB:OnTooltipShow()
 	self:AddLine(ns.player .. " - " .. ns:GoldSilverCopper(GetMoney()));
 	self:AddLine(ns.srv .. " - " .. ns:GetServerGold(ns.srv, true) .. "\n\n");
 	
-	self:AddLine("Profit/loss this session = " .. ns:GetTodaysChange());
+	self:AddLine("Profit/loss this session = " .. ns:GetSessionChange());
 	self:AddLine("Today = " .. ns:GetYesterdaysChange());
-	self:AddLine("This Week = " .. ns:GetWeeksChange());
-	self:AddLine("This Month = " .. ns:GetMonthsChange());
-	self:AddLine("This Year = " .. ns:GetYearsChange() .. "\n\n");	
+	--self:AddLine("This Week = " .. ns:GetWeeksChange());
+	--self:AddLine("This Month = " .. ns:GetMonthsChange());
+	--self:AddLine("This Year = " .. ns:GetYearsChange() .. "\n\n");	
 	
-	self:AddLine("Total Gold Yesterday = " .. ns:GetYesterdayPL());
-	self:AddLine("Last Week = " .. ns:GetLastWeekPL());
-	self:AddLine("Last Month = " .. ns:GetLastMonthPL());
-	self:AddLine("Last Year = " .. ns:GetLastYearPL());
+	--self:AddLine("Total Gold Yesterday = " .. ns:GetYesterdayPL());
+	--self:AddLine("Last Week = " .. ns:GetLastWeekPL());
+	--self:AddLine("Last Month = " .. ns:GetLastMonthPL());
+	--self:AddLine("Last Year = " .. ns:GetLastYearPL());
 	
 	self:AddLine("\nTotal gold(all servers) = " .. ns:GetTotalGold(true));
 	
@@ -140,7 +140,7 @@ function f:OnEvent(event, ...)
 		--Minimap button
 		icon:Register(addon, gcLDB, GoldCofferIcon);
 		minimapButtonShowHide(false);
-		ns:updateGold();	--initialize data
+		ns:iniData();	--initialize data
 		GoldCoffer.History.Today = ns:GetTotalGold(false);
 		f:UnregisterEvent("PLAYER_ENTERING_WORLD");
 	end;	

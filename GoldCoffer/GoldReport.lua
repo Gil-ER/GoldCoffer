@@ -32,10 +32,10 @@ local function cbClick(index)
 		rightTxt[i]:SetText("");
 	end;
 	--Update gold reported
-	goldTitle[1]:SetText("Todays profit/loss = " .. ns:GetTodaysChange());
+	goldTitle[1]:SetText("Todays profit/loss = " .. ns:GetSessionChange());
 	goldTitle[2]:SetText("Since yesterday = " .. ns:GetYesterdaysChange());
-	goldTitle[3]:SetText("This week = " .. ns:GetWeeksChange());
-	goldTitle[4]:SetText("Total gold = " .. ns:GetTotalGold(true));
+	--goldTitle[3]:SetText("This week = " .. ns:GetWeeksChange());
+	--goldTitle[4]:SetText("Total gold = " .. ns:GetTotalGold(true));
 	--Update the report with data requested by selecting checkboxes
 	for i=1, 50 do
 		if cb[i]:GetChecked() then
