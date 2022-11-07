@@ -56,14 +56,14 @@ function gcLDB:OnTooltipShow()
 	
 	self:AddLine("Profit/loss this session = " .. ns:GetSessionChange());
 	self:AddLine("Today = " .. ns:GetYesterdaysChange());
-	--self:AddLine("This Week = " .. ns:GetWeeksChange());
-	--self:AddLine("This Month = " .. ns:GetMonthsChange());
-	--self:AddLine("This Year = " .. ns:GetYearsChange() .. "\n\n");	
+	self:AddLine("This Week = " .. ns:GetWeeksChange());
+	self:AddLine("This Month = " .. ns:GetMonthsChange());
+	self:AddLine("This Year = " .. ns:GetYearsChange() .. "\n\n");	
 	
-	--self:AddLine("Total Gold Yesterday = " .. ns:GetYesterdayPL());
-	--self:AddLine("Last Week = " .. ns:GetLastWeekPL());
-	--self:AddLine("Last Month = " .. ns:GetLastMonthPL());
-	--self:AddLine("Last Year = " .. ns:GetLastYearPL());
+	self:AddLine("Total Gold Yesterday = " .. ns:GetYesterdaysGold(true));
+	self:AddLine("Last Week = " .. ns:GetLastWeeksGold(true));
+	self:AddLine("Last Month = " .. ns:GetLastMonthsGold(true));
+	self:AddLine("Last Year = " .. ns:GetLastYearsGold(true));
 	
 	self:AddLine("\nTotal gold(all servers) = " .. ns:GetTotalGold(true));
 	

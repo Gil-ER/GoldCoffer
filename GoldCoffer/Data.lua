@@ -214,7 +214,7 @@ function ns:updateGold()
 	GoldCoffer.Servers[ns.srv] = GoldCoffer.Servers[ns.srv] or {};
 	GoldCoffer.Servers[ns.srv][ns.player] = GetMoney();
 	--Check to see if we have passed a daily reset and advance data if we have
-	checkResets(curGold);
+	checkResets(ns:GetTotalGold(false));
 end;
 
 function ns:GetServers()
@@ -227,6 +227,15 @@ function ns:GetServers()
 	return s;	
 end;
 
+
+local function ProfitLossColoring(gold)
+	if gold < 0 then return ns:colorString("red", ns:GoldSilverCopper(gold)); end;
+	return ns:colorString("green", ns:GoldSilverCopper(gold));
+end;
+
+----------------------------------------------------------------------------------------
+--		Functions that return gold totals
+----------------------------------------------------------------------------------------
 function ns:GetTotalGold(iconFlag)
 	--iconFlag:	- true return is formated with icons for gold silver copper
 	--			- false of nil returns total in copper
@@ -252,18 +261,38 @@ function ns:GetServerGold(s, iconFlag)
 	return sg;
 end;
 
-local function ProfitLossColoring(gold)
-	if gold < 0 then return ns:colorString("red", ns:GoldSilverCopper(gold)); end;
-	return ns:colorString("green", ns:GoldSilverCopper(gold));
-end;
-
-----------------------------------------------------------------------------------------
---		Functions that return gold totals
-----------------------------------------------------------------------------------------
-function GetYesterdaysGold()
+function ns:GetYesterdaysGold(formatFlag)
 	--Returns closing balance the last day played
 	for _,v in pairs (GoldCoffer.History.Day["2"]) do
-		return v;
+		if formatFlag then return ProfitLossColoring(v)
+		else return v; end;
+	end;
+	return 0;
+end;
+
+function ns:GetLastWeeksGold(formatFlag)
+	--Returns closing balance the last day played
+	for _,v in pairs (GoldCoffer.History.Week["2"]) do
+		if formatFlag then return ProfitLossColoring(v)
+		else return v; end;
+	end;
+	return 0;
+end;
+
+function ns:GetLastMonthsGold(formatFlag)
+	--Returns closing balance the last day played
+	for _,v in pairs (GoldCoffer.History.Month["2"]) do
+		if formatFlag then return ProfitLossColoring(v)
+		else return v; end;
+	end;
+	return 0;
+end;
+
+function ns:GetLastYearsGold(formatFlag)
+	--Returns closing balance the last day played
+	for _,v in pairs (GoldCoffer.History.Year["2"]) do
+		if formatFlag then return ProfitLossColoring(v)
+		else return v; end;
 	end;
 	return 0;
 end;
@@ -277,50 +306,22 @@ end;
 
 function ns:GetYesterdaysChange()
 	--Returns Profit/Loss since yesterday
-	local diff = ns:GetTotalGold(false) - GetYesterdaysGold();
+	local diff = ns:GetTotalGold(false) - ns:GetYesterdaysGold(false);
 	return ProfitLossColoring(diff);
 end;
 
-
-
-
-
-
-
---Need work/updating
-
-
 function ns:GetWeeksChange()
-	local curGold = ns:GetTotalGold(false);
-	local diff = curGold - GoldCoffer.History.LastWeek;
+	local diff = ns:GetTotalGold(false) - ns:GetLastWeeksGold(false);
 	return ProfitLossColoring(diff);	
 end;
 
 function ns:GetMonthsChange()
-	local curGold = ns:GetTotalGold(false);
-	local diff = curGold - GoldCoffer.History.LastMonth;
+	local diff = ns:GetTotalGold(false) - ns:GetLastMonthsGold(false);
 	return ProfitLossColoring(diff);	
 end;
 
 function ns:GetYearsChange()
-	local curGold = ns:GetTotalGold(false);
-	local diff = curGold - GoldCoffer.History.LastYear;
+	local diff = ns:GetTotalGold(false) - ns:GetLastYearsGold(false);
 	return ProfitLossColoring(diff);
-end;
-
-function ns:GetYesterdayPL()
-	return ProfitLossColoring(GoldCoffer.History.Previous.Day);	
-end;
-
-function ns:GetLastWeekPL()
-	return ProfitLossColoring(GoldCoffer.History.Previous.Week);
-end;
-
-function ns:GetLastMonthPL()
-	return ProfitLossColoring(GoldCoffer.History.Previous.Month);	
-end;
-
-function ns:GetLastYearPL()
-	return ProfitLossColoring(GoldCoffer.History.Previous.Year);	
 end;
 
