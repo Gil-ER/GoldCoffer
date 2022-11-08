@@ -164,3 +164,81 @@ end;--		CREATE A SCROLL FRAME
 
 
 
+-- Add tabs to a frame
+local TabedFrame;
+--Tab Functions
+local function Tab_OnClick (self)
+	PanelTemplates_SetTab(self:GetParent(), self:GetID());
+	local scrollChild = TabedFrame.ScrollFrame:GetScrollChild();
+	if (scrollChild) then
+		scrollChild:Hide();
+	end;
+	
+	TabedFrame.ScrollFrame:SetScrollChild(self.content);
+	self.content:Show();
+end
+
+function ns:SetTabs (frame, numTabs, ...)
+	frame.numTabs = numTabs;
+	
+	TabedFrame = frame;
+	local FrameName = frame:GetName();
+	local contents = {};
+	for i = 1, numTabs do
+		
+		local tab = CreateFrame("Button", FrameName.."Tab"..i, frame, "PanelTabButtonTemplate");
+		tab:SetID(i);
+		tab:SetText(select(i, ...));
+		tab:SetScript("OnClick", Tab_OnClick);
+		
+		tab.content = CreateFrame("Frame", nil, frame.ScrollFrame);
+		tab.content:SetSize(308, 500);
+		tab.content:Hide();		
+		
+		table.insert(contents, tab.content);
+		if i == 1 then
+			tab:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 7);
+		else
+			local no = i - 1;
+			tab:SetPoint("TOPLEFT",_G[FrameName.."Tab"..(i - 1)], "TOPRIGHT")
+		end;
+	end;
+	Tab_OnClick(_G[FrameName.."Tab1"]);
+	
+	return unpack(contents);
+end;
+-- /Add tabs to a frame
+
+-- createButton
+local buttonCount = 0;
+function ns:createButton(opts)
+	buttonCount = buttonCount + 1;		--Counts each button created
+	if opts.name == nil or opts.name == "" then
+		--Unique name generator, addonName + string + counterValue
+		opts.name = addon .. "GeneratedFrameNumber" .. buttonCount;
+	end;	
+	local btn = CreateFrame("Button",  opts.name, opts.parent, "GameMenuButtonTemplate");
+	--position, size and add title to the frame
+	btn:SetSize(opts.width, opts.height);
+	btn:SetText(opts.caption);
+	btn:SetNormalFontObject("GameFontNormalLarge");
+	btn:SetHighlightFontObject("GameFontHighlightLarge");
+	btn:SetPoint(opts.anchor, opts.relFrame, opts.relPoint, opts.xOff, opts.yOff);
+	--Add a tooltip if one was provided
+	if (opts.ttip ~= nil) or (opts.ttip ~= "") then 
+		btn:SetScript("OnEnter", function()
+			GameTooltip:SetOwner(btn, "LEFT");
+			GameTooltip:AddLine(opts.ttip);
+			GameTooltip:Show();
+		end);
+		btn:SetScript("OnLeave", function() GameTooltip:Hide(); end);
+	end;
+	--Button function
+	if opts.pressFunc ~= nil then 
+		btn:SetScript("OnClick", function(self, button, down)
+			opts.pressFunc(self, button)
+		end)
+	end;
+	return btn;	
+end;
+-- \createButton

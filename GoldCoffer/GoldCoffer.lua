@@ -29,7 +29,7 @@ local function GoldCofferMiniMap(button)
 		if IsShiftKeyDown() then
 			minimapButtonShowHide(true)
 		elseif IsControlKeyDown() then	
-			--Placeholder
+			ns:ShowGoldReport();
 		else
 			ns:ShowReport();
 		end;
