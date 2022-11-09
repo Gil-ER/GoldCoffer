@@ -29,9 +29,9 @@ local function GoldCofferMiniMap(button)
 		if IsShiftKeyDown() then
 			minimapButtonShowHide(true)
 		elseif IsControlKeyDown() then	
-			ns:ShowGoldReport();
+			--placeholder
 		else
-			ns:ShowReport();
+			ns:ShowGoldReport();
 		end;
 	elseif button == "RightButton" then
 		--resets window position
@@ -118,7 +118,6 @@ SlashCmdList.GOLDCOFFER = function(arg)
 	elseif msg == "c" or msg == "center" or msg == "centre"	then		--including British spelling
 		ns:CenterGoldReport();
 	else
-		print (arg1, arg2, arg3)
 		local s = "/gc or /goldcoffer shows report.\n" 	
 			.. "/gc delete Toon Server - Deletes a single toon.\n"
 			.. "/gc mm or button - toggle minimap button (on/off)\n"

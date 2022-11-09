@@ -192,12 +192,12 @@ function ns:SetTabs (frame, numTabs, ...)
 		tab:SetScript("OnClick", Tab_OnClick);
 		
 		tab.content = CreateFrame("Frame", nil, frame.ScrollFrame);
-		tab.content:SetSize(308, 500);
+		tab.content:SetSize(308, 5);
 		tab.content:Hide();		
 		
 		table.insert(contents, tab.content);
 		if i == 1 then
-			tab:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 7);
+			tab:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 20, 7);
 		else
 			local no = i - 1;
 			tab:SetPoint("TOPLEFT",_G[FrameName.."Tab"..(i - 1)], "TOPRIGHT")

@@ -163,7 +163,6 @@ end;
 function ns:iniData()
 	--initializes the table
 	local t = time() - (24 * 60 * 60);
-	print(date("%m/%d/%Y %H:%M",t))
 	local key1 = month[tonumber(date("%m"))] .. date("%d");
 	local key2 = month[tonumber(date("%m", t))] .. date("%d", t);
 	local yearKey1 = "December 31, " .. date("%Y");
@@ -197,8 +196,11 @@ function ns:iniData()
 	GoldCoffer.History.Week = GoldCoffer.History.Week or {["1"] = {[key1] = curGold}};
 	GoldCoffer.History.Month = GoldCoffer.History.Month or {["1"] = {[key1] = curGold}};
 	GoldCoffer.History.Year = GoldCoffer.History.Year or {["1"] = {[yearKey1] = curGold}};
-	GoldCoffer.History.Day["2"] = GoldCoffer.History.Day["2"] or {[key2] = 0};
-	GoldCoffer.History.Week["2"] = GoldCoffer.History.Week["2"] or {[key2] = 0};
+	local g;
+	if GoldCoffer.History.Yesterday == nil then g = 0; else g = GoldCoffer.History.Yesterday; GoldCoffer.History.Yesterday = nil; end;
+	GoldCoffer.History.Day["2"] = GoldCoffer.History.Day["2"] or {[key2] = g};
+	if GoldCoffer.History.LastWeek == nil then g = 0; else g = GoldCoffer.History.LastWeek; GoldCoffer.History.LastWeek = nil; end;
+	GoldCoffer.History.Week["2"] = GoldCoffer.History.Week["2"] or {[key2] = g};
 	GoldCoffer.History.Month["2"] = GoldCoffer.History.Month["2"] or {[key2] = 0};
 	GoldCoffer.History.Year["2"] = GoldCoffer.History.Year["2"] or {[yearKey2] = 0};
 	
