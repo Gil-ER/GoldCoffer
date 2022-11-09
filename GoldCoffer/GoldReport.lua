@@ -190,8 +190,8 @@ Tab2.goldTitle[11]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 60, -325);
 Tab2.goldTitle[12] = Tab2:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
 Tab2.goldTitle[12]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 400, -100);
 Tab2.goldTitle[13] = Tab2:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
-Tab2.goldTitle[13]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 400, -125);
-
+Tab2.goldTitle[13]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 400, -150);
+Tab2.goldTitle[13]:SetJustifyH("LEFT");
 
 --------------------------------------------------------------------------------------------------
 --			/Tab2	-		Gold History
@@ -228,8 +228,8 @@ function ns:ShowGoldReport()
 		Tab2.goldTitle[9]:SetText("Last Month = " .. ns:GetLastMonthsGold(true));
 		Tab2.goldTitle[10]:SetText("Last Year = " .. ns:GetLastYearsGold(true));	
 		Tab2.goldTitle[11]:SetText("* Last Week/Month/Year will show 0 until enough data is collected.");	
-		Tab2.goldTitle[12]:SetText("More to come here.");	
-		Tab2.goldTitle[13]:SetText("Data is being collected.");	
+		Tab2.goldTitle[12]:SetText("More here in a later build.");	
+		Tab2.goldTitle[13]:SetText("Data is being collected\n until then.");	
 		
 		
 		
