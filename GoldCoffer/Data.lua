@@ -197,6 +197,7 @@ function ns:iniData()
 	GoldCoffer.History.Month = GoldCoffer.History.Month or {["1"] = {[key1] = curGold}};
 	GoldCoffer.History.Year = GoldCoffer.History.Year or {["1"] = {[yearKey1] = curGold}};
 	local g;
+	if GoldCoffer.History.Today ~= nil then GoldCoffer.History.Today = nil; end;
 	if GoldCoffer.History.Yesterday == nil then g = 0; else g = GoldCoffer.History.Yesterday; GoldCoffer.History.Yesterday = nil; end;
 	GoldCoffer.History.Day["2"] = GoldCoffer.History.Day["2"] or {[key2] = g};
 	if GoldCoffer.History.LastWeek == nil then g = 0; else g = GoldCoffer.History.LastWeek; GoldCoffer.History.LastWeek = nil; end;
