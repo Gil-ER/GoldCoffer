@@ -9,5 +9,5 @@ lib\embeds.xml
 
 Widgets.lua
 Data.lua
-NewGoldReport.lua
+GoldReport.lua
 GoldCoffer.lua
