@@ -185,8 +185,9 @@ function ns:SetTabs (frame, numTabs, ...)
 	local FrameName = frame:GetName();
 	local contents = {};
 	for i = 1, numTabs do
-		
-		local tab = CreateFrame("Button", FrameName.."Tab"..i, frame, "PanelTabButtonTemplate");
+		local buttonTemplate = "CharacterFrameTabButtonTemplate";
+		if select(4, GetBuildInfo()) = 100000 then templ = "PanelTabButtonTemplate; end;
+		local tab = CreateFrame("Button", FrameName.."Tab"..i, frame, buttonTemplate);
 		tab:SetID(i);
 		tab:SetText(select(i, ...));
 		tab:SetScript("OnClick", Tab_OnClick);
