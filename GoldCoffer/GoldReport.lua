@@ -31,9 +31,21 @@ local Tab1, Tab2 = ns:SetTabs (ReportFrame, 2, "Gold Report", "Gold History")
 --------------------------------------------------------------------------------------------------
 --			Tab1	-		Gold Report
 --------------------------------------------------------------------------------------------------
+function Tab1.tabShow()
+	--moved from the else in ns:ShowGoldReport()
+	Tab1.goldTitle:SetText("Total gold = " .. ns:GetTotalGold(true));
+	local s = ns:GetServers();
+	for i=1, #s do
+		--check the current server and uncheck all others
+		if ns.srv == s[i] then Tab1.cb[i]:SetChecked(true); else Tab1.cb[i]:SetChecked(false); end;
+		Tab1.cbText[i]:SetText(s[i] .. " - " ..  ns:GoldSilverCopper(ns:GetServerGold(s[i])));
+		Tab1.cb[i]:Show();
+	end;	
+end;
+
 function Tab1.cbClick(index)
 	--called by the OnClick event all 50 checkboxes
-	--index is the index of the box clicked (not currently using the info)
+	--index is the index of the box clicked (not currently used)
 	local idx = 1;	-- current text row	
 	--Remove old data
 	for i=1, 100 do					
@@ -150,6 +162,7 @@ for i=2, 100 do			-- 100 is space for 50 servers with 1 toon on each (max for 50
 	Tab1.rightTxt[i]:SetJustifyH("RIGHT");
 end;
 
+Tab1:SetScript( "OnShow", function() Tab1.tabShow(); end);
 ReportFrame:Hide();
 
 --------------------------------------------------------------------------------------------------
@@ -160,9 +173,26 @@ ReportFrame:Hide();
 --------------------------------------------------------------------------------------------------
 --			Tab2	-		Gold History
 --------------------------------------------------------------------------------------------------
-
+function Tab2.tabShow()
+	--moved from the else in ns:ShowGoldReport()
+	Tab2.goldTitle[1]:SetText(ns.player .. " - " .. ns:GoldSilverCopper(GetMoney()));
+	Tab2.goldTitle[2]:SetText(ns.srv .. " - " .. ns:GetServerGold(ns.srv, true));
+	Tab2.goldTitle[3]:SetText("Profit/loss this session = " .. ns:GetSessionChange());
+	Tab2.goldTitle[4]:SetText("Today = " .. ns:GetYesterdaysChange());
+	Tab2.goldTitle[5]:SetText("This Week = " .. ns:GetWeeksChange());
+	Tab2.goldTitle[6]:SetText("This Year = " .. ns:GetYearsChange());
+	Tab2.goldTitle[7]:SetText("Total Gold Yesterday = " .. ns:GetYesterdaysGold(true));
+	Tab2.goldTitle[8]:SetText("Last Week = " .. ns:GetLastWeeksGold(true));
+	Tab2.goldTitle[9]:SetText("Last Month = " .. ns:GetLastMonthsGold(true));
+	Tab2.goldTitle[10]:SetText("Last Year = " .. ns:GetLastYearsGold(true));	
+	Tab2.goldTitle[11]:SetText("* Last Week/Month/Year will show 0 until enough data is collected.");	
+	Tab2.goldTitle[12]:SetText("More here in a later build.");	
+	Tab2.goldTitle[13]:SetText("Data is being collected\n until then.");
+end;
 
 -- Create 'title' texts for gold comparisons
+-- this all needs a redo
+-- Tab2 elements
 Tab2.goldTitle = {};
 Tab2.goldTitle[1] = Tab2:CreateFontString (nil, "OVERLAY", "GameFontNormal");
 Tab2.goldTitle[1]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 30, -25);
@@ -193,6 +223,8 @@ Tab2.goldTitle[13] = Tab2:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge
 Tab2.goldTitle[13]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 400, -150);
 Tab2.goldTitle[13]:SetJustifyH("LEFT");
 
+Tab2:SetScript( "OnShow", function() Tab2.tabShow(); end);
+
 --------------------------------------------------------------------------------------------------
 --			/Tab2	-		Gold History
 --------------------------------------------------------------------------------------------------
@@ -206,40 +238,17 @@ function ns:ShowGoldReport()
 		--Tab1--
 		--When showing the frame initialize the frame
 		--ReportFrame.Title:SetText( "Gold Coffer" );
-		Tab1.goldTitle:SetText("Total gold = " .. ns:GetTotalGold(true));
-		local s = ns:GetServers();
-		for i=1, #s do
-			--check the current server and uncheck all others
-			if ns.srv == s[i] then Tab1.cb[i]:SetChecked(true); else Tab1.cb[i]:SetChecked(false); end;
-			Tab1.cbText[i]:SetText(s[i] .. " - " ..  ns:GoldSilverCopper(ns:GetServerGold(s[i])));
-			Tab1.cb[i]:Show();
-		end;
+
 		--Hide unused checkboxes
-		for i=#s+1, 50 do Tab1.cb[i]:SetChecked(false); Tab1.cb[i]:Hide(); end;
-		--Tab2--
-		Tab2.goldTitle[1]:SetText(ns.player .. " - " .. ns:GoldSilverCopper(GetMoney()));
-		Tab2.goldTitle[2]:SetText(ns.srv .. " - " .. ns:GetServerGold(ns.srv, true));
-		Tab2.goldTitle[3]:SetText("Profit/loss this session = " .. ns:GetSessionChange());
-		Tab2.goldTitle[4]:SetText("Today = " .. ns:GetYesterdaysChange());
-		Tab2.goldTitle[5]:SetText("This Week = " .. ns:GetWeeksChange());
-		Tab2.goldTitle[6]:SetText("This Year = " .. ns:GetYearsChange());
-		Tab2.goldTitle[7]:SetText("Total Gold Yesterday = " .. ns:GetYesterdaysGold(true));
-		Tab2.goldTitle[8]:SetText("Last Week = " .. ns:GetLastWeeksGold(true));
-		Tab2.goldTitle[9]:SetText("Last Month = " .. ns:GetLastMonthsGold(true));
-		Tab2.goldTitle[10]:SetText("Last Year = " .. ns:GetLastYearsGold(true));	
-		Tab2.goldTitle[11]:SetText("* Last Week/Month/Year will show 0 until enough data is collected.");	
-		Tab2.goldTitle[12]:SetText("More here in a later build.");	
-		Tab2.goldTitle[13]:SetText("Data is being collected\n until then.");	
-		
+		--Below happens on Tab1.cbClick
+		--for i=#s+1, 50 do Tab1.cb[i]:SetChecked(false); Tab1.cb[i]:Hide(); end;
+
+	
+		--delete all this if things work
 		
 		
 		--Show selected servers
 		Tab1.cbClick();
-		ReportFrame:Show();
-		
-		
-		
-		
-		
+		ReportFrame:Show();		
 	end;
 end;
