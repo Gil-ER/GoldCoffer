@@ -25,50 +25,52 @@ ReportFrame:EnableMouseWheel(1)
 ReportFrame.ScrollFrame.ScrollBar:ClearAllPoints();
 ReportFrame.ScrollFrame.ScrollBar:SetPoint("TOPLEFT", ReportFrame.ScrollFrame, "TOPRIGHT", -12, -18);
 ReportFrame.ScrollFrame.ScrollBar:SetPoint("BOTTOMRIGHT", ReportFrame.ScrollFrame, "BOTTOMRIGHT", -7, 18);
+local TabServers, TabSummery, TabDaily, TabWeekly, TabYearly = ns:SetTabs (ReportFrame, 5, 
+		"Gold Report", "Gold Summery", "Daily History", "Weekly History", "Yearly History")
 
-local Tab1, Tab2 = ns:SetTabs (ReportFrame, 2, "Gold Report", "Gold History")
 
 --------------------------------------------------------------------------------------------------
---			Tab1	-		Gold Report
+--			TabServers
 --------------------------------------------------------------------------------------------------
-function Tab1.tabShow()
+function TabServers.tabShow()
 	--moved from the else in ns:ShowGoldReport()
-	Tab1.goldTitle:SetText("Total gold = " .. ns:GetTotalGold(true));
+	TabServers.goldTitle:SetText("Total gold = " .. ns:GetTotalGold(true));
 	local s = ns:GetServers();
 	for i=1, #s do
 		--check the current server and uncheck all others
-		if ns.srv == s[i] then Tab1.cb[i]:SetChecked(true); else Tab1.cb[i]:SetChecked(false); end;
-		Tab1.cbText[i]:SetText(s[i] .. " - " ..  ns:GoldSilverCopper(ns:GetServerGold(s[i])));
-		Tab1.cb[i]:Show();
+		if ns.srv == s[i] then TabServers.cb[i]:SetChecked(true); else TabServers.cb[i]:SetChecked(false); end;
+		TabServers.cbText[i]:SetText(s[i] .. " - " ..  ns:GoldSilverCopper(ns:GetServerGold(s[i])));
+		TabServers.cb[i]:Show();
 	end;	
+	TabServers.cbClick();
 end;
 
-function Tab1.cbClick(index)
+function TabServers.cbClick(index)
 	--called by the OnClick event all 50 checkboxes
 	--index is the index of the box clicked (not currently used)
 	local idx = 1;	-- current text row	
 	--Remove old data
 	for i=1, 100 do					
-		Tab1.leftTxt[i]:SetText("");
-		Tab1.rightTxt[i]:SetText("");
+		TabServers.leftTxt[i]:SetText("");
+		TabServers.rightTxt[i]:SetText("");
 	end;
 	--Update the report with data requested by selecting checkboxes
 	for i=1, 50 do
-		if Tab1.cb[i]:GetChecked() then
-			local s = Tab1.cbText[i]:GetText();		--  Server - 12345g 67s 89c
+		if TabServers.cb[i]:GetChecked() then
+			local s = TabServers.cbText[i]:GetText();		--  Server - 12345g 67s 89c
 			local g = "";
 			s,g = strsplit("-", s, 2);			--  Split at the '-'
 			s = strtrim(s, " ");				--  'Server'
 			g = g or " ";
 			g = strtrim(g, " -");				--  '12345g67s89c'
-			Tab1.leftTxt[idx]:SetText(s);			--  Show values
-			Tab1.rightTxt[idx]:SetText(g);
+			TabServers.leftTxt[idx]:SetText(s);			--  Show values
+			TabServers.rightTxt[idx]:SetText(g);
 			--position the text
 			if idx > 1 then
-				Tab1.leftTxt[idx]:ClearAllPoints();
-				Tab1.leftTxt[idx]:SetPoint("TOPLEFT", Tab1.leftTxt[idx-1], "TOPLEFT", -10, -30);				
-				Tab1.rightTxt[idx]:ClearAllPoints();				
-				Tab1.rightTxt[idx]:SetPoint("TOPRIGHT", Tab1.rightTxt[idx-1], "TOPRIGHT", 0, -30);
+				TabServers.leftTxt[idx]:ClearAllPoints();
+				TabServers.leftTxt[idx]:SetPoint("TOPLEFT", TabServers.leftTxt[idx-1], "TOPLEFT", -10, -30);				
+				TabServers.rightTxt[idx]:ClearAllPoints();				
+				TabServers.rightTxt[idx]:SetPoint("TOPRIGHT", TabServers.rightTxt[idx-1], "TOPRIGHT", 0, -30);
 			end;	--if
 			idx = idx + 1;			-- Move to next text row
 			local stepIn = 10;		-- Indent first toon of the server
@@ -81,12 +83,12 @@ function Tab1.cbClick(index)
 			end;
 			table.sort (list, function(a,b) return a.gold > b.gold; end);
 			for k, v in pairs(list) do							-- display server data
-				Tab1.leftTxt[idx]:SetText(v.name);	
-				Tab1.rightTxt[idx]:SetText(ns:GoldSilverCopper(v.gold));
-				Tab1.leftTxt[idx]:ClearAllPoints();
-				Tab1.leftTxt[idx]:SetPoint("TOPLEFT", Tab1.leftTxt[idx-1], "TOPLEFT", stepIn, stepDown);
-				Tab1.rightTxt[idx]:ClearAllPoints();				
-				Tab1.rightTxt[idx]:SetPoint("TOPRIGHT", Tab1.rightTxt[idx-1], "TOPRIGHT", 0, stepDown);
+				TabServers.leftTxt[idx]:SetText(v.name);	
+				TabServers.rightTxt[idx]:SetText(ns:GoldSilverCopper(v.gold));
+				TabServers.leftTxt[idx]:ClearAllPoints();
+				TabServers.leftTxt[idx]:SetPoint("TOPLEFT", TabServers.leftTxt[idx-1], "TOPLEFT", stepIn, stepDown);
+				TabServers.rightTxt[idx]:ClearAllPoints();				
+				TabServers.rightTxt[idx]:SetPoint("TOPRIGHT", TabServers.rightTxt[idx-1], "TOPRIGHT", 0, stepDown);
 				idx = idx + 1;
 				stepIn = 0;
 				stepDown = -20;
@@ -96,16 +98,16 @@ function Tab1.cbClick(index)
 end;
 
 -- Create 'title' texts for gold
-Tab1.goldTitle = Tab1:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
-Tab1.goldTitle:SetPoint("TOPLEFT", Tab1, "TOPLEFT", 0, -25);
-Tab1.goldTitle:SetWidth(700);
-Tab1.goldTitle:SetJustifyH("CENTER");
+TabServers.goldTitle = TabServers:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabServers.goldTitle:SetPoint("TOPLEFT", TabServers, "TOPLEFT", 0, -25);
+TabServers.goldTitle:SetWidth(700);
+TabServers.goldTitle:SetJustifyH("CENTER");
 
 --	Create 50 checkboxes for server names
 local params = {
 	name = nil,					--globally unique, only change if you need it
-	parent = Tab1,		--parent frame
-	relFrame = Tab1,		--relative control for positioning
+	parent = TabServers,		--parent frame
+	relFrame = TabServers,		--relative control for positioning
 	anchor = "TOPLEFT", 		--anchor point of this form
 	relPoint = "TOPLEFT",		--relative point for positioning	
 	xOff = 25,					--x offset from relative point
@@ -114,19 +116,19 @@ local params = {
 	ttip = "",					--Tooltip
 }
 
-Tab1.cbText = {};			--Add tables for checkboxes and text to Tab1
-Tab1.cb = {};
-Tab1.leftTxt = {};
-Tab1.rightTxt = {};
-Tab1.cb[1], Tab1.cbText[1] = ns:createCheckBox(params);
-Tab1.cb[1]:Hide();
-Tab1.cb[1]:SetScript( "OnClick", function() Tab1.cbClick(1); end);
+TabServers.cbText = {};			--Add tables for checkboxes and text to TabServers
+TabServers.cb = {};
+TabServers.leftTxt = {};
+TabServers.rightTxt = {};
+TabServers.cb[1], TabServers.cbText[1] = ns:createCheckBox(params);
+TabServers.cb[1]:Hide();
+TabServers.cb[1]:SetScript( "OnClick", function() TabServers.cbClick(1); end);
 
 for i=2, 50 do
 	params = {	
 		name = nil,
-		parent = Tab1,
-		relFrame = Tab1.cb[i-1],	
+		parent = TabServers,
+		relFrame = TabServers.cb[i-1],	
 		anchor = "TOPLEFT", 
 		relPoint = "TOPLEFT",
 		xOff = 0,
@@ -134,121 +136,196 @@ for i=2, 50 do
 		caption = "",
 		ttip = "",	
 	}
-	Tab1.cb[i], Tab1.cbText[i] = ns:createCheckBox(params);
-	Tab1.cb[i]:SetScript( "OnClick", function() Tab1.cbClick(i); end);
-	Tab1.cb[i]:Hide();
+	TabServers.cb[i], TabServers.cbText[i] = ns:createCheckBox(params);
+	TabServers.cb[i]:SetScript( "OnClick", function() TabServers.cbClick(i); end);
+	TabServers.cb[i]:Hide();
 end;
 
 --create output textboxes
-Tab1.leftTxt[1] = Tab1:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-Tab1.leftTxt[1]:SetPoint("TOPLEFT", Tab1, "TOPLEFT", 360, -65);
-Tab1.leftTxt[1]:SetWidth(150);
-Tab1.leftTxt[1]:SetJustifyH("LEFT");
+TabServers.leftTxt[1] = TabServers:CreateFontString (nil, "OVERLAY", "GameFontNormal");
+TabServers.leftTxt[1]:SetPoint("TOPLEFT", TabServers, "TOPLEFT", 360, -65);
+TabServers.leftTxt[1]:SetWidth(150);
+TabServers.leftTxt[1]:SetJustifyH("LEFT");
 
-Tab1.rightTxt[1] = Tab1:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-Tab1.rightTxt[1]:SetPoint("TOPLEFT", Tab1.leftTxt[1], "TOPRIGHT", 0, 0)
-Tab1.rightTxt[1]:SetWidth(150);
-Tab1.rightTxt[1]:SetJustifyH("RIGHT");
+TabServers.rightTxt[1] = TabServers:CreateFontString (nil, "OVERLAY", "GameFontNormal");
+TabServers.rightTxt[1]:SetPoint("TOPLEFT", TabServers.leftTxt[1], "TOPRIGHT", 0, 0)
+TabServers.rightTxt[1]:SetWidth(150);
+TabServers.rightTxt[1]:SetJustifyH("RIGHT");
 
 for i=2, 100 do			-- 100 is space for 50 servers with 1 toon on each (max for 50 character limit)
-	Tab1.leftTxt[i] = Tab1:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-	Tab1.leftTxt[i]:SetPoint("TOPLEFT", Tab1.leftTxt[i-1], "TOPLEFT", 0, -15);
-	Tab1.leftTxt[i]:SetWidth(150);
-	Tab1.leftTxt[i]:SetJustifyH("LEFT");
+	TabServers.leftTxt[i] = TabServers:CreateFontString (nil, "OVERLAY", "GameFontNormal");
+	TabServers.leftTxt[i]:SetPoint("TOPLEFT", TabServers.leftTxt[i-1], "TOPLEFT", 0, -15);
+	TabServers.leftTxt[i]:SetWidth(150);
+	TabServers.leftTxt[i]:SetJustifyH("LEFT");
 	
-	Tab1.rightTxt[i] = Tab1:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-	Tab1.rightTxt[i]:SetPoint("TOPRIGHT", Tab1.rightTxt[i-1], "TOPRIGHT", 0, -15)
-	Tab1.rightTxt[i]:SetWidth(150);
-	Tab1.rightTxt[i]:SetJustifyH("RIGHT");
+	TabServers.rightTxt[i] = TabServers:CreateFontString (nil, "OVERLAY", "GameFontNormal");
+	TabServers.rightTxt[i]:SetPoint("TOPRIGHT", TabServers.rightTxt[i-1], "TOPRIGHT", 0, -15)
+	TabServers.rightTxt[i]:SetWidth(150);
+	TabServers.rightTxt[i]:SetJustifyH("RIGHT");
 end;
 
-Tab1:SetScript( "OnShow", function() Tab1.tabShow(); end);
+TabServers:SetScript( "OnShow", function() TabServers.tabShow(); end);
 ReportFrame:Hide();
 
 --------------------------------------------------------------------------------------------------
---			/Tab1	-		Gold Report
+--			/TabServers
 --------------------------------------------------------------------------------------------------
 
 
 --------------------------------------------------------------------------------------------------
---			Tab2	-		Gold History
+--			TabSummery
 --------------------------------------------------------------------------------------------------
-function Tab2.tabShow()
-	--moved from the else in ns:ShowGoldReport()
-	Tab2.goldTitle[1]:SetText(ns.player .. " - " .. ns:GoldSilverCopper(GetMoney()));
-	Tab2.goldTitle[2]:SetText(ns.srv .. " - " .. ns:GetServerGold(ns.srv, true));
-	Tab2.goldTitle[3]:SetText("Profit/loss this session = " .. ns:GetSessionChange());
-	Tab2.goldTitle[4]:SetText("Today = " .. ns:GetYesterdaysChange());
-	Tab2.goldTitle[5]:SetText("This Week = " .. ns:GetWeeksChange());
-	Tab2.goldTitle[6]:SetText("This Year = " .. ns:GetYearsChange());
-	Tab2.goldTitle[7]:SetText("Total Gold Yesterday = " .. ns:GetYesterdaysGold(true));
-	Tab2.goldTitle[8]:SetText("Last Week = " .. ns:GetLastWeeksGold(true));
-	Tab2.goldTitle[9]:SetText("Last Month = " .. ns:GetLastMonthsGold(true));
-	Tab2.goldTitle[10]:SetText("Last Year = " .. ns:GetLastYearsGold(true));	
-	Tab2.goldTitle[11]:SetText("* Last Week/Month/Year will show 0 until enough data is collected.");	
-	Tab2.goldTitle[12]:SetText("More here in a later build.");	
-	Tab2.goldTitle[13]:SetText("Data is being collected\n until then.");
+function TabSummery.tabShow()
+	local h = ns.player .. "  -  " .. ns:GoldSilverCopper(GetMoney())	.. "\n\n" .. 
+			ns.srv .. "  -  " .. ns:GetServerGold(ns.srv, true);			
+	local l = "Profit/loss this session\n" .. ns:GetSessionChange() .. "\n\n" .. 
+			"Today\n" .. ns:GetYesterdaysChange() .. "\n\n" .. 
+			"This Week\n" .. ns:GetWeeksChange() .. "\n\n" .. 
+			"This Year\n" .. ns:GetYearsChange() .. "\n\n\n";		
+	local r = "Total Gold Yesterday\n" .. ns:GetYesterdaysGold(true) .. "\n\n" .. 
+			"Last Week\n" .. ns:GetLastWeeksGold(true) .. "\n\n" .. 
+			"Last Month\n" .. ns:GetLastMonthsGold(true) .. "\n\n" .. 
+			"Last Year\n" .. ns:GetLastYearsGold(true);	
+	TabSummery.Header:SetText(h);		
+	TabSummery.LeftText:SetText(l);
+	TabSummery.RightText:SetText(r);
 end;
 
--- Create 'title' texts for gold comparisons
--- this all needs a redo
--- Tab2 elements
-Tab2.goldTitle = {};
-Tab2.goldTitle[1] = Tab2:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-Tab2.goldTitle[1]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 30, -25);
-Tab2.goldTitle[2] = Tab2:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-Tab2.goldTitle[2]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 30, -50);
-Tab2.goldTitle[3] = Tab2:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-Tab2.goldTitle[3]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 30, -100);
-Tab2.goldTitle[4] = Tab2:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-Tab2.goldTitle[4]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 30, -125);
-Tab2.goldTitle[5] = Tab2:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-Tab2.goldTitle[5]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 30, -150);
-Tab2.goldTitle[6] = Tab2:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-Tab2.goldTitle[6]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 30, -175);
-Tab2.goldTitle[7] = Tab2:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-Tab2.goldTitle[7]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 30, -225);
-Tab2.goldTitle[8] = Tab2:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-Tab2.goldTitle[8]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 30, -250);
-Tab2.goldTitle[9] = Tab2:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-Tab2.goldTitle[9]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 30, -275);
-Tab2.goldTitle[10] = Tab2:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-Tab2.goldTitle[10]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 30, -300);
-Tab2.goldTitle[11] = Tab2:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-Tab2.goldTitle[11]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 60, -325);
+-- TabSummery elements
+TabSummery.Header = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabSummery.Header:SetPoint("TOPLEFT", TabSummery, "TOPLEFT", 30, -25);
+TabSummery.Header:SetWidth(600);
 
-Tab2.goldTitle[12] = Tab2:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
-Tab2.goldTitle[12]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 400, -100);
-Tab2.goldTitle[13] = Tab2:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
-Tab2.goldTitle[13]:SetPoint("TOPLEFT", Tab2, "TOPLEFT", 400, -150);
-Tab2.goldTitle[13]:SetJustifyH("LEFT");
+TabSummery.LeftText = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabSummery.LeftText:SetPoint("TOPLEFT", TabSummery.Header, "BOTTOMLEFT", 0, -30);
+TabSummery.LeftText:SetWidth(300);
 
-Tab2:SetScript( "OnShow", function() Tab2.tabShow(); end);
+TabSummery.RightText = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabSummery.RightText:SetPoint("TOPLEFT", TabSummery.LeftText, "TOPRIGHT");
+TabSummery.RightText:SetWidth(300);
+
+TabSummery.Footer = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabSummery.Footer:SetPoint("TOPLEFT", TabSummery.LeftText, "BOTTOMLEFT");
+TabSummery.Footer:SetWidth(600);
+TabSummery.Footer:SetText("* Last Week/Month/Year will show 0 until enough data is collected.");
+
+
+TabSummery:SetScript( "OnShow", function() TabSummery.tabShow(); end);
 
 --------------------------------------------------------------------------------------------------
---			/Tab2	-		Gold History
+--			/TabSummery
+--------------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------------
+--			TabDaily
+--------------------------------------------------------------------------------------------------
+function TabDaily.tabShow()
+	local h = "Daily History"			
+	local l, m, r = "Date", "Days Closing Gold", "Profit/Loss from Previous Day"
+	local days = GoldCoffer.History.Day
+	print(#GoldCoffer.History.Day)
+	for i=1, #days do
+		for k,v in pairs(days[i]) do
+			print(k)
+			l = l .. "\n" .. k;
+		end; --/k,v in pairs
+	end;	--/for i
+	TabDaily.Header:SetText(h);	
+	TabDaily.LeftText:SetText(l);
+	TabDaily.MiddleText:SetText(m);
+	TabDaily.RightText:SetText(r);	
+end;
+
+TabDaily.Header = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabDaily.Header:SetPoint("TOPLEFT", TabDaily, "TOPLEFT", 30, -25);
+TabDaily.Header:SetWidth(600);
+TabDaily.Header:SetText("");
+
+TabDaily.LeftText = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabDaily.LeftText:SetPoint("TOPLEFT", TabDaily.Header, "BOTTOMLEFT", 0, -30);
+TabDaily.LeftText:SetWidth(200);
+TabDaily.LeftText:SetJustifyH("LEFT");
+
+TabDaily.MiddleText = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabDaily.MiddleText:SetPoint("TOPLEFT", TabDaily.LeftText, "TOPRIGHT");
+TabDaily.MiddleText:SetWidth(200);
+TabDaily.MiddleText:SetJustifyH("RIGHT");
+
+TabDaily.RightText = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabDaily.RightText:SetPoint("TOPLEFT", TabDaily.MiddleText, "TOPRIGHT");
+TabDaily.RightText:SetWidth(200);
+TabDaily.RightText:SetJustifyH("RIGHT");
+
+TabDaily.Footer = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabDaily.Footer:SetPoint("TOPLEFT", TabDaily.LeftText, "BOTTOMLEFT", 0, -30);
+TabDaily.Footer:SetWidth(600);
+TabDaily.Footer:SetText("* Last Week/Month/Year will show 0 until enough data is collected.");
+
+
+TabDaily:SetScript( "OnShow", function() TabDaily.tabShow(); end);
+--------------------------------------------------------------------------------------------------
+--			/TabDaily
+--------------------------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------------------------
+--			TabWeekly
+--------------------------------------------------------------------------------------------------
+function TabWeekly.tabShow()
+	local h = "Weekly History";			
+	local l = "Profit/loss this session\n" .. ns:GetSessionChange() .. "\n\n" .. 
+			"Today\n" .. ns:GetYesterdaysChange() .. "\n\n" .. 
+			"This Week\n" .. ns:GetWeeksChange() .. "\n\n" .. 
+			"This Year\n" .. ns:GetYearsChange() .. "\n\n\n";		
+	local r = "Total Gold Yesterday\n" .. ns:GetYesterdaysGold(true) .. "\n\n" .. 
+			"Last Week\n" .. ns:GetLastWeeksGold(true) .. "\n\n" .. 
+			"Last Month\n" .. ns:GetLastMonthsGold(true) .. "\n\n" .. 
+			"Last Year\n" .. ns:GetLastYearsGold(true);	
+	TabWeekly.Header:SetText(h);	
+end;
+
+TabWeekly.Header = TabWeekly:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabWeekly.Header:SetPoint("TOPLEFT", TabWeekly, "TOPLEFT", 30, -25);
+TabWeekly.Header:SetWidth(600);
+TabWeekly.Header:SetText("");
+
+TabWeekly:SetScript( "OnShow", function() TabWeekly.tabShow(); end);
+--------------------------------------------------------------------------------------------------
+--			/TabWeekly
+--------------------------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------------------------
+--			TabYearly
+--------------------------------------------------------------------------------------------------
+function TabYearly.tabShow()
+	local h = "Yearly History";
+	local l = "Profit/loss this session\n" .. ns:GetSessionChange() .. "\n\n" .. 
+			"Today\n" .. ns:GetYesterdaysChange() .. "\n\n" .. 
+			"This Week\n" .. ns:GetWeeksChange() .. "\n\n" .. 
+			"This Year\n" .. ns:GetYearsChange() .. "\n\n\n";		
+	local r = "Total Gold Yesterday\n" .. ns:GetYesterdaysGold(true) .. "\n\n" .. 
+			"Last Week\n" .. ns:GetLastWeeksGold(true) .. "\n\n" .. 
+			"Last Month\n" .. ns:GetLastMonthsGold(true) .. "\n\n" .. 
+			"Last Year\n" .. ns:GetLastYearsGold(true);	
+	TabYearly.Header:SetText(h);	
+end;
+
+TabYearly.Header = TabYearly:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabYearly.Header:SetPoint("TOPLEFT", TabYearly, "TOPLEFT", 30, -25);
+TabYearly.Header:SetWidth(600);
+TabYearly.Header:SetText("");
+
+TabYearly:SetScript( "OnShow", function() TabYearly.tabShow(); end);
+--------------------------------------------------------------------------------------------------
+--			/TabYearly
 --------------------------------------------------------------------------------------------------
 
 
 function ns:ShowGoldReport()
-	--toggles the visibility of the report frame 
-	if ReportFrame:IsVisible() then
-		ReportFrame:Hide()
-	else
-		--Tab1--
-		--When showing the frame initialize the frame
-		--ReportFrame.Title:SetText( "Gold Coffer" );
-
-		--Hide unused checkboxes
-		--Below happens on Tab1.cbClick
-		--for i=#s+1, 50 do Tab1.cb[i]:SetChecked(false); Tab1.cb[i]:Hide(); end;
-
-	
-		--delete all this if things work
-		
-		
-		--Show selected servers
-		Tab1.cbClick();
-		ReportFrame:Show();		
-	end;
+	--toggles the visibility of the report frame 	
+	if ReportFrame:IsVisible() then ReportFrame:Hide(); else ReportFrame:Show(); end;
 end;

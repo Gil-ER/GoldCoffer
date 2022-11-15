@@ -198,10 +198,9 @@ function ns:SetTabs (frame, numTabs, ...)
 		
 		table.insert(contents, tab.content);
 		if i == 1 then
-			tab:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 20, 7);
+			tab:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 20, 5);
 		else
-			local no = i - 1;
-			tab:SetPoint("TOPLEFT",_G[FrameName.."Tab"..(i - 1)], "TOPRIGHT")
+			tab:SetPoint("TOPLEFT",_G[FrameName.."Tab"..(i - 1)], "TOPRIGHT", -15, 0)
 		end;
 	end;
 	Tab_OnClick(_G[FrameName.."Tab1"]);
