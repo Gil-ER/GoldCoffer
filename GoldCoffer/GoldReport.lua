@@ -251,23 +251,23 @@ TabDaily.Header:SetText("");
 
 TabDaily.LeftText = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
 TabDaily.LeftText:SetPoint("TOPLEFT", TabDaily.Header, "BOTTOMLEFT", 0, -30);
-TabDaily.LeftText:SetWidth(150);
+TabDaily.LeftText:SetWidth(130);
 TabDaily.LeftText:SetJustifyH("LEFT");
 
 TabDaily.MiddleText = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
 TabDaily.MiddleText:SetPoint("TOPLEFT", TabDaily.LeftText, "TOPRIGHT");
-TabDaily.MiddleText:SetWidth(225);
+TabDaily.MiddleText:SetWidth(235);
 TabDaily.MiddleText:SetJustifyH("RIGHT");
 
 TabDaily.RightText = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
 TabDaily.RightText:SetPoint("TOPLEFT", TabDaily.MiddleText, "TOPRIGHT");
-TabDaily.RightText:SetWidth(225);
+TabDaily.RightText:SetWidth(235);
 TabDaily.RightText:SetJustifyH("RIGHT");
 
 TabDaily.Footer = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormal");
 TabDaily.Footer:SetPoint("TOPLEFT", TabDaily.LeftText, "BOTTOMLEFT", 0, -30);
 TabDaily.Footer:SetWidth(600);
-TabDaily.RightText:SetJustifyH("LEFT");
+TabDaily.Footer:SetJustifyH("LEFT");
 TabDaily.Footer:SetText("* Last Week/Month/Year will show 0 until enough data is collected.");
 
 
