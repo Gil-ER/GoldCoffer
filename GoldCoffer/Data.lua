@@ -231,7 +231,7 @@ function ns:GetServers()
 end;
 
 
-local function ProfitLossColoring(gold)
+function ns:ProfitLossColoring(gold)
 	if gold < 0 then return ns:colorString("red", ns:GoldSilverCopper(gold)); end;
 	return ns:colorString("green", ns:GoldSilverCopper(gold));
 end;
@@ -267,7 +267,7 @@ end;
 function ns:GetYesterdaysGold(formatFlag)
 	--Returns closing balance the last day played
 	for _,v in pairs (GoldCoffer.History.Day["2"]) do
-		if formatFlag then return ProfitLossColoring(v)
+		if formatFlag then return ns:ProfitLossColoring(v)
 		else return v; end;
 	end;
 	return 0;
@@ -276,7 +276,7 @@ end;
 function ns:GetLastWeeksGold(formatFlag)
 	--Returns closing balance the last day played
 	for _,v in pairs (GoldCoffer.History.Week["2"]) do
-		if formatFlag then return ProfitLossColoring(v)
+		if formatFlag then return ns:ProfitLossColoring(v)
 		else return v; end;
 	end;
 	return 0;
@@ -285,7 +285,7 @@ end;
 function ns:GetLastMonthsGold(formatFlag)
 	--Returns closing balance the last day played
 	for _,v in pairs (GoldCoffer.History.Month["2"]) do
-		if formatFlag then return ProfitLossColoring(v)
+		if formatFlag then return ns:ProfitLossColoring(v)
 		else return v; end;
 	end;
 	return 0;
@@ -294,7 +294,7 @@ end;
 function ns:GetLastYearsGold(formatFlag)
 	--Returns closing balance the last day played
 	for _,v in pairs (GoldCoffer.History.Year["2"]) do
-		if formatFlag then return ProfitLossColoring(v)
+		if formatFlag then return ns:ProfitLossColoring(v)
 		else return v; end;
 	end;
 	return 0;
@@ -304,27 +304,27 @@ function ns:GetSessionChange()
 	--returns Profit/Loss this session
 	local curGold = ns:GetTotalGold(false);
 	local diff = curGold - GoldCoffer.History.Today;
-	return ProfitLossColoring(diff);
+	return ns:ProfitLossColoring(diff);
 end;
 
 function ns:GetYesterdaysChange()
 	--Returns Profit/Loss since yesterday
 	local diff = ns:GetTotalGold(false) - ns:GetYesterdaysGold(false);
-	return ProfitLossColoring(diff);
+	return ns:ProfitLossColoring(diff);
 end;
 
 function ns:GetWeeksChange()
 	local diff = ns:GetTotalGold(false) - ns:GetLastWeeksGold(false);
-	return ProfitLossColoring(diff);	
+	return ns:ProfitLossColoring(diff);	
 end;
 
 function ns:GetMonthsChange()
 	local diff = ns:GetTotalGold(false) - ns:GetLastMonthsGold(false);
-	return ProfitLossColoring(diff);	
+	return ns:ProfitLossColoring(diff);	
 end;
 
 function ns:GetYearsChange()
 	local diff = ns:GetTotalGold(false) - ns:GetLastYearsGold(false);
-	return ProfitLossColoring(diff);
+	return ns:ProfitLossColoring(diff);
 end;
 

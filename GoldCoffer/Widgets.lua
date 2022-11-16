@@ -200,7 +200,7 @@ function ns:SetTabs (frame, numTabs, ...)
 		if i == 1 then
 			tab:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 20, 5);
 		else
-			tab:SetPoint("TOPLEFT",_G[FrameName.."Tab"..(i - 1)], "TOPRIGHT", -15, 0)
+			tab:SetPoint("TOPLEFT",_G[FrameName.."Tab"..(i - 1)], "TOPRIGHT");
 		end;
 	end;
 	Tab_OnClick(_G[FrameName.."Tab1"]);

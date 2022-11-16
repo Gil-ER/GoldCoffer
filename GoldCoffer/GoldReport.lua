@@ -196,15 +196,15 @@ TabSummery.Header = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNormal
 TabSummery.Header:SetPoint("TOPLEFT", TabSummery, "TOPLEFT", 30, -25);
 TabSummery.Header:SetWidth(600);
 
-TabSummery.LeftText = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabSummery.LeftText = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNormal");
 TabSummery.LeftText:SetPoint("TOPLEFT", TabSummery.Header, "BOTTOMLEFT", 0, -30);
 TabSummery.LeftText:SetWidth(300);
 
-TabSummery.RightText = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabSummery.RightText = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNormal");
 TabSummery.RightText:SetPoint("TOPLEFT", TabSummery.LeftText, "TOPRIGHT");
 TabSummery.RightText:SetWidth(300);
 
-TabSummery.Footer = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabSummery.Footer = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNormal");
 TabSummery.Footer:SetPoint("TOPLEFT", TabSummery.LeftText, "BOTTOMLEFT");
 TabSummery.Footer:SetWidth(600);
 TabSummery.Footer:SetText("* Last Week/Month/Year will show 0 until enough data is collected.");
@@ -222,14 +222,21 @@ TabSummery:SetScript( "OnShow", function() TabSummery.tabShow(); end);
 --------------------------------------------------------------------------------------------------
 function TabDaily.tabShow()
 	local h = "Daily History"			
-	local l, m, r = "Date", "Days Closing Gold", "Profit/Loss from Previous Day"
+	local l, m, r = "Date\n", "Days Closing Gold\n", "Daily Gain/Loss\n"
 	local days = GoldCoffer.History.Day
-	print(#GoldCoffer.History.Day)
-	for i=1, #days do
-		for k,v in pairs(days[i]) do
-			print(k)
-			l = l .. "\n" .. k;
+	local i = "1";
+	local gt = 0;
+	local prev = -1;
+	while (GoldCoffer.History.Day[i] ~= nil) do	
+		for d,g in pairs(GoldCoffer.History.Day[i]) do
+			l = l .. "\n" .. d;
+			m = m .. "\n" .. ns:ProfitLossColoring(g);
+			if prev > -1 then
+				r = r .. "\n" .. ns:ProfitLossColoring(prev - g);
+			end;
+			prev = g;
 		end; --/k,v in pairs
+		i = tostring(tonumber(i) + 1);
 	end;	--/for i
 	TabDaily.Header:SetText(h);	
 	TabDaily.LeftText:SetText(l);
@@ -244,22 +251,23 @@ TabDaily.Header:SetText("");
 
 TabDaily.LeftText = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
 TabDaily.LeftText:SetPoint("TOPLEFT", TabDaily.Header, "BOTTOMLEFT", 0, -30);
-TabDaily.LeftText:SetWidth(200);
+TabDaily.LeftText:SetWidth(150);
 TabDaily.LeftText:SetJustifyH("LEFT");
 
 TabDaily.MiddleText = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
 TabDaily.MiddleText:SetPoint("TOPLEFT", TabDaily.LeftText, "TOPRIGHT");
-TabDaily.MiddleText:SetWidth(200);
+TabDaily.MiddleText:SetWidth(225);
 TabDaily.MiddleText:SetJustifyH("RIGHT");
 
 TabDaily.RightText = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
 TabDaily.RightText:SetPoint("TOPLEFT", TabDaily.MiddleText, "TOPRIGHT");
-TabDaily.RightText:SetWidth(200);
+TabDaily.RightText:SetWidth(225);
 TabDaily.RightText:SetJustifyH("RIGHT");
 
-TabDaily.Footer = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabDaily.Footer = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormal");
 TabDaily.Footer:SetPoint("TOPLEFT", TabDaily.LeftText, "BOTTOMLEFT", 0, -30);
 TabDaily.Footer:SetWidth(600);
+TabDaily.RightText:SetJustifyH("LEFT");
 TabDaily.Footer:SetText("* Last Week/Month/Year will show 0 until enough data is collected.");
 
 
