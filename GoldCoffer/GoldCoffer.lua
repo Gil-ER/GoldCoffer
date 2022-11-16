@@ -140,6 +140,7 @@ function f:OnEvent(event, ...)
 		minimapButtonShowHide(false);
 		ns:iniData();	--initialize data
 		GoldCoffer.History.Today = ns:GetTotalGold(false);
+		tinsert(UISpecialFrames, "gcReportFrame");	--Close with ESC key
 		f:UnregisterEvent("PLAYER_ENTERING_WORLD");
 	end;	
 	if event == "PLAYER_MONEY" then
