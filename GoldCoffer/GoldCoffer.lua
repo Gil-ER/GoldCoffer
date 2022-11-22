@@ -87,7 +87,7 @@ SlashCmdList.GOLDCOFFER = function(arg)
 	local arg1, arg2, arg3, arg4 = strsplit(" ", arg);
 	msg = strlower(arg1);
 	if msg == "" then	
-		ns:ShowReport();
+		ns:ShowGoldReport();
 	elseif msg == "mm" or msg == "button" then
 		minimapButtonShowHide(true);
 		if mmButtonShown then
