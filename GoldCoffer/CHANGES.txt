@@ -1,3 +1,6 @@
+1.2.2
+- Bug fix (Calculating next month/year)
+
 1.2.1
 - Update for 10.0.2
 - Finished history reporting started in 1.2.0
