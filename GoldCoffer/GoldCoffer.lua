@@ -132,6 +132,7 @@ end; --/ Slash Commands
 local f = CreateFrame("FRAME");
 f:RegisterEvent("PLAYER_ENTERING_WORLD"); --PLAYER_ENTERING_WORLD
 f:RegisterEvent("PLAYER_MONEY");
+f:RegisterEvent("PLAYER_LOGOUT");
 
 function f:OnEvent(event, ...)
 	if event == "PLAYER_ENTERING_WORLD" then
@@ -146,6 +147,10 @@ function f:OnEvent(event, ...)
 	if event == "PLAYER_MONEY" then
 		ns:updateGold();	--update player gold
 	end;
+	if event == "PLAYER_LOGOUT" then
+		ns.UpdateCurrency();	--update player gold
+	end;	
+	
 end;
 f:SetScript("OnEvent", f.OnEvent); 
 

@@ -4,11 +4,12 @@
 ## DefaultState: enabled
 ## Version: 1.2.2
 ## Author: Gildina
-## SavedVariables: GoldCoffer, GoldCofferIcon
+## SavedVariables: GoldCoffer, GoldCofferIcon, GoldCofferCerrencies
 
 lib\embeds.xml
 
 Widgets.lua
 Data.lua
+Currencies.lua
 GoldReport.lua
 GoldCoffer.lua

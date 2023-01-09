@@ -25,8 +25,8 @@ ReportFrame:EnableMouseWheel(1)
 ReportFrame.ScrollFrame.ScrollBar:ClearAllPoints();
 ReportFrame.ScrollFrame.ScrollBar:SetPoint("TOPLEFT", ReportFrame.ScrollFrame, "TOPRIGHT", -12, -18);
 ReportFrame.ScrollFrame.ScrollBar:SetPoint("BOTTOMRIGHT", ReportFrame.ScrollFrame, "BOTTOMRIGHT", -7, 18);
-local TabServers, TabSummery, TabDaily, TabWeekly, TabYearly = ns:SetTabs (ReportFrame, 5, 
-		"Gold Report", "Gold Summery", "Daily History", "Weekly History", "Yearly History")
+local TabServers, TabSummery, TabDaily, TabWeekly, TabYearly, TabCurrencies = ns:SetTabs (ReportFrame, 6, 
+		"Gold Report", "Gold Summery", "Daily History", "Weekly History", "Yearly History", "Currencies")
 
 
 --------------------------------------------------------------------------------------------------
@@ -393,6 +393,49 @@ TabYearly:SetScript( "OnShow", function() TabYearly.tabShow(); end);
 --			/TabYearly
 --------------------------------------------------------------------------------------------------
 
+
+
+--------------------------------------------------------------------------------------------------
+--			/TabCurrencies
+--------------------------------------------------------------------------------------------------
+function TabCurrencies.tabShow()
+	local h = "Currency Detail";	
+	local l, r = "All Curencies\n", "Selected Currencies\n";
+
+	l = l .. "\n Under construction.\n\nCheck back later.\n\n\n\n\n\n";
+ns.UpdateCurrency();
+
+
+	TabCurrencies.Header:SetText(h);	
+	TabCurrencies.LeftText:SetText(l);
+	TabCurrencies.RightText:SetText(r);		
+end;
+
+-- TabCurrencies elements
+TabCurrencies.Header = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabCurrencies.Header:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 30, -25);
+TabCurrencies.Header:SetWidth(600);
+
+TabCurrencies.LeftText = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabCurrencies.LeftText:SetPoint("TOPLEFT", TabCurrencies.Header, "BOTTOMLEFT", 0, -30);
+TabCurrencies.LeftText:SetWidth(300);
+
+TabCurrencies.RightText = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabCurrencies.RightText:SetPoint("TOPLEFT", TabCurrencies.LeftText, "TOPRIGHT");
+TabCurrencies.RightText:SetWidth(300);
+
+TabCurrencies.Footer = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFontNormal");
+TabCurrencies.Footer:SetPoint("TOPLEFT", TabCurrencies.LeftText, "BOTTOMLEFT");
+TabCurrencies.Footer:SetWidth(600);
+TabCurrencies.Footer:SetText("* Select a currency on the left to get a listing of that currency.");
+
+
+TabCurrencies:SetScript( "OnShow", function() TabCurrencies.tabShow(); end);
+
+
+--------------------------------------------------------------------------------------------------
+--			/TabCurrencies
+--------------------------------------------------------------------------------------------------
 
 function ns:ShowGoldReport()
 	--toggles the visibility of the report frame 	
