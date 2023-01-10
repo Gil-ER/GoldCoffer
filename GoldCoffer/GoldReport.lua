@@ -339,6 +339,8 @@ TabWeekly:SetScript( "OnShow", function() TabWeekly.tabShow(); end);
 --------------------------------------------------------------------------------------------------
 --			TabYearly
 --------------------------------------------------------------------------------------------------
+TabYearly.cbCount = 1;
+
 function TabYearly.tabShow()
 	local h = "Yearly History";	
 	local l, m, r = "Date\n", "Years Closing Gold\n", "Yearly Gain/Loss\n"
@@ -398,12 +400,50 @@ TabYearly:SetScript( "OnShow", function() TabYearly.tabShow(); end);
 --------------------------------------------------------------------------------------------------
 --			/TabCurrencies
 --------------------------------------------------------------------------------------------------
+local maxCur = 200;
+
 function TabCurrencies.tabShow()
 	ns.UpdateCurrency();
 		
 	TabCurrencies.Header:SetText( "Currency Detail");
-	TabCurrencies.QuantityText:SetText("8,888,888");	
+	TabCurrencies.QuantityText:SetText("88,888,888");	
 	TabCurrencies.NameText:SetText("Under Construction, check back later.");
+	local curList = ns.GetCurrencies();
+	
+	for i=1, maxCur do
+		TabCurrencies.cb[i]:Hide();
+	end;
+	
+	local temp = ""
+	for i=1, #curList do
+		temp = temp .. curList[i] .. "\n";
+		TabCurrencies.cbText[i]:SetText(curList[i]);
+		TabCurrencies.cb[i]:Show();
+	end;	
+end;
+
+function TabCurrencies.cbClick(idx)
+	print(idx, " Click");
+	
+	--Clear any old detail
+	TabCurrencies.QuantityText:SetText("");
+	TabCurrencies.NameText:SetText("");
+	local qty = "";
+	local names = "";
+	
+	for i=1, maxCur do
+		if TabCurrencies.cb[i]:GetChecked() then
+			--Get a sorted list of toons with this currency
+			ns.GetToonsWith(TabCurrencies.cb[i]:GetText());
+			--Add the listed toond to the detail
+		
+		end;	--/if
+		--Add a break before the next currency
+		
+	end; 	--/for i
+	
+	
+	
 end;
 
 -- TabCurrencies elements
@@ -412,14 +452,51 @@ TabCurrencies.Header:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 30, -25);
 TabCurrencies.Header:SetWidth(600);
 
 TabCurrencies.QuantityText = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-TabCurrencies.QuantityText:SetPoint("TOPLEFT", TabCurrencies.Header, "BOTTOMLEFT", 300, -25);
-TabCurrencies.QuantityText:SetWidth(80);
+TabCurrencies.QuantityText:SetPoint("TOPLEFT", TabCurrencies.Header, "BOTTOMLEFT", 250, -25);
+TabCurrencies.QuantityText:SetWidth(100);
 TabCurrencies.QuantityText:SetJustifyH("RIGHT");
 
 TabCurrencies.NameText = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFontNormal");
 TabCurrencies.NameText:SetPoint("TOPLEFT", TabCurrencies.QuantityText, "TOPRIGHT", 10, 0);
-TabCurrencies.NameText:SetWidth(250);
+TabCurrencies.NameText:SetWidth(280);
 TabCurrencies.NameText:SetJustifyH("LEFT");
+
+TabCurrencies.params = {
+	name = nil,					--globally unique, only change if you need it
+	parent = TabCurrencies,		--parent frame
+	relFrame = TabCurrencies,	--relative control for positioning
+	anchor = "TOPLEFT", 		--anchor point of this form
+	relPoint = "TOPLEFT",		--relative point for positioning	
+	xOff = 25,					--x offset from relative point
+	yOff = -55,				--y offset from relative point
+	caption = "",				--Text displayed beside checkbox
+	ttip = "",					--Tooltip
+}
+
+TabCurrencies.cbText = {};			--Add tables for checkboxes and text to TabCurrencies
+TabCurrencies.cb = {};
+TabCurrencies.cb[1], TabCurrencies.cbText[1] = ns:createCheckBox(TabCurrencies.params);
+TabCurrencies.cb[1]:Hide();
+TabCurrencies.cb[1]:SetScript( "OnClick", function() TabCurrencies.cbClick(1); end);
+
+for i=2, maxCur do
+	params = {	
+		name = nil,
+		parent = TabCurrencies,
+		relFrame = TabCurrencies.cb[i-1],	
+		anchor = "TOPLEFT", 
+		relPoint = "TOPLEFT",
+		xOff = 0,
+		yOff = -30,
+		caption = "",
+		ttip = "",	
+	}
+	TabCurrencies.cb[i], TabCurrencies.cbText[i] = ns:createCheckBox(params);
+	TabCurrencies.cb[i]:SetScript( "OnClick", function() TabCurrencies.cbClick(i); end);
+	TabCurrencies.cb[i]:Hide();
+end;
+
+
 
 
 TabCurrencies:SetScript( "OnShow", function() TabCurrencies.tabShow(); end);

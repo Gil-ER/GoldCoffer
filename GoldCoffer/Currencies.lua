@@ -18,6 +18,31 @@ function ns.UpdateCurrency()
 	end --/for(i)
 end
 
+function ns.GetCurrencies()
+	local ret = {};
+	if GoldCofferCurrencies and GoldCofferCurrencies.Currency then
+		for k,v in pairs (GoldCofferCurrencies.Currency) do
+			tinsert(ret, k);
+		end;	--/for
+	end;	--/if
+	return ret;
+end;
 
-print ("Currencies loaded.");
-
+function ns.GetToonsWith(curr)
+	local tbl = {};
+	if GoldCofferCurrencies and GoldCofferCurrencies.Currency then
+		for k,v in pairs (GoldCofferCurrencies.Currency) do
+			if k == curr then
+				for t,q in pairs(k)
+					
+				end;  -- /for t,q
+			end;	--/if k
+		end;	--/for k,v
+	
+	end;	--/if table exists
+	
+	local qty;
+	local toon;
+	
+	return qty, toon;
+end;
