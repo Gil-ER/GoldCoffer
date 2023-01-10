@@ -399,16 +399,11 @@ TabYearly:SetScript( "OnShow", function() TabYearly.tabShow(); end);
 --			/TabCurrencies
 --------------------------------------------------------------------------------------------------
 function TabCurrencies.tabShow()
-	local h = "Currency Detail";	
-	local l, r = "All Curencies\n", "Selected Currencies\n";
-
-	l = l .. "\n Under construction.\n\nCheck back later.\n\n\n\n\n\n";
-ns.UpdateCurrency();
-
-
-	TabCurrencies.Header:SetText(h);	
-	TabCurrencies.LeftText:SetText(l);
-	TabCurrencies.RightText:SetText(r);		
+	ns.UpdateCurrency();
+		
+	TabCurrencies.Header:SetText( "Currency Detail");
+	TabCurrencies.QuantityText:SetText("8,888,888");	
+	TabCurrencies.NameText:SetText("Under Construction, check back later.");
 end;
 
 -- TabCurrencies elements
@@ -416,18 +411,15 @@ TabCurrencies.Header = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFont
 TabCurrencies.Header:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 30, -25);
 TabCurrencies.Header:SetWidth(600);
 
-TabCurrencies.LeftText = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
-TabCurrencies.LeftText:SetPoint("TOPLEFT", TabCurrencies.Header, "BOTTOMLEFT", 0, -30);
-TabCurrencies.LeftText:SetWidth(300);
+TabCurrencies.QuantityText = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFontNormal");
+TabCurrencies.QuantityText:SetPoint("TOPLEFT", TabCurrencies.Header, "BOTTOMLEFT", 300, -25);
+TabCurrencies.QuantityText:SetWidth(80);
+TabCurrencies.QuantityText:SetJustifyH("RIGHT");
 
-TabCurrencies.RightText = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
-TabCurrencies.RightText:SetPoint("TOPLEFT", TabCurrencies.LeftText, "TOPRIGHT");
-TabCurrencies.RightText:SetWidth(300);
-
-TabCurrencies.Footer = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-TabCurrencies.Footer:SetPoint("TOPLEFT", TabCurrencies.LeftText, "BOTTOMLEFT");
-TabCurrencies.Footer:SetWidth(600);
-TabCurrencies.Footer:SetText("* Select a currency on the left to get a listing of that currency.");
+TabCurrencies.NameText = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFontNormal");
+TabCurrencies.NameText:SetPoint("TOPLEFT", TabCurrencies.QuantityText, "TOPRIGHT", 10, 0);
+TabCurrencies.NameText:SetWidth(250);
+TabCurrencies.NameText:SetJustifyH("LEFT");
 
 
 TabCurrencies:SetScript( "OnShow", function() TabCurrencies.tabShow(); end);

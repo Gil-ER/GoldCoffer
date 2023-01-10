@@ -9,10 +9,11 @@ function ns.UpdateCurrency()
 		--get the name and amount for each one
 		name = C_CurrencyInfo.GetCurrencyListInfo(i).name;
 		count = C_CurrencyInfo.GetCurrencyListInfo(i).quantity;
+		local toon = ns.srv .. "-" .. ns.player
 		if count ~= nil and count > 0 then
 			GoldCofferCurrencies.Currency = GoldCofferCurrencies.Currency or {};
 			GoldCofferCurrencies.Currency[name] = GoldCofferCurrencies.Currency[name] or {};
-			GoldCofferCurrencies.Currency[name][ns.player] = count; 
+			GoldCofferCurrencies.Currency[name][toon] = count; 
 		end --/if count
 	end --/for(i)
 end

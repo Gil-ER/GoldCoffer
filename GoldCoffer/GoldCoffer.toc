@@ -4,7 +4,7 @@
 ## DefaultState: enabled
 ## Version: 1.2.2
 ## Author: Gildina
-## SavedVariables: GoldCoffer, GoldCofferIcon, GoldCofferCerrencies
+## SavedVariables: GoldCoffer, GoldCofferIcon, GoldCofferCurrencies
 
 lib\embeds.xml
 
