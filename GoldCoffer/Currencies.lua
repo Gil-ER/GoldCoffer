@@ -25,6 +25,7 @@ function ns.GetCurrencies()
 			tinsert(ret, k);
 		end;	--/for
 	end;	--/if
+	sort(ret);
 	return ret;
 end;
 
@@ -33,16 +34,12 @@ function ns.GetToonsWith(curr)
 	if GoldCofferCurrencies and GoldCofferCurrencies.Currency then
 		for k,v in pairs (GoldCofferCurrencies.Currency) do
 			if k == curr then
-				for t,q in pairs(k)
-					
+				for t,q in pairs(v) do
+					tbl[t] = q;
 				end;  -- /for t,q
+				return tbl;
 			end;	--/if k
 		end;	--/for k,v
-	
 	end;	--/if table exists
-	
-	local qty;
-	local toon;
-	
-	return qty, toon;
+	return tbl;
 end;

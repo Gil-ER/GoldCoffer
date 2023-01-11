@@ -422,9 +422,19 @@ function TabCurrencies.tabShow()
 	end;	
 end;
 
+local function addCommas(num)
+	num = tonumber(num);
+	local ret = "";
+	if num > 999 then ret = format("%03d",mod(num, 1000)); else ret = tostring(mod(num, 1000));	end;
+	num = floor(num / 1000);
+	while (num > 0) do 
+		if num > 999 then ret = format("%03d",mod(num, 1000)) .. "," .. ret; else ret = tostring(mod(num, 1000)) .. "," .. ret; end;
+		num = floor(num / 1000);	
+	end;
+	return ret;
+end;
+
 function TabCurrencies.cbClick(idx)
-	print(idx, " Click");
-	
 	--Clear any old detail
 	TabCurrencies.QuantityText:SetText("");
 	TabCurrencies.NameText:SetText("");
@@ -432,18 +442,33 @@ function TabCurrencies.cbClick(idx)
 	local names = "";
 	
 	for i=1, maxCur do
+		local list = {};
+		local toons = {};
 		if TabCurrencies.cb[i]:GetChecked() then
-			--Get a sorted list of toons with this currency
-			ns.GetToonsWith(TabCurrencies.cb[i]:GetText());
-			--Add the listed toond to the detail
-		
+			--Get a list of toons with this currency
+			local cur = TabCurrencies.cbText[i]:GetText();
+			list = ns.GetToonsWith(cur);
+			--sort the keys
+			for k,v in pairs(list) do tinsert(toons, k); end;
+			sort(toons);
+			--Add the listed toond to the detail	
+			if #toons > 0 then
+				qty = qty .. "\n";
+				names = names .. cur .. "\n";				
+				for i=1, #toons do
+					qty = qty .. addCommas(list[toons[i]]) .. "\n";
+					names = names .. toons[i] .. "\n";
+				end; 	--/for i				
+				--Add a break before the next currency
+				qty = qty .. "\n";
+				names = names .. "\n";
+			end;	--/if #list
 		end;	--/if
-		--Add a break before the next currency
-		
 	end; 	--/for i
-	
-	
-	
+	--Add text to the boxes
+	TabCurrencies.QuantityText:SetText(qty);	
+	TabCurrencies.NameText:SetText(names);	
+	ReportFrame.ScrollFrame:SetCursorPosition(0)
 end;
 
 -- TabCurrencies elements
