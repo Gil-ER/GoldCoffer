@@ -25,8 +25,8 @@ ReportFrame:EnableMouseWheel(1)
 ReportFrame.ScrollFrame.ScrollBar:ClearAllPoints();
 ReportFrame.ScrollFrame.ScrollBar:SetPoint("TOPLEFT", ReportFrame.ScrollFrame, "TOPRIGHT", -12, -18);
 ReportFrame.ScrollFrame.ScrollBar:SetPoint("BOTTOMRIGHT", ReportFrame.ScrollFrame, "BOTTOMRIGHT", -7, 18);
-local TabServers, TabSummery, TabDaily, TabWeekly, TabYearly, TabCurrencies, TabC2 = ns:SetTabs (ReportFrame, 7, 
-		"Gold Report", "Gold Summery", "Daily History", "Weekly History", "Yearly History", "Currencies", "Currencies II")
+local TabServers, TabSummery, TabDaily, TabWeekly, TabYearly, TabCurrencies = ns:SetTabs (ReportFrame, 6, 
+		"Gold Report", "Gold Summery", "Daily History", "Weekly History", "Yearly History", "Currencies")
 
 
 --------------------------------------------------------------------------------------------------
@@ -405,9 +405,12 @@ local maxCur = 200;
 function TabCurrencies.tabShow()
 	ns.UpdateCurrency();
 		
+
+
 	TabCurrencies.Header:SetText( "Currency Detail");
 	TabCurrencies.QuantityText:SetText("");	
 	TabCurrencies.NameText:SetText("");
+	
 	local curList = ns.GetCurrencies();
 	
 	for i=1, maxCur do
@@ -428,7 +431,7 @@ local function addCommas(num)
 	if num > 999 then ret = format("%03d",mod(num, 1000)); else ret = tostring(mod(num, 1000));	end;
 	num = floor(num / 1000);
 	while (num > 0) do 
-		if num > 999 then ret = format("%03d",mod(num, 1000)) .. "," .. ret; else ret = tostring(mod(num, 1000)) .. "," .. ret; end;
+		if num > 999 then ret = format("%03d",mod(num, 1000)) .. "," .. ret; else ret = tostring(num) .. "," .. ret; end;
 		num = floor(num / 1000);	
 	end;
 	return ret;
@@ -486,10 +489,20 @@ TabCurrencies.NameText:SetPoint("TOPLEFT", TabCurrencies.QuantityText, "TOPRIGHT
 TabCurrencies.NameText:SetWidth(280);
 TabCurrencies.NameText:SetJustifyH("LEFT");
 
+
+TabCurrencies.CurrencySF = CreateFrame("ScrollFrame", nil, TabCurrencies, "UIPanelScrollFrameTemplate")
+TabCurrencies.CurrencySF:SetSize(250,275)
+TabCurrencies.CurrencySF:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 25, -50)
+
+TabCurrencies.CurrencySW = CreateFrame("Frame", nil, TabCurrencies.CurrencySF)
+TabCurrencies.CurrencySW:SetWidth(250)
+TabCurrencies.CurrencySF:SetScrollChild(TabCurrencies.CurrencySW)
+	
+	
 TabCurrencies.params = {
 	name = nil,					--globally unique, only change if you need it
-	parent = TabCurrencies,		--parent frame
-	relFrame = TabCurrencies,	--relative control for positioning
+	parent = TabCurrencies.CurrencySW,		--parent frame
+	relFrame = TabCurrencies.CurrencySF,	--relative control for positioning
 	anchor = "TOPLEFT", 		--anchor point of this form
 	relPoint = "TOPLEFT",		--relative point for positioning	
 	xOff = 25,					--x offset from relative point
@@ -507,7 +520,7 @@ TabCurrencies.cb[1]:SetScript( "OnClick", function() TabCurrencies.cbClick(1); e
 for i=2, maxCur do
 	params = {	
 		name = nil,
-		parent = TabCurrencies,
+		parent = TabCurrencies.CurrencySW,
 		relFrame = TabCurrencies.cb[i-1],	
 		anchor = "TOPLEFT", 
 		relPoint = "TOPLEFT",
@@ -534,61 +547,6 @@ TabCurrencies:SetScript( "OnShow", function() TabCurrencies.tabShow(); end);
 
 
 
---------------------------------------------------------------------------------------------------
---			TabCurrencies
---------------------------------------------------------------------------------------------------
-
---Left Side
---TabC2:EnableMouseWheel(0)
-TabC2.CurrencyFrame = CreateFrame("ScrollFrame", nil, TabC2, "UIPanelScrollFrameTemplate");
-TabC2.CurrencyFrame:SetPoint("TOPLEFT", gcReportFrame, "TOPLEFT", 0, -30);
-TabC2.CurrencyFrame:SetPoint("BOTTOMRIGHT", gcReportFrame, "BOTTOMRIGHT", -400, 10);
-TabC2.CurrencyFrame:SetClipsChildren(true);
-TabC2.CurrencyFrame:EnableMouseWheel(1)
-TabC2.CurrencyFrame.ScrollBar:ClearAllPoints();
-TabC2.CurrencyFrame.ScrollBar:SetPoint("TOPLEFT", TabC2.CurrencyFrame, "TOPRIGHT", -12, -18);
-TabC2.CurrencyFrame.ScrollBar:SetPoint("BOTTOMRIGHT", TabC2.CurrencyFrame, "BOTTOMRIGHT", -7, 18);
---temp
-TabC2.CurrencyFrame.QuantityText = TabC2.CurrencyFrame:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-TabC2.CurrencyFrame.QuantityText:SetPoint("TOPLEFT", TabC2, "TOPLEFT", 0, -25);
-TabC2.CurrencyFrame.QuantityText:SetWidth(100);
-TabC2.CurrencyFrame.QuantityText:SetJustifyH("RIGHT");
-
-TabC2.CurrencyFrame.QuantityText:SetScript("OnEnter", function (self) Tab2.ScrollFrame:SetScrollChild(self) end);
-
-
---TabedFrame.ScrollFrame:SetScrollChild(self.content);
-
---Right Side
-TabC2.DetailFrame = CreateFrame("ScrollFrame", nil, TabC2, "UIPanelScrollFrameTemplate");
-TabC2.DetailFrame:SetPoint("TOPLEFT", TabC2.CurrencyFrame, "TOPRIGHT");
-TabC2.DetailFrame:SetPoint("BOTTOMRIGHT", gcReportFrame, "BOTTOMRIGHT", -15, 10);
-TabC2.DetailFrame:SetClipsChildren(true);
-TabC2:EnableMouseWheel(1)
-TabC2.DetailFrame.ScrollBar:ClearAllPoints();
-TabC2.DetailFrame.ScrollBar:SetPoint("TOPLEFT", TabC2.DetailFrame, "TOPRIGHT", -12, -18);
-TabC2.DetailFrame.ScrollBar:SetPoint("BOTTOMRIGHT", TabC2.DetailFrame, "BOTTOMRIGHT", -7, 18);
-
--- TabC2.DetailFrame.QuantityText = TabC2.CurrencyFrame:CreateFontString (nil, "OVERLAY", "GameFontNormal");
--- TabC2.DetailFrame.QuantityText:SetPoint("TOPLEFT", TabC2, "TOPLEFT", 275, -25);
--- TabC2.DetailFrame.QuantityText:SetWidth(100);
--- TabC2.DetailFrame.QuantityText:SetJustifyH("RIGHT");
-
--- TabC2.DetailFrame.NameText = TabC2.CurrencyFrame:CreateFontString (nil, "OVERLAY", "GameFontNormal");
--- TabC2.DetailFrame.NameText:SetPoint("TOPLEFT", TabC2.DetailFrame.QuantityText, "TOPRIGHT", 10, 0);
--- TabC2.DetailFrame.NameText:SetWidth(280);
--- TabC2.DetailFrame.NameText:SetJustifyH("LEFT");
-
-
-local t = "";
-for i=1, 50 do t = t .. i .. "\n"; end;
-TabC2.CurrencyFrame.QuantityText:SetText(t);
-
---TabC2.DetailFrame.QuantityText:SetText(t);
---TabC2.DetailFrame.NameText:SetText("Name goes here");
---------------------------------------------------------------------------------------------------
---			/TabCurrencies
---------------------------------------------------------------------------------------------------
 
 
 function ns:ShowGoldReport()

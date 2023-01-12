@@ -2,18 +2,24 @@ local Addon, ns = ...;
 
 function ns.UpdateCurrency()
 	--step through each currency
-	local ls, name, count
+	local ls, name, count, header
 	GoldCofferCurrencies = GoldCofferCurrencies or {};
 	ls = C_CurrencyInfo.GetCurrencyListSize();
 	for i = 1,ls do
 		--get the name and amount for each one
 		name = C_CurrencyInfo.GetCurrencyListInfo(i).name;
 		count = C_CurrencyInfo.GetCurrencyListInfo(i).quantity;
+		header = C_CurrencyInfo.GetCurrencyListInfo(i).isHeader
 		local toon = ns.srv .. "-" .. ns.player
-		if count ~= nil and count > 0 then
-			GoldCofferCurrencies.Currency = GoldCofferCurrencies.Currency or {};
-			GoldCofferCurrencies.Currency[name] = GoldCofferCurrencies.Currency[name] or {};
-			GoldCofferCurrencies.Currency[name][toon] = count; 
+		if count then
+			if count == 0 then
+				if header then print (name); else print("NOT HEADER ", name); end;
+				
+			else
+				GoldCofferCurrencies.Currency = GoldCofferCurrencies.Currency or {};
+				GoldCofferCurrencies.Currency[name] = GoldCofferCurrencies.Currency[name] or {};
+				GoldCofferCurrencies.Currency[name][toon] = count; 
+			end; --/if count == 0
 		end --/if count
 	end --/for(i)
 end
