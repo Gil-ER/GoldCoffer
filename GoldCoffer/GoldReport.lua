@@ -479,34 +479,56 @@ TabCurrencies.Header = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFont
 TabCurrencies.Header:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 30, -25);
 TabCurrencies.Header:SetWidth(600);
 
-TabCurrencies.QuantityText = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-TabCurrencies.QuantityText:SetPoint("TOPLEFT", TabCurrencies.Header, "BOTTOMLEFT", 250, -25);
-TabCurrencies.QuantityText:SetWidth(100);
+--Right Side
+TabCurrencies.DetailSF = CreateFrame("ScrollFrame", nil, TabCurrencies, "UIPanelScrollFrameTemplate")
+TabCurrencies.DetailSF:SetSize(370,310)
+TabCurrencies.DetailSF:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 300, -50)
+TabCurrencies.DetailSF:SetClipsChildren(true);
+TabCurrencies.DetailSW = CreateFrame("Frame", nil, TabCurrencies.DetailSF)
+TabCurrencies.DetailSW:SetSize(350, 310)	--(W, H)
+TabCurrencies.DetailSF.ScrollBar:ClearAllPoints();
+TabCurrencies.DetailSF.ScrollBar:SetPoint("TOPLEFT", TabCurrencies.DetailSF, "TOPRIGHT", -12, -18);
+TabCurrencies.DetailSF.ScrollBar:SetPoint("BOTTOMRIGHT", TabCurrencies.DetailSF, "BOTTOMRIGHT", -7, 18);
+TabCurrencies.DetailSF:SetScrollChild(TabCurrencies.DetailSW)
+
+-- TabCurrencies.DetailSW.bg = TabCurrencies.DetailSW:CreateTexture(nil, "BACKGROUND");
+-- TabCurrencies.DetailSW.bg:SetAllPoints(true);
+-- TabCurrencies.DetailSW.bg:SetColorTexture(0.2, 0.6, 0, 0.8);
+
+TabCurrencies.QuantityText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormal");
+TabCurrencies.QuantityText:SetPoint("TOPLEFT", TabCurrencies.DetailSW, "TOPLEFT");
+TabCurrencies.QuantityText:SetWidth(90);
 TabCurrencies.QuantityText:SetJustifyH("RIGHT");
 
-TabCurrencies.NameText = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFontNormal");
+TabCurrencies.NameText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormal");
 TabCurrencies.NameText:SetPoint("TOPLEFT", TabCurrencies.QuantityText, "TOPRIGHT", 10, 0);
-TabCurrencies.NameText:SetWidth(280);
+TabCurrencies.NameText:SetWidth(260);
 TabCurrencies.NameText:SetJustifyH("LEFT");
 
-
+--Left Side
 TabCurrencies.CurrencySF = CreateFrame("ScrollFrame", nil, TabCurrencies, "UIPanelScrollFrameTemplate")
-TabCurrencies.CurrencySF:SetSize(250,275)
+TabCurrencies.CurrencySF:SetSize(275,310)
 TabCurrencies.CurrencySF:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 25, -50)
-
+TabCurrencies.CurrencySF:SetClipsChildren(true);
 TabCurrencies.CurrencySW = CreateFrame("Frame", nil, TabCurrencies.CurrencySF)
-TabCurrencies.CurrencySW:SetWidth(250)
+TabCurrencies.CurrencySW:SetSize(240, 300)
+TabCurrencies.CurrencySF.ScrollBar:ClearAllPoints();
+TabCurrencies.CurrencySF.ScrollBar:SetPoint("TOPLEFT", TabCurrencies.CurrencySF, "TOPRIGHT", -12, -18);
+TabCurrencies.CurrencySF.ScrollBar:SetPoint("BOTTOMRIGHT", TabCurrencies.CurrencySF, "BOTTOMRIGHT", -7, 18);
 TabCurrencies.CurrencySF:SetScrollChild(TabCurrencies.CurrencySW)
 	
+-- TabCurrencies.CurrencySF.bg = TabCurrencies.CurrencySF:CreateTexture(nil, "BACKGROUND");
+-- TabCurrencies.CurrencySF.bg:SetAllPoints(true);
+-- TabCurrencies.CurrencySF.bg:SetColorTexture(0.6, 0.2, 0, 0.8);
 	
 TabCurrencies.params = {
 	name = nil,					--globally unique, only change if you need it
 	parent = TabCurrencies.CurrencySW,		--parent frame
-	relFrame = TabCurrencies.CurrencySF,	--relative control for positioning
+	relFrame = TabCurrencies.CurrencySW,	--relative control for positioning
 	anchor = "TOPLEFT", 		--anchor point of this form
 	relPoint = "TOPLEFT",		--relative point for positioning	
-	xOff = 25,					--x offset from relative point
-	yOff = -55,				--y offset from relative point
+	xOff = 0,					--x offset from relative point
+	yOff = 0,				--y offset from relative point
 	caption = "",				--Text displayed beside checkbox
 	ttip = "",					--Tooltip
 }
