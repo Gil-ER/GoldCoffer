@@ -404,9 +404,6 @@ local maxCur = 200;
 
 function TabCurrencies.tabShow()
 	ns.UpdateCurrency();
-		
-
-
 	TabCurrencies.Header:SetText( "Currency Detail");
 	TabCurrencies.QuantityText:SetText("");	
 	TabCurrencies.NameText:SetText("");
@@ -423,6 +420,9 @@ function TabCurrencies.tabShow()
 		TabCurrencies.cbText[i]:SetText(curList[i]);
 		TabCurrencies.cb[i]:Show();
 	end;	
+	TabCurrencies.CurrencySF:Hide();
+	TabCurrencies.DetailSF:Hide();
+	TabCurrencies.Header:SetText( "Under Construction");
 end;
 
 local function addCommas(num)
@@ -556,12 +556,7 @@ for i=2, maxCur do
 	TabCurrencies.cb[i]:Hide();
 end;
 
-
-
-
 TabCurrencies:SetScript( "OnShow", function() TabCurrencies.tabShow(); end);
-
-
 --------------------------------------------------------------------------------------------------
 --			/TabCurrencies
 --------------------------------------------------------------------------------------------------
