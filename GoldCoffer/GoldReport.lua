@@ -2,7 +2,7 @@ local Addon, ns = ...;
 
 --	Creates a frame (Example)
 	local opts = {
-		title = "Gold Report",
+		title = "Gold Coffer",
 		name = "gcReportFrame",
 		anchor = "CENTER", 
 		parent = UIParent,
@@ -420,9 +420,12 @@ function TabCurrencies.tabShow()
 		TabCurrencies.cbText[i]:SetText(curList[i]);
 		TabCurrencies.cb[i]:Show();
 	end;	
+	
+	
+	
 	TabCurrencies.CurrencySF:Hide();
 	TabCurrencies.DetailSF:Hide();
-	TabCurrencies.Header:SetText( "Under Construction");
+	TabCurrencies.Header:SetText( "Under Construction, More to come soon.");
 end;
 
 local function addCommas(num)

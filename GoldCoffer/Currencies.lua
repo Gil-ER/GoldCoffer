@@ -11,15 +11,10 @@ function ns.UpdateCurrency()
 		count = C_CurrencyInfo.GetCurrencyListInfo(i).quantity;
 		header = C_CurrencyInfo.GetCurrencyListInfo(i).isHeader
 		local toon = ns.srv .. "-" .. ns.player
-		if count then
-			if count == 0 then
-				if header then print (name); else print("NOT HEADER ", name); end;
-				
-			else
+		if count and count > 1 then
 				GoldCofferCurrencies.Currency = GoldCofferCurrencies.Currency or {};
 				GoldCofferCurrencies.Currency[name] = GoldCofferCurrencies.Currency[name] or {};
 				GoldCofferCurrencies.Currency[name][toon] = count; 
-			end; --/if count == 0
 		end --/if count
 	end --/for(i)
 end
