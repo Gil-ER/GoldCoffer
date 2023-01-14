@@ -1,4 +1,4 @@
-## Interface: 100002
+## Interface: 20504
 ## Title: Gold Coffer
 ## Notes: Tracks your current gold on your account with comparisons and history.
 ## DefaultState: enabled
