@@ -1,3 +1,6 @@
+1.2.3
+- Added support for classic versions
+
 1.2.2
 - Bug fix (Calculating next month/year)
 
