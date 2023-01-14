@@ -25,9 +25,14 @@ ReportFrame:EnableMouseWheel(1)
 ReportFrame.ScrollFrame.ScrollBar:ClearAllPoints();
 ReportFrame.ScrollFrame.ScrollBar:SetPoint("TOPLEFT", ReportFrame.ScrollFrame, "TOPRIGHT", -12, -18);
 ReportFrame.ScrollFrame.ScrollBar:SetPoint("BOTTOMRIGHT", ReportFrame.ScrollFrame, "BOTTOMRIGHT", -7, 18);
-local TabServers, TabSummery, TabDaily, TabWeekly, TabYearly, TabCurrencies = ns:SetTabs (ReportFrame, 6, 
-		"Gold Report", "Gold Summery", "Daily History", "Weekly History", "Yearly History", "Currencies")
-
+local TabServers, TabSummery, TabDaily, TabWeekly, TabYearly, TabCurrencies;
+if select(4, GetBuildInfo()) > 40000 then
+	TabServers, TabSummery, TabDaily, TabWeekly, TabYearly, TabCurrencies = ns:SetTabs (ReportFrame, 6, 
+			"Gold Report", "Gold Summery", "Daily History", "Weekly History", "Yearly History", "Currencies")
+else
+	TabServers, TabSummery, TabDaily, TabWeekly, TabYearly = ns:SetTabs (ReportFrame, 5, 
+			"Gold Report", "Gold Summery", "Daily History", "Weekly History", "Yearly History")
+end;
 
 --------------------------------------------------------------------------------------------------
 --			TabServers
@@ -402,164 +407,166 @@ TabYearly:SetScript( "OnShow", function() TabYearly.tabShow(); end);
 --------------------------------------------------------------------------------------------------
 local maxCur = 200;
 
-function TabCurrencies.tabShow()
-	ns.UpdateCurrency();
-	TabCurrencies.Header:SetText( "Currency Detail");
-	TabCurrencies.QuantityText:SetText("");	
-	TabCurrencies.NameText:SetText("");
-	
-	local curList = ns.GetCurrencies();
-	
-	for i=1, maxCur do
+if select(4, GetBuildInfo()) > 40000 then
+	function TabCurrencies.tabShow()
+		ns.UpdateCurrency();
+		TabCurrencies.Header:SetText( "Currency Detail");
+		TabCurrencies.QuantityText:SetText("");	
+		TabCurrencies.NameText:SetText("");
+		
+		local curList = ns.GetCurrencies();
+		
+		for i=1, maxCur do
+			TabCurrencies.cb[i]:Hide();
+		end;
+		
+		local temp = ""
+		for i=1, #curList do
+			temp = temp .. curList[i] .. "\n";
+			TabCurrencies.cbText[i]:SetText(curList[i]);
+			TabCurrencies.cb[i]:Show();
+		end;	
+		
+		
+		
+		TabCurrencies.CurrencySF:Hide();
+		TabCurrencies.DetailSF:Hide();
+		TabCurrencies.Header:SetText( "Under Construction, More to come soon.");
+	end;
+
+	local function addCommas(num)
+		num = tonumber(num);
+		local ret = "";
+		if num > 999 then ret = format("%03d",mod(num, 1000)); else ret = tostring(mod(num, 1000));	end;
+		num = floor(num / 1000);
+		while (num > 0) do 
+			if num > 999 then ret = format("%03d",mod(num, 1000)) .. "," .. ret; else ret = tostring(num) .. "," .. ret; end;
+			num = floor(num / 1000);	
+		end;
+		return ret;
+	end;
+
+	function TabCurrencies.cbClick(idx)
+		--Clear any old detail
+		TabCurrencies.QuantityText:SetText("");
+		TabCurrencies.NameText:SetText("");
+		local qty = "";
+		local names = "";
+		
+		for i=1, maxCur do
+			local list = {};
+			local toons = {};
+			if TabCurrencies.cb[i]:GetChecked() then
+				--Get a list of toons with this currency
+				local cur = TabCurrencies.cbText[i]:GetText();
+				list = ns.GetToonsWith(cur);
+				--sort the keys
+				for k,v in pairs(list) do tinsert(toons, k); end;
+				sort(toons);
+				--Add the listed toond to the detail	
+				if #toons > 0 then
+					qty = qty .. "\n";
+					names = names .. cur .. "\n";				
+					for i=1, #toons do
+						qty = qty .. addCommas(list[toons[i]]) .. "\n";
+						names = names .. toons[i] .. "\n";
+					end; 	--/for i				
+					--Add a break before the next currency
+					qty = qty .. "\n";
+					names = names .. "\n";
+				end;	--/if #list
+			end;	--/if
+		end; 	--/for i
+		--Add text to the boxes
+		TabCurrencies.QuantityText:SetText(qty);	
+		TabCurrencies.NameText:SetText(names);	
+		ReportFrame.ScrollFrame:SetVerticalScroll(0)
+	end;
+
+	-- TabCurrencies elements
+	TabCurrencies.Header = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+	TabCurrencies.Header:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 30, -25);
+	TabCurrencies.Header:SetWidth(600);
+
+	--Right Side
+	TabCurrencies.DetailSF = CreateFrame("ScrollFrame", nil, TabCurrencies, "UIPanelScrollFrameTemplate")
+	TabCurrencies.DetailSF:SetSize(370,310)
+	TabCurrencies.DetailSF:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 300, -50)
+	TabCurrencies.DetailSF:SetClipsChildren(true);
+	TabCurrencies.DetailSW = CreateFrame("Frame", nil, TabCurrencies.DetailSF)
+	TabCurrencies.DetailSW:SetSize(350, 310)	--(W, H)
+	TabCurrencies.DetailSF.ScrollBar:ClearAllPoints();
+	TabCurrencies.DetailSF.ScrollBar:SetPoint("TOPLEFT", TabCurrencies.DetailSF, "TOPRIGHT", -12, -18);
+	TabCurrencies.DetailSF.ScrollBar:SetPoint("BOTTOMRIGHT", TabCurrencies.DetailSF, "BOTTOMRIGHT", -7, 18);
+	TabCurrencies.DetailSF:SetScrollChild(TabCurrencies.DetailSW)
+
+	-- TabCurrencies.DetailSW.bg = TabCurrencies.DetailSW:CreateTexture(nil, "BACKGROUND");
+	-- TabCurrencies.DetailSW.bg:SetAllPoints(true);
+	-- TabCurrencies.DetailSW.bg:SetColorTexture(0.2, 0.6, 0, 0.8);
+
+	TabCurrencies.QuantityText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormal");
+	TabCurrencies.QuantityText:SetPoint("TOPLEFT", TabCurrencies.DetailSW, "TOPLEFT");
+	TabCurrencies.QuantityText:SetWidth(90);
+	TabCurrencies.QuantityText:SetJustifyH("RIGHT");
+
+	TabCurrencies.NameText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormal");
+	TabCurrencies.NameText:SetPoint("TOPLEFT", TabCurrencies.QuantityText, "TOPRIGHT", 10, 0);
+	TabCurrencies.NameText:SetWidth(260);
+	TabCurrencies.NameText:SetJustifyH("LEFT");
+
+	--Left Side
+	TabCurrencies.CurrencySF = CreateFrame("ScrollFrame", nil, TabCurrencies, "UIPanelScrollFrameTemplate")
+	TabCurrencies.CurrencySF:SetSize(275,310)
+	TabCurrencies.CurrencySF:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 25, -50)
+	TabCurrencies.CurrencySF:SetClipsChildren(true);
+	TabCurrencies.CurrencySW = CreateFrame("Frame", nil, TabCurrencies.CurrencySF)
+	TabCurrencies.CurrencySW:SetSize(240, 300)
+	TabCurrencies.CurrencySF.ScrollBar:ClearAllPoints();
+	TabCurrencies.CurrencySF.ScrollBar:SetPoint("TOPLEFT", TabCurrencies.CurrencySF, "TOPRIGHT", -12, -18);
+	TabCurrencies.CurrencySF.ScrollBar:SetPoint("BOTTOMRIGHT", TabCurrencies.CurrencySF, "BOTTOMRIGHT", -7, 18);
+	TabCurrencies.CurrencySF:SetScrollChild(TabCurrencies.CurrencySW)
+		
+	-- TabCurrencies.CurrencySF.bg = TabCurrencies.CurrencySF:CreateTexture(nil, "BACKGROUND");
+	-- TabCurrencies.CurrencySF.bg:SetAllPoints(true);
+	-- TabCurrencies.CurrencySF.bg:SetColorTexture(0.6, 0.2, 0, 0.8);
+		
+	TabCurrencies.params = {
+		name = nil,					--globally unique, only change if you need it
+		parent = TabCurrencies.CurrencySW,		--parent frame
+		relFrame = TabCurrencies.CurrencySW,	--relative control for positioning
+		anchor = "TOPLEFT", 		--anchor point of this form
+		relPoint = "TOPLEFT",		--relative point for positioning	
+		xOff = 0,					--x offset from relative point
+		yOff = 0,				--y offset from relative point
+		caption = "",				--Text displayed beside checkbox
+		ttip = "",					--Tooltip
+	}
+
+	TabCurrencies.cbText = {};			--Add tables for checkboxes and text to TabCurrencies
+	TabCurrencies.cb = {};
+	TabCurrencies.cb[1], TabCurrencies.cbText[1] = ns:createCheckBox(TabCurrencies.params);
+	TabCurrencies.cb[1]:Hide();
+	TabCurrencies.cb[1]:SetScript( "OnClick", function() TabCurrencies.cbClick(1); end);
+
+	for i=2, maxCur do
+		params = {	
+			name = nil,
+			parent = TabCurrencies.CurrencySW,
+			relFrame = TabCurrencies.cb[i-1],	
+			anchor = "TOPLEFT", 
+			relPoint = "TOPLEFT",
+			xOff = 0,
+			yOff = -30,
+			caption = "",
+			ttip = "",	
+		}
+		TabCurrencies.cb[i], TabCurrencies.cbText[i] = ns:createCheckBox(params);
+		TabCurrencies.cb[i]:SetScript( "OnClick", function() TabCurrencies.cbClick(i); end);
 		TabCurrencies.cb[i]:Hide();
 	end;
-	
-	local temp = ""
-	for i=1, #curList do
-		temp = temp .. curList[i] .. "\n";
-		TabCurrencies.cbText[i]:SetText(curList[i]);
-		TabCurrencies.cb[i]:Show();
-	end;	
-	
-	
-	
-	TabCurrencies.CurrencySF:Hide();
-	TabCurrencies.DetailSF:Hide();
-	TabCurrencies.Header:SetText( "Under Construction, More to come soon.");
+
+	TabCurrencies:SetScript( "OnShow", function() TabCurrencies.tabShow(); end);
 end;
-
-local function addCommas(num)
-	num = tonumber(num);
-	local ret = "";
-	if num > 999 then ret = format("%03d",mod(num, 1000)); else ret = tostring(mod(num, 1000));	end;
-	num = floor(num / 1000);
-	while (num > 0) do 
-		if num > 999 then ret = format("%03d",mod(num, 1000)) .. "," .. ret; else ret = tostring(num) .. "," .. ret; end;
-		num = floor(num / 1000);	
-	end;
-	return ret;
-end;
-
-function TabCurrencies.cbClick(idx)
-	--Clear any old detail
-	TabCurrencies.QuantityText:SetText("");
-	TabCurrencies.NameText:SetText("");
-	local qty = "";
-	local names = "";
-	
-	for i=1, maxCur do
-		local list = {};
-		local toons = {};
-		if TabCurrencies.cb[i]:GetChecked() then
-			--Get a list of toons with this currency
-			local cur = TabCurrencies.cbText[i]:GetText();
-			list = ns.GetToonsWith(cur);
-			--sort the keys
-			for k,v in pairs(list) do tinsert(toons, k); end;
-			sort(toons);
-			--Add the listed toond to the detail	
-			if #toons > 0 then
-				qty = qty .. "\n";
-				names = names .. cur .. "\n";				
-				for i=1, #toons do
-					qty = qty .. addCommas(list[toons[i]]) .. "\n";
-					names = names .. toons[i] .. "\n";
-				end; 	--/for i				
-				--Add a break before the next currency
-				qty = qty .. "\n";
-				names = names .. "\n";
-			end;	--/if #list
-		end;	--/if
-	end; 	--/for i
-	--Add text to the boxes
-	TabCurrencies.QuantityText:SetText(qty);	
-	TabCurrencies.NameText:SetText(names);	
-	ReportFrame.ScrollFrame:SetVerticalScroll(0)
-end;
-
--- TabCurrencies elements
-TabCurrencies.Header = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
-TabCurrencies.Header:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 30, -25);
-TabCurrencies.Header:SetWidth(600);
-
---Right Side
-TabCurrencies.DetailSF = CreateFrame("ScrollFrame", nil, TabCurrencies, "UIPanelScrollFrameTemplate")
-TabCurrencies.DetailSF:SetSize(370,310)
-TabCurrencies.DetailSF:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 300, -50)
-TabCurrencies.DetailSF:SetClipsChildren(true);
-TabCurrencies.DetailSW = CreateFrame("Frame", nil, TabCurrencies.DetailSF)
-TabCurrencies.DetailSW:SetSize(350, 310)	--(W, H)
-TabCurrencies.DetailSF.ScrollBar:ClearAllPoints();
-TabCurrencies.DetailSF.ScrollBar:SetPoint("TOPLEFT", TabCurrencies.DetailSF, "TOPRIGHT", -12, -18);
-TabCurrencies.DetailSF.ScrollBar:SetPoint("BOTTOMRIGHT", TabCurrencies.DetailSF, "BOTTOMRIGHT", -7, 18);
-TabCurrencies.DetailSF:SetScrollChild(TabCurrencies.DetailSW)
-
--- TabCurrencies.DetailSW.bg = TabCurrencies.DetailSW:CreateTexture(nil, "BACKGROUND");
--- TabCurrencies.DetailSW.bg:SetAllPoints(true);
--- TabCurrencies.DetailSW.bg:SetColorTexture(0.2, 0.6, 0, 0.8);
-
-TabCurrencies.QuantityText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-TabCurrencies.QuantityText:SetPoint("TOPLEFT", TabCurrencies.DetailSW, "TOPLEFT");
-TabCurrencies.QuantityText:SetWidth(90);
-TabCurrencies.QuantityText:SetJustifyH("RIGHT");
-
-TabCurrencies.NameText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-TabCurrencies.NameText:SetPoint("TOPLEFT", TabCurrencies.QuantityText, "TOPRIGHT", 10, 0);
-TabCurrencies.NameText:SetWidth(260);
-TabCurrencies.NameText:SetJustifyH("LEFT");
-
---Left Side
-TabCurrencies.CurrencySF = CreateFrame("ScrollFrame", nil, TabCurrencies, "UIPanelScrollFrameTemplate")
-TabCurrencies.CurrencySF:SetSize(275,310)
-TabCurrencies.CurrencySF:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 25, -50)
-TabCurrencies.CurrencySF:SetClipsChildren(true);
-TabCurrencies.CurrencySW = CreateFrame("Frame", nil, TabCurrencies.CurrencySF)
-TabCurrencies.CurrencySW:SetSize(240, 300)
-TabCurrencies.CurrencySF.ScrollBar:ClearAllPoints();
-TabCurrencies.CurrencySF.ScrollBar:SetPoint("TOPLEFT", TabCurrencies.CurrencySF, "TOPRIGHT", -12, -18);
-TabCurrencies.CurrencySF.ScrollBar:SetPoint("BOTTOMRIGHT", TabCurrencies.CurrencySF, "BOTTOMRIGHT", -7, 18);
-TabCurrencies.CurrencySF:SetScrollChild(TabCurrencies.CurrencySW)
-	
--- TabCurrencies.CurrencySF.bg = TabCurrencies.CurrencySF:CreateTexture(nil, "BACKGROUND");
--- TabCurrencies.CurrencySF.bg:SetAllPoints(true);
--- TabCurrencies.CurrencySF.bg:SetColorTexture(0.6, 0.2, 0, 0.8);
-	
-TabCurrencies.params = {
-	name = nil,					--globally unique, only change if you need it
-	parent = TabCurrencies.CurrencySW,		--parent frame
-	relFrame = TabCurrencies.CurrencySW,	--relative control for positioning
-	anchor = "TOPLEFT", 		--anchor point of this form
-	relPoint = "TOPLEFT",		--relative point for positioning	
-	xOff = 0,					--x offset from relative point
-	yOff = 0,				--y offset from relative point
-	caption = "",				--Text displayed beside checkbox
-	ttip = "",					--Tooltip
-}
-
-TabCurrencies.cbText = {};			--Add tables for checkboxes and text to TabCurrencies
-TabCurrencies.cb = {};
-TabCurrencies.cb[1], TabCurrencies.cbText[1] = ns:createCheckBox(TabCurrencies.params);
-TabCurrencies.cb[1]:Hide();
-TabCurrencies.cb[1]:SetScript( "OnClick", function() TabCurrencies.cbClick(1); end);
-
-for i=2, maxCur do
-	params = {	
-		name = nil,
-		parent = TabCurrencies.CurrencySW,
-		relFrame = TabCurrencies.cb[i-1],	
-		anchor = "TOPLEFT", 
-		relPoint = "TOPLEFT",
-		xOff = 0,
-		yOff = -30,
-		caption = "",
-		ttip = "",	
-	}
-	TabCurrencies.cb[i], TabCurrencies.cbText[i] = ns:createCheckBox(params);
-	TabCurrencies.cb[i]:SetScript( "OnClick", function() TabCurrencies.cbClick(i); end);
-	TabCurrencies.cb[i]:Hide();
-end;
-
-TabCurrencies:SetScript( "OnShow", function() TabCurrencies.tabShow(); end);
 --------------------------------------------------------------------------------------------------
 --			/TabCurrencies
 --------------------------------------------------------------------------------------------------

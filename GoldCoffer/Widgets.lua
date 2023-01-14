@@ -184,6 +184,8 @@ function ns:SetTabs (frame, numTabs, ...)
 	TabedFrame = frame;
 	local FrameName = frame:GetName();
 	local contents = {};
+	local x = 0;
+	if select(4, GetBuildInfo()) < 40000 then x = -15; end;
 	for i = 1, numTabs do
 		local buttonTemplate = "CharacterFrameTabButtonTemplate";
 		if select(4, GetBuildInfo()) >= 100000 then buttonTemplate = "PanelTabButtonTemplate"; end;
@@ -200,7 +202,7 @@ function ns:SetTabs (frame, numTabs, ...)
 		if i == 1 then
 			tab:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 20, 5);
 		else
-			tab:SetPoint("TOPLEFT",_G[FrameName.."Tab"..(i - 1)], "TOPRIGHT");
+			tab:SetPoint("TOPLEFT",_G[FrameName.."Tab"..(i - 1)], "TOPRIGHT", x, 0);
 		end;
 	end;
 	Tab_OnClick(_G[FrameName.."Tab1"]);

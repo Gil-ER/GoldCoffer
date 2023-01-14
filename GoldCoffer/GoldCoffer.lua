@@ -37,11 +37,12 @@ local function GoldCofferMiniMap(button)
 		ns:CenterGoldReport();
 	end;
 end
-
+local iconFile = "Interface\\Icons\\inv_misc_coin_17"
+if select(4, GetBuildInfo()) < 40000 then iconFile = "Interface\\Icons\\inv_misc_coin_01"; end;
 local gcLDB = LibStub("LibDataBroker-1.1"):NewDataObject("GoldCofferMMButton", {
 	type = "data source",
 	text = "Gold Coffer",
-	icon = "Interface\\Icons\\inv_misc_coin_17",
+	icon = iconFile,
 	OnClick = function(_, button) GoldCofferMiniMap(button) end,
 })
 
