@@ -1,6 +1,6 @@
 local Addon, ns = ...;
 
---	Creates a frame (Example)
+--	Creates a frame
 	local opts = {
 		title = "Gold Coffer",
 		name = "gcReportFrame",
