@@ -4,7 +4,6 @@ GoldCofferIcon = GoldCofferIcon or {};
 local mmButtonShown = GoldCofferIcon.Visible or true;
 
 ns.totalGold = 0;
-
 local function minimapButtonShowHide(toggle)
 	--if toggle is true just flip visibility.
 	if toggle then mmButtonShown = not mmButtonShown; end;
