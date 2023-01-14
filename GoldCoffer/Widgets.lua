@@ -7,7 +7,6 @@ local color = 	{
 				["green"]  = "00FF00",
 				["NotUsed"] = ""
 			}
-
 function ns:colorString(c, str)
 	if c == nil then return; end;
 	if str == nil then str = "nil"; end;
