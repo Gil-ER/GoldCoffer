@@ -425,13 +425,8 @@ if select(4, GetBuildInfo()) > 40000 then
 			temp = temp .. curList[i] .. "\n";
 			TabCurrencies.cbText[i]:SetText(curList[i]);
 			TabCurrencies.cb[i]:Show();
-		end;	
-		
-		
-		
-		TabCurrencies.CurrencySF:Hide();
-		TabCurrencies.DetailSF:Hide();
-		TabCurrencies.Header:SetText( "Under Construction, More to come soon.");
+		end;			
+		TabCurrencies.cbClick(0);
 	end;
 
 	local function addCommas(num)
@@ -447,7 +442,16 @@ if select(4, GetBuildInfo()) > 40000 then
 	end;
 
 	function TabCurrencies.cbClick(idx)
+		--Uncheck all but the checkbox just clicked
+		if idx > 0 then		--0 will display whatever is checked
+			for i=1, maxCur do
+				TabCurrencies.cb[i]:SetChecked(false);
+			end;
+			TabCurrencies.cb[idx]:SetChecked(true);
+		end;
+		
 		--Clear any old detail
+		TabCurrencies.CurrencyText:SetText("");
 		TabCurrencies.QuantityText:SetText("");
 		TabCurrencies.NameText:SetText("");
 		local qty = "";
@@ -456,20 +460,27 @@ if select(4, GetBuildInfo()) > 40000 then
 		for i=1, maxCur do
 			local list = {};
 			local toons = {};
+			local rlm = "";
 			if TabCurrencies.cb[i]:GetChecked() then
 				--Get a list of toons with this currency
 				local cur = TabCurrencies.cbText[i]:GetText();
+				TabCurrencies.CurrencyText:SetText(cur);
 				list = ns.GetToonsWith(cur);
 				--sort the keys
 				for k,v in pairs(list) do tinsert(toons, k); end;
 				sort(toons);
 				--Add the listed toond to the detail	
-				if #toons > 0 then
-					qty = qty .. "\n";
-					names = names .. cur .. "\n";				
-					for i=1, #toons do
+				if #toons > 0 then				
+					for i=1, #toons do						
+						--split out realm name and if different from last pass add a blank line
+						local r, n = strsplit("-",toons[i]);
+							if r ~= rlm then								
+								qty = qty .. "\n\n";
+								names = names .. "\n" .. r .. "\n";
+								rlm = r;
+							end;						
 						qty = qty .. addCommas(list[toons[i]]) .. "\n";
-						names = names .. toons[i] .. "\n";
+						names = names .. n .. "\n";
 					end; 	--/for i				
 					--Add a break before the next currency
 					qty = qty .. "\n";
@@ -478,6 +489,7 @@ if select(4, GetBuildInfo()) > 40000 then
 			end;	--/if
 		end; 	--/for i
 		--Add text to the boxes
+		
 		TabCurrencies.QuantityText:SetText(qty);	
 		TabCurrencies.NameText:SetText(names);	
 		ReportFrame.ScrollFrame:SetVerticalScroll(0)
@@ -504,12 +516,18 @@ if select(4, GetBuildInfo()) > 40000 then
 	-- TabCurrencies.DetailSW.bg:SetAllPoints(true);
 	-- TabCurrencies.DetailSW.bg:SetColorTexture(0.2, 0.6, 0, 0.8);
 
-	TabCurrencies.QuantityText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-	TabCurrencies.QuantityText:SetPoint("TOPLEFT", TabCurrencies.DetailSW, "TOPLEFT");
+	TabCurrencies.CurrencyText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+	TabCurrencies.CurrencyText:SetPoint("TOPLEFT", TabCurrencies.DetailSW, "TOPLEFT", 60, 0);
+	TabCurrencies.CurrencyText:SetWidth(350);
+	TabCurrencies.CurrencyText:SetJustifyH("LEFT");
+	TabCurrencies.CurrencyText:SetText("TITLE");
+
+	TabCurrencies.QuantityText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+	TabCurrencies.QuantityText:SetPoint("TOPLEFT", TabCurrencies.CurrencyText, "BOTTOMLEFT", -30, -10);
 	TabCurrencies.QuantityText:SetWidth(90);
 	TabCurrencies.QuantityText:SetJustifyH("RIGHT");
 
-	TabCurrencies.NameText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormal");
+	TabCurrencies.NameText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
 	TabCurrencies.NameText:SetPoint("TOPLEFT", TabCurrencies.QuantityText, "TOPRIGHT", 10, 0);
 	TabCurrencies.NameText:SetWidth(260);
 	TabCurrencies.NameText:SetJustifyH("LEFT");
