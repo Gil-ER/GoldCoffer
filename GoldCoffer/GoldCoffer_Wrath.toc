@@ -2,9 +2,9 @@
 ## Title: Gold Coffer
 ## Notes: Tracks your current gold on your account with comparisons and history.
 ## DefaultState: enabled
-## Version: 1.2.4
+## Version: 1.2.5
 ## Author: Gildina
-## SavedVariables: GoldCoffer, GoldCofferIcon, GoldCofferCurrencies
+## SavedVariables: GoldCoffer, GoldCofferIcon, GoldCofferCurrency
 
 lib\embeds.xml
 
