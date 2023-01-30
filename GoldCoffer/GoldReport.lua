@@ -1,6 +1,5 @@
 local Addon, ns = ...;
 
---	Creates a frame
 	local opts = {
 		title = "Gold Coffer",
 		name = "gcReportFrame",
@@ -33,16 +32,10 @@ else
 	TabServers, TabSummery, TabDaily, TabWeekly, TabYearly = ns:SetTabs (ReportFrame, 5, 
 			"Gold Report", "Gold Summery", "Daily History", "Weekly History", "Yearly History")
 end;
-
---------------------------------------------------------------------------------------------------
---			TabServers
---------------------------------------------------------------------------------------------------
 function TabServers.tabShow()
-	--moved from the else in ns:ShowGoldReport()
 	TabServers.goldTitle:SetText("Total gold = " .. ns:GetTotalGold(true));
 	local s = ns:GetServers();
 	for i=1, #s do
-		--check the current server and uncheck all others
 		if ns.srv == s[i] then TabServers.cb[i]:SetChecked(true); else TabServers.cb[i]:SetChecked(false); end;
 		TabServers.cbText[i]:SetText(s[i] .. " - " ..  ns:GoldSilverCopper(ns:GetServerGold(s[i])));
 		TabServers.cb[i]:Show();
@@ -51,24 +44,20 @@ function TabServers.tabShow()
 end;
 
 function TabServers.cbClick(index)
-	--called by the OnClick event all 50 checkboxes
-	--index is the index of the box clicked (not currently used)
-	local idx = 1;	-- current text row	
-	--Remove old data
+	local idx = 1;
 	for i=1, 100 do					
 		TabServers.leftTxt[i]:SetText("");
 		TabServers.rightTxt[i]:SetText("");
 	end;
-	--Update the report with data requested by selecting checkboxes
 	for i=1, 50 do
 		if TabServers.cb[i]:GetChecked() then
-			local s = TabServers.cbText[i]:GetText();		--  Server - 12345g 67s 89c
+			local s = TabServers.cbText[i]:GetText();		
 			local g = "";
-			s,g = strsplit("-", s, 2);			--  Split at the '-'
-			s = strtrim(s, " ");				--  'Server'
+			s,g = strsplit("-", s, 2);			
+			s = strtrim(s, " ");				
 			g = g or " ";
-			g = strtrim(g, " -");				--  '12345g67s89c'
-			TabServers.leftTxt[idx]:SetText(s);			--  Show values
+			g = strtrim(g, " -");				
+			TabServers.leftTxt[idx]:SetText(s);			
 			TabServers.rightTxt[idx]:SetText(g);
 			--position the text
 			if idx > 1 then
@@ -77,17 +66,17 @@ function TabServers.cbClick(index)
 				TabServers.rightTxt[idx]:ClearAllPoints();				
 				TabServers.rightTxt[idx]:SetPoint("TOPRIGHT", TabServers.rightTxt[idx-1], "TOPRIGHT", 0, -30);
 			end;	--if
-			idx = idx + 1;			-- Move to next text row
-			local stepIn = 10;		-- Indent first toon of the server
+			idx = idx + 1;			
+			local stepIn = 10;		
 			local stepDown = -20;
 			local list = {};
 			if GoldCoffer.Servers[s] ~= nil then
-				for k, v in pairs (GoldCoffer.Servers[s]) do		-- copy server data
+				for k, v in pairs (GoldCoffer.Servers[s]) do		
 					list [#list+1] = {["name"] = k; ["gold"] = v};
 				end;
 			end;
 			table.sort (list, function(a,b) return a.gold > b.gold; end);
-			for k, v in pairs(list) do							-- display server data
+			for k, v in pairs(list) do							
 				TabServers.leftTxt[idx]:SetText(v.name);	
 				TabServers.rightTxt[idx]:SetText(ns:GoldSilverCopper(v.gold));
 				TabServers.leftTxt[idx]:ClearAllPoints();
@@ -107,21 +96,19 @@ TabServers.goldTitle = TabServers:CreateFontString (nil, "OVERLAY", "GameFontNor
 TabServers.goldTitle:SetPoint("TOPLEFT", TabServers, "TOPLEFT", 0, -25);
 TabServers.goldTitle:SetWidth(700);
 TabServers.goldTitle:SetJustifyH("CENTER");
-
---	Create 50 checkboxes for server names
 local params = {
-	name = nil,					--globally unique, only change if you need it
-	parent = TabServers,		--parent frame
-	relFrame = TabServers,		--relative control for positioning
-	anchor = "TOPLEFT", 		--anchor point of this form
-	relPoint = "TOPLEFT",		--relative point for positioning	
-	xOff = 25,					--x offset from relative point
-	yOff = -55,				--y offset from relative point
-	caption = "",				--Text displayed beside checkbox
-	ttip = "",					--Tooltip
+	name = nil,					
+	parent = TabServers,		
+	relFrame = TabServers,		
+	anchor = "TOPLEFT", 		
+	relPoint = "TOPLEFT",		
+	xOff = 25,					
+	yOff = -55,				
+	caption = "",				
+	ttip = "",					
 }
 
-TabServers.cbText = {};			--Add tables for checkboxes and text to TabServers
+TabServers.cbText = {};			
 TabServers.cb = {};
 TabServers.leftTxt = {};
 TabServers.rightTxt = {};
@@ -146,7 +133,6 @@ for i=2, 50 do
 	TabServers.cb[i]:Hide();
 end;
 
---create output textboxes
 TabServers.leftTxt[1] = TabServers:CreateFontString (nil, "OVERLAY", "GameFontNormal");
 TabServers.leftTxt[1]:SetPoint("TOPLEFT", TabServers, "TOPLEFT", 360, -65);
 TabServers.leftTxt[1]:SetWidth(150);
@@ -157,7 +143,7 @@ TabServers.rightTxt[1]:SetPoint("TOPLEFT", TabServers.leftTxt[1], "TOPRIGHT", 0,
 TabServers.rightTxt[1]:SetWidth(150);
 TabServers.rightTxt[1]:SetJustifyH("RIGHT");
 
-for i=2, 100 do			-- 100 is space for 50 servers with 1 toon on each (max for 50 character limit)
+for i=2, 100 do			
 	TabServers.leftTxt[i] = TabServers:CreateFontString (nil, "OVERLAY", "GameFontNormal");
 	TabServers.leftTxt[i]:SetPoint("TOPLEFT", TabServers.leftTxt[i-1], "TOPLEFT", 0, -15);
 	TabServers.leftTxt[i]:SetWidth(150);
@@ -172,14 +158,6 @@ end;
 TabServers:SetScript( "OnShow", function() TabServers.tabShow(); end);
 ReportFrame:Hide();
 
---------------------------------------------------------------------------------------------------
---			/TabServers
---------------------------------------------------------------------------------------------------
-
-
---------------------------------------------------------------------------------------------------
---			TabSummery
---------------------------------------------------------------------------------------------------
 function TabSummery.tabShow()
 	local h = ns.player .. "  -  " .. ns:GoldSilverCopper(GetMoney())	.. "\n\n" .. 
 			ns.srv .. "  -  " .. ns:GetServerGold(ns.srv, true);			
@@ -216,15 +194,6 @@ TabSummery.Footer:SetText("* Last Week/Month/Year will show 0 until enough data 
 
 
 TabSummery:SetScript( "OnShow", function() TabSummery.tabShow(); end);
-
---------------------------------------------------------------------------------------------------
---			/TabSummery
---------------------------------------------------------------------------------------------------
-
-
---------------------------------------------------------------------------------------------------
---			TabDaily
---------------------------------------------------------------------------------------------------
 function TabDaily.tabShow()
 	local h = "Daily History"			
 	local l, m, r = "Date\n", "Days Closing Gold\n", "Daily Gain/Loss\n"
@@ -276,15 +245,6 @@ TabDaily.Footer:SetText("");
 
 
 TabDaily:SetScript( "OnShow", function() TabDaily.tabShow(); end);
---------------------------------------------------------------------------------------------------
---			/TabDaily
---------------------------------------------------------------------------------------------------
-
-
-
---------------------------------------------------------------------------------------------------
---			TabWeekly
---------------------------------------------------------------------------------------------------
 function TabWeekly.tabShow()
 	local h = "Weekly History";	
 	local l, m, r = "Date\n", "Weeks Closing Gold\n", "Weekly Gain/Loss\n"
@@ -299,9 +259,9 @@ function TabWeekly.tabShow()
 				r = r .. "\n" .. ns:ProfitLossColoring(prev - g);
 			end;
 			prev = g;
-		end; --/in pairs
+		end; 
 		i = tostring(tonumber(i) + 1);
-	end;	--/while
+	end;	
 	TabWeekly.Header:SetText(h);	
 	TabWeekly.LeftText:SetText(l);
 	TabWeekly.MiddleText:SetText(m);
@@ -335,15 +295,6 @@ TabWeekly.Footer:SetJustifyH("LEFT");
 TabWeekly.Footer:SetText("* These dates may be off as you first start using this addon, also if you have gaps in your playtime.");
 
 TabWeekly:SetScript( "OnShow", function() TabWeekly.tabShow(); end);
---------------------------------------------------------------------------------------------------
---			/TabWeekly
---------------------------------------------------------------------------------------------------
-
-
-
---------------------------------------------------------------------------------------------------
---			TabYearly
---------------------------------------------------------------------------------------------------
 TabYearly.cbCount = 1;
 
 function TabYearly.tabShow()
@@ -396,37 +347,12 @@ TabYearly.Footer:SetJustifyH("LEFT");
 TabYearly.Footer:SetText("* The first time you use this addon the previous year is recorded as 0.");
 
 TabYearly:SetScript( "OnShow", function() TabYearly.tabShow(); end);
---------------------------------------------------------------------------------------------------
---			/TabYearly
---------------------------------------------------------------------------------------------------
-
-
-
---------------------------------------------------------------------------------------------------
---			TabCurrencies
---------------------------------------------------------------------------------------------------
 local maxCur = 200;
 
 if select(4, GetBuildInfo()) > 40000 then
 	function TabCurrencies.tabShow()
 		ns.UpdateCurrency();
-		TabCurrencies.Header:SetText( "Currency Detail");
-		TabCurrencies.QuantityText:SetText("");	
-		TabCurrencies.NameText:SetText("");
-		
-		local curList = ns.GetCurrencies();
-		
-		for i=1, maxCur do
-			TabCurrencies.cb[i]:Hide();
-		end;
-		
-		local temp = ""
-		for i=1, #curList do
-			temp = temp .. curList[i] .. "\n";
-			TabCurrencies.cbText[i]:SetText(curList[i]);
-			TabCurrencies.cb[i]:Show();
-		end;			
-		TabCurrencies.cbClick(0);
+		TabCurrencies.Header:SetText( "Currencies - Comming Soon");
 	end;
 
 	local function addCommas(num)
@@ -442,15 +368,12 @@ if select(4, GetBuildInfo()) > 40000 then
 	end;
 
 	function TabCurrencies.cbClick(idx)
-		--Uncheck all but the checkbox just clicked
-		if idx > 0 then		--0 will display whatever is checked
+		if idx > 0 then	
 			for i=1, maxCur do
 				TabCurrencies.cb[i]:SetChecked(false);
 			end;
 			TabCurrencies.cb[idx]:SetChecked(true);
 		end;
-		
-		--Clear any old detail
 		TabCurrencies.CurrencyText:SetText("");
 		TabCurrencies.QuantityText:SetText("");
 		TabCurrencies.NameText:SetText("");
@@ -462,17 +385,14 @@ if select(4, GetBuildInfo()) > 40000 then
 			local toons = {};
 			local rlm = "";
 			if TabCurrencies.cb[i]:GetChecked() then
-				--Get a list of toons with this currency
 				local cur = TabCurrencies.cbText[i]:GetText();
 				TabCurrencies.CurrencyText:SetText(cur);
 				list = ns.GetToonsWith(cur);
 				--sort the keys
 				for k,v in pairs(list) do tinsert(toons, k); end;
-				sort(toons);
-				--Add the listed toond to the detail	
+				sort(toons);	
 				if #toons > 0 then				
 					for i=1, #toons do						
-						--split out realm name and if different from last pass add a blank line
 						local r, n = strsplit("-",toons[i]);
 							if r ~= rlm then								
 								qty = qty .. "\n\n";
@@ -481,115 +401,22 @@ if select(4, GetBuildInfo()) > 40000 then
 							end;						
 						qty = qty .. addCommas(list[toons[i]]) .. "\n";
 						names = names .. n .. "\n";
-					end; 	--/for i				
-					--Add a break before the next currency
+					end; 	
 					qty = qty .. "\n";
 					names = names .. "\n";
-				end;	--/if #list
-			end;	--/if
-		end; 	--/for i
-		--Add text to the boxes
-		
+				end;	
+			end;	
+		end; 	
 		TabCurrencies.QuantityText:SetText(qty);	
 		TabCurrencies.NameText:SetText(names);	
 		ReportFrame.ScrollFrame:SetVerticalScroll(0)
 	end;
-
-	-- TabCurrencies elements
 	TabCurrencies.Header = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
 	TabCurrencies.Header:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 30, -25);
 	TabCurrencies.Header:SetWidth(600);
-
-	--Right Side
-	TabCurrencies.DetailSF = CreateFrame("ScrollFrame", nil, TabCurrencies, "UIPanelScrollFrameTemplate")
-	TabCurrencies.DetailSF:SetSize(370,310)
-	TabCurrencies.DetailSF:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 300, -50)
-	TabCurrencies.DetailSF:SetClipsChildren(true);
-	TabCurrencies.DetailSW = CreateFrame("Frame", nil, TabCurrencies.DetailSF)
-	TabCurrencies.DetailSW:SetSize(350, 310)	--(W, H)
-	TabCurrencies.DetailSF.ScrollBar:ClearAllPoints();
-	TabCurrencies.DetailSF.ScrollBar:SetPoint("TOPLEFT", TabCurrencies.DetailSF, "TOPRIGHT", -12, -18);
-	TabCurrencies.DetailSF.ScrollBar:SetPoint("BOTTOMRIGHT", TabCurrencies.DetailSF, "BOTTOMRIGHT", -7, 18);
-	TabCurrencies.DetailSF:SetScrollChild(TabCurrencies.DetailSW)
-
-	-- TabCurrencies.DetailSW.bg = TabCurrencies.DetailSW:CreateTexture(nil, "BACKGROUND");
-	-- TabCurrencies.DetailSW.bg:SetAllPoints(true);
-	-- TabCurrencies.DetailSW.bg:SetColorTexture(0.2, 0.6, 0, 0.8);
-
-	TabCurrencies.CurrencyText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
-	TabCurrencies.CurrencyText:SetPoint("TOPLEFT", TabCurrencies.DetailSW, "TOPLEFT", 60, 0);
-	TabCurrencies.CurrencyText:SetWidth(350);
-	TabCurrencies.CurrencyText:SetJustifyH("LEFT");
-	TabCurrencies.CurrencyText:SetText("TITLE");
-
-	TabCurrencies.QuantityText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
-	TabCurrencies.QuantityText:SetPoint("TOPLEFT", TabCurrencies.CurrencyText, "BOTTOMLEFT", -30, -10);
-	TabCurrencies.QuantityText:SetWidth(90);
-	TabCurrencies.QuantityText:SetJustifyH("RIGHT");
-
-	TabCurrencies.NameText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
-	TabCurrencies.NameText:SetPoint("TOPLEFT", TabCurrencies.QuantityText, "TOPRIGHT", 10, 0);
-	TabCurrencies.NameText:SetWidth(260);
-	TabCurrencies.NameText:SetJustifyH("LEFT");
-
-	--Left Side
-	TabCurrencies.CurrencySF = CreateFrame("ScrollFrame", nil, TabCurrencies, "UIPanelScrollFrameTemplate")
-	TabCurrencies.CurrencySF:SetSize(275,310)
-	TabCurrencies.CurrencySF:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 25, -50)
-	TabCurrencies.CurrencySF:SetClipsChildren(true);
-	TabCurrencies.CurrencySW = CreateFrame("Frame", nil, TabCurrencies.CurrencySF)
-	TabCurrencies.CurrencySW:SetSize(240, 300)
-	TabCurrencies.CurrencySF.ScrollBar:ClearAllPoints();
-	TabCurrencies.CurrencySF.ScrollBar:SetPoint("TOPLEFT", TabCurrencies.CurrencySF, "TOPRIGHT", -12, -18);
-	TabCurrencies.CurrencySF.ScrollBar:SetPoint("BOTTOMRIGHT", TabCurrencies.CurrencySF, "BOTTOMRIGHT", -7, 18);
-	TabCurrencies.CurrencySF:SetScrollChild(TabCurrencies.CurrencySW)
-		
-	-- TabCurrencies.CurrencySF.bg = TabCurrencies.CurrencySF:CreateTexture(nil, "BACKGROUND");
-	-- TabCurrencies.CurrencySF.bg:SetAllPoints(true);
-	-- TabCurrencies.CurrencySF.bg:SetColorTexture(0.6, 0.2, 0, 0.8);
-		
-	TabCurrencies.params = {
-		name = nil,					--globally unique, only change if you need it
-		parent = TabCurrencies.CurrencySW,		--parent frame
-		relFrame = TabCurrencies.CurrencySW,	--relative control for positioning
-		anchor = "TOPLEFT", 		--anchor point of this form
-		relPoint = "TOPLEFT",		--relative point for positioning	
-		xOff = 0,					--x offset from relative point
-		yOff = 0,				--y offset from relative point
-		caption = "",				--Text displayed beside checkbox
-		ttip = "",					--Tooltip
-	}
-
-	TabCurrencies.cbText = {};			--Add tables for checkboxes and text to TabCurrencies
-	TabCurrencies.cb = {};
-	TabCurrencies.cb[1], TabCurrencies.cbText[1] = ns:createCheckBox(TabCurrencies.params);
-	TabCurrencies.cb[1]:Hide();
-	TabCurrencies.cb[1]:SetScript( "OnClick", function() TabCurrencies.cbClick(1); end);
-
-	for i=2, maxCur do
-		params = {	
-			name = nil,
-			parent = TabCurrencies.CurrencySW,
-			relFrame = TabCurrencies.cb[i-1],	
-			anchor = "TOPLEFT", 
-			relPoint = "TOPLEFT",
-			xOff = 0,
-			yOff = -30,
-			caption = "",
-			ttip = "",	
-		}
-		TabCurrencies.cb[i], TabCurrencies.cbText[i] = ns:createCheckBox(params);
-		TabCurrencies.cb[i]:SetScript( "OnClick", function() TabCurrencies.cbClick(i); end);
-		TabCurrencies.cb[i]:Hide();
-	end;
-
 	TabCurrencies:SetScript( "OnShow", function() TabCurrencies.tabShow(); end);
 end;
---------------------------------------------------------------------------------------------------
---			/TabCurrencies
---------------------------------------------------------------------------------------------------
 
-function ns:ShowGoldReport()
-	--toggles the visibility of the report frame 	
+function ns:ShowGoldReport()	
 	if ReportFrame:IsVisible() then ReportFrame:Hide(); else ReportFrame:Show(); end;
 end;

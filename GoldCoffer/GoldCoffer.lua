@@ -5,9 +5,9 @@ local mmButtonShown = GoldCofferIcon.Visible or true;
 
 ns.totalGold = 0;
 local function minimapButtonShowHide(toggle)
-	--if toggle is true just flip visibility.
+	
 	if toggle then mmButtonShown = not mmButtonShown; end;
-	--if toggle is false adjust visibility to saved status
+	
 	if toggle == false then
 		if GoldCofferIcon.Visible == nil then  GoldCofferIcon.Visible = true; end;
 		mmButtonShown = GoldCofferIcon.Visible;
@@ -21,18 +21,18 @@ local function minimapButtonShowHide(toggle)
 	GoldCofferIcon.Visible = mmButtonShown;
 end;
 
---Mini map button stuff
+
 local function GoldCofferMiniMap(button)
 	if button == "LeftButton" then
 		if IsShiftKeyDown() then
 			minimapButtonShowHide(true)
 		elseif IsControlKeyDown() then	
-			--placeholder
+			
 		else
 			ns:ShowGoldReport();
 		end;
 	elseif button == "RightButton" then
-		--resets window position
+		
 		ns:CenterGoldReport();
 	end;
 end
@@ -78,9 +78,9 @@ end
 function gcLDB:OnLeave()
 	GameTooltip:Hide();
 end
---/ Mini map button stuff
 
---Slash Commands
+
+
 SLASH_GOLDCOFFER1 = "/goldcoffer";
 SLASH_GOLDCOFFER2 = "/gc";
 SlashCmdList.GOLDCOFFER = function(arg)
@@ -101,10 +101,10 @@ SlashCmdList.GOLDCOFFER = function(arg)
 		print("Server gold ", ns:GetServerGold(ns.srv, true));
 	elseif msg == "delete" then
 		if ((arg2 or "") > "") and ((arg3 or "") > "") then
-			arg2 = strlower(arg2);					--lowercase the string
-			arg2 = arg2:gsub("^%l", string.upper);	--First character to uppercase (now matches WoW name convention)
-			arg3 = strlower(arg3);					--lowercase the string
-			arg3 = arg3:gsub("^%l", string.upper);	--First character to uppercase (now matches WoW name convention)			
+			arg2 = strlower(arg2);					
+			arg2 = arg2:gsub("^%l", string.upper);	
+			arg3 = strlower(arg3);					
+			arg3 = arg3:gsub("^%l", string.upper);	
 			if GoldCoffer.Servers[arg3] == nil then
 				print("Invalid server '" .. arg3 .. "'");
 			else
@@ -114,7 +114,7 @@ SlashCmdList.GOLDCOFFER = function(arg)
 		else
 			print ("Invalid input. You must enter a valid server and toon like this example.\n /gc delete Toon Server");
 		end;
-	elseif msg == "c" or msg == "center" or msg == "centre"	then		--including British spelling
+	elseif msg == "c" or msg == "center" or msg == "centre"	then		
 		ns:CenterGoldReport();
 	else
 		local s = "/gc or /goldcoffer shows report.\n" 	
@@ -126,33 +126,30 @@ SlashCmdList.GOLDCOFFER = function(arg)
 			.. "/gc ?  - Show help."		
 		print (s);
 	end;
-end; --/ Slash Commands
+end; 
 
---event frame
+
 local f = CreateFrame("FRAME");
-f:RegisterEvent("PLAYER_ENTERING_WORLD"); --PLAYER_ENTERING_WORLD
+f:RegisterEvent("PLAYER_ENTERING_WORLD"); 
 f:RegisterEvent("PLAYER_MONEY");
 f:RegisterEvent("PLAYER_LOGOUT");
 
 function f:OnEvent(event, ...)
 	if event == "PLAYER_ENTERING_WORLD" then
-		--Minimap button
+		
 		icon:Register(addon, gcLDB, GoldCofferIcon);
 		minimapButtonShowHide(false);
-		ns:iniData();	--initialize data
+		ns:iniData();	
 		GoldCoffer.History.Today = ns:GetTotalGold(false);
-		tinsert(UISpecialFrames, "gcReportFrame");	--Close with ESC key
+		tinsert(UISpecialFrames, "gcReportFrame");	
 		f:UnregisterEvent("PLAYER_ENTERING_WORLD");
 	end;	
 	if event == "PLAYER_MONEY" then
-		ns:updateGold();	--update player gold
+		ns:updateGold();	
 	end;
 	if event == "PLAYER_LOGOUT" then
-		ns.UpdateCurrency();	--update player gold
+		ns.UpdateCurrency();	
 	end;	
 	
 end;
 f:SetScript("OnEvent", f.OnEvent); 
-
-		
-		
