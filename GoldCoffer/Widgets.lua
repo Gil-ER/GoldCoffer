@@ -14,8 +14,8 @@ function ns:colorString(c, str)
 end
 
 local function padString(s, pad, lead, len)
--- pads string 's' with character 'pad' to 'len' characters in length
--- if lead is true characters are added before 's' otherwise they are added after
+
+
 	local ret = s;
 	if lead == nil then lead = false; end;
 	while (strlen(ret) < len) do
@@ -56,24 +56,24 @@ function ns:GoldSilverCopper(copper)
 	return strjoin("", gt, gIcon, s, sIcon, c, cIcon);
 end
 
---		CREATE A FRAME
+
 local frameFrameCount = 0;
 function ns:createFrame(opts)
-	frameFrameCount = frameFrameCount + 1;		--count each frame created
+	frameFrameCount = frameFrameCount + 1;		
 	if opts.name == nil or opts.name == "" then
-		--Unique name generator, addonName + string + counterValue
+		
 		opts.name = addon .. "GeneratedFrameNumber" .. frameFrameCount;
 	end;
 	local f = CreateFrame("Frame", opts.name, opts.parent, "UIPanelDialogTemplate"); 
 	f:SetSize(opts.width, opts.height);
 	f:SetPoint(opts.anchor, opts.relFrame, opts.relPoint, opts.xOff, opts,yOff);
 	if opts.title ~= nil then
-		--Add the title if one was provided
+		
 		f.Title:SetJustifyH("CENTER");
 		f.Title:SetText( opts.title );
 	end;
 	if opts.isMovable then
-		--Make movable if flag set
+		
 		f:EnableMouse(true);
 		f:SetMovable(true);
 		f:SetUserPlaced(true); 
@@ -82,7 +82,7 @@ function ns:createFrame(opts)
 		f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing(); end);
 	end;
 	if opts.isResizable then
-		--Make frame Resizable if flag was set
+		
 		f:SetResizable(true);
 		f:SetScript("OnMouseDown", function()
 			f:StartSizing("BOTTOMRIGHT")
@@ -93,15 +93,15 @@ function ns:createFrame(opts)
 		f:SetScript("OnSizeChanged", OnSizeChanged);
 	end;
 	f:Hide();
-	return f;		--return the frame
-end;--		CREATE A FRAME
+	return f;		
+end;
 
---		CREATE A CHECKBOX
+
 local cbFrameCount = 0;
 function ns:createCheckBox(opts)	
-	cbFrameCount = cbFrameCount + 1;		--count each frame created
+	cbFrameCount = cbFrameCount + 1;		
 	if opts.name == nil or opts.name == "" then
-		--Unique name generator, addonName + string + counterValue
+		
 		opts.name = addon .. "GeneratedCheckboxNumber" .. cbFrameCount;
 	end;
 	local cb = CreateFrame("CheckButton", opts.name, opts.parent, "ChatConfigCheckButtonTemplate");
@@ -112,32 +112,32 @@ function ns:createCheckBox(opts)
 	txt:SetText(opts.caption);	
 	cb.tooltip = opts.ttip;	
 	return cb, txt;
-end;--		CREATE A CHECKBOX
+end;
 
---		CREATE A SCROLL FRAME
+
 function ns:CreateScrollFrame (parent)
 	local frameHolder;
 	 
-	-- create the frame that will hold all other frames/objects:
-	local self = frameHolder or CreateFrame("Frame", nil, parent); -- re-size this to whatever size you wish your ScrollFrame to be, at this point
+	
+	local self = frameHolder or CreateFrame("Frame", nil, parent); 
 	self:ClearAllPoints();
 	self:SetPoint("TOPLEFT", parent, "TOPLEFT", 10, -30);
 	self:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", -10, 10);
 	
-	-- now create the template Scroll Frame (this frame must be given a name so that it can be looked up via the _G function (you'll see why later on in the code)
+	
 	self.scrollframe = self.scrollframe or CreateFrame("ScrollFrame", "ANewScrollFrame", self, "UIPanelScrollFrameTemplate");
 	 
-	-- create the standard frame which will eventually become the Scroll Frame's scrollchild
-	-- importantly, each Scroll Frame can have only ONE scrollchild
-	self.scrollchild = self.scrollchild or CreateFrame("Frame"); -- not sure what happens if you do, but to be safe, don't parent this yet (or do anything with it)
+	
+	
+	self.scrollchild = self.scrollchild or CreateFrame("Frame"); 
 	 
-	-- define the scrollframe's objects/elements:
+	
 	local scrollbarName = self.scrollframe:GetName()
 	self.scrollbar = _G[scrollbarName.."ScrollBar"];
 	self.scrollupbutton = _G[scrollbarName.."ScrollBarScrollUpButton"];
 	self.scrolldownbutton = _G[scrollbarName.."ScrollBarScrollDownButton"];
 	 
-	-- all of these objects will need to be re-anchored (if not, they appear outside the frame and about 30 pixels too high)
+	
 	self.scrollupbutton:ClearAllPoints();
 	self.scrollupbutton:SetPoint("TOPRIGHT", self.scrollframe, "TOPRIGHT", -2, -2);
 	 
@@ -148,24 +148,24 @@ function ns:CreateScrollFrame (parent)
 	self.scrollbar:SetPoint("TOP", self.scrollupbutton, "BOTTOM", 0, -2);
 	self.scrollbar:SetPoint("BOTTOM", self.scrolldownbutton, "TOP", 0, 2);
 	 
-	-- now officially set the scrollchild as your Scroll Frame's scrollchild (this also parents self.scrollchild to self.scrollframe)
-	-- IT IS IMPORTANT TO ENSURE THAT YOU SET THE SCROLLCHILD'S SIZE AFTER REGISTERING IT AS A SCROLLCHILD:
+	
+	
 	self.scrollframe:SetScrollChild(self.scrollchild);
 	 
-	-- set self.scrollframe points to the first frame that you created (in this case, self)
+	
 	self.scrollframe:SetAllPoints(self);
 	 
-	-- now that SetScrollChild has been defined, you are safe to define your scrollchild's size.
+	
 	self.scrollchild:SetSize(self.scrollframe:GetWidth(), ( self.scrollframe:GetHeight() * 8 ));
 	 
 	return self.scrollchild;
-end;--		CREATE A SCROLL FRAME
+end;
 
 
 
--- Add tabs to a frame
+
 local TabedFrame;
---Tab Functions
+
 local function Tab_OnClick (self)
 	PanelTemplates_SetTab(self:GetParent(), self:GetID());
 	local scrollChild = TabedFrame.ScrollFrame:GetScrollChild();
@@ -208,24 +208,24 @@ function ns:SetTabs (frame, numTabs, ...)
 	
 	return unpack(contents);
 end;
--- /Add tabs to a frame
 
--- createButton
+
+
 local buttonCount = 0;
 function ns:createButton(opts)
-	buttonCount = buttonCount + 1;		--Counts each button created
+	buttonCount = buttonCount + 1;		
 	if opts.name == nil or opts.name == "" then
-		--Unique name generator, addonName + string + counterValue
+		
 		opts.name = addon .. "GeneratedFrameNumber" .. buttonCount;
 	end;	
 	local btn = CreateFrame("Button",  opts.name, opts.parent, "GameMenuButtonTemplate");
-	--position, size and add title to the frame
+	
 	btn:SetSize(opts.width, opts.height);
 	btn:SetText(opts.caption);
 	btn:SetNormalFontObject("GameFontNormalLarge");
 	btn:SetHighlightFontObject("GameFontHighlightLarge");
 	btn:SetPoint(opts.anchor, opts.relFrame, opts.relPoint, opts.xOff, opts.yOff);
-	--Add a tooltip if one was provided
+	
 	if (opts.ttip ~= nil) or (opts.ttip ~= "") then 
 		btn:SetScript("OnEnter", function()
 			GameTooltip:SetOwner(btn, "LEFT");
@@ -234,7 +234,7 @@ function ns:createButton(opts)
 		end);
 		btn:SetScript("OnLeave", function() GameTooltip:Hide(); end);
 	end;
-	--Button function
+	
 	if opts.pressFunc ~= nil then 
 		btn:SetScript("OnClick", function(self, button, down)
 			opts.pressFunc(self, button)
@@ -242,4 +242,4 @@ function ns:createButton(opts)
 	end;
 	return btn;	
 end;
--- \createButton
+
