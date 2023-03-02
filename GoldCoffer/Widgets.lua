@@ -14,8 +14,6 @@ function ns:colorString(c, str)
 end
 
 local function padString(s, pad, lead, len)
-
-
 	local ret = s;
 	if lead == nil then lead = false; end;
 	while (strlen(ret) < len) do
@@ -56,24 +54,20 @@ function ns:GoldSilverCopper(copper)
 	return strjoin("", gt, gIcon, s, sIcon, c, cIcon);
 end
 
-
 local frameFrameCount = 0;
 function ns:createFrame(opts)
-	frameFrameCount = frameFrameCount + 1;		
+	frameFrameCount = frameFrameCount + 1;	
 	if opts.name == nil or opts.name == "" then
-		
 		opts.name = addon .. "GeneratedFrameNumber" .. frameFrameCount;
 	end;
 	local f = CreateFrame("Frame", opts.name, opts.parent, "UIPanelDialogTemplate"); 
 	f:SetSize(opts.width, opts.height);
 	f:SetPoint(opts.anchor, opts.relFrame, opts.relPoint, opts.xOff, opts,yOff);
 	if opts.title ~= nil then
-		
 		f.Title:SetJustifyH("CENTER");
 		f.Title:SetText( opts.title );
 	end;
 	if opts.isMovable then
-		
 		f:EnableMouse(true);
 		f:SetMovable(true);
 		f:SetUserPlaced(true); 
@@ -82,7 +76,6 @@ function ns:createFrame(opts)
 		f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing(); end);
 	end;
 	if opts.isResizable then
-		
 		f:SetResizable(true);
 		f:SetScript("OnMouseDown", function()
 			f:StartSizing("BOTTOMRIGHT")
@@ -93,15 +86,13 @@ function ns:createFrame(opts)
 		f:SetScript("OnSizeChanged", OnSizeChanged);
 	end;
 	f:Hide();
-	return f;		
+	return f;
 end;
-
 
 local cbFrameCount = 0;
 function ns:createCheckBox(opts)	
-	cbFrameCount = cbFrameCount + 1;		
+	cbFrameCount = cbFrameCount + 1;
 	if opts.name == nil or opts.name == "" then
-		
 		opts.name = addon .. "GeneratedCheckboxNumber" .. cbFrameCount;
 	end;
 	local cb = CreateFrame("CheckButton", opts.name, opts.parent, "ChatConfigCheckButtonTemplate");
@@ -113,31 +104,19 @@ function ns:createCheckBox(opts)
 	cb.tooltip = opts.ttip;	
 	return cb, txt;
 end;
-
-
 function ns:CreateScrollFrame (parent)
 	local frameHolder;
-	 
-	
-	local self = frameHolder or CreateFrame("Frame", nil, parent); 
+	local self = frameHolder or CreateFrame("Frame", nil, parent);
 	self:ClearAllPoints();
 	self:SetPoint("TOPLEFT", parent, "TOPLEFT", 10, -30);
 	self:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", -10, 10);
 	
-	
 	self.scrollframe = self.scrollframe or CreateFrame("ScrollFrame", "ANewScrollFrame", self, "UIPanelScrollFrameTemplate");
-	 
-	
-	
-	self.scrollchild = self.scrollchild or CreateFrame("Frame"); 
-	 
-	
+	self.scrollchild = self.scrollchild or CreateFrame("Frame");
 	local scrollbarName = self.scrollframe:GetName()
 	self.scrollbar = _G[scrollbarName.."ScrollBar"];
 	self.scrollupbutton = _G[scrollbarName.."ScrollBarScrollUpButton"];
 	self.scrolldownbutton = _G[scrollbarName.."ScrollBarScrollDownButton"];
-	 
-	
 	self.scrollupbutton:ClearAllPoints();
 	self.scrollupbutton:SetPoint("TOPRIGHT", self.scrollframe, "TOPRIGHT", -2, -2);
 	 
@@ -147,25 +126,13 @@ function ns:CreateScrollFrame (parent)
 	self.scrollbar:ClearAllPoints();
 	self.scrollbar:SetPoint("TOP", self.scrollupbutton, "BOTTOM", 0, -2);
 	self.scrollbar:SetPoint("BOTTOM", self.scrolldownbutton, "TOP", 0, 2);
-	 
-	
-	
 	self.scrollframe:SetScrollChild(self.scrollchild);
-	 
-	
 	self.scrollframe:SetAllPoints(self);
-	 
-	
 	self.scrollchild:SetSize(self.scrollframe:GetWidth(), ( self.scrollframe:GetHeight() * 8 ));
 	 
 	return self.scrollchild;
 end;
-
-
-
-
 local TabedFrame;
-
 local function Tab_OnClick (self)
 	PanelTemplates_SetTab(self:GetParent(), self:GetID());
 	local scrollChild = TabedFrame.ScrollFrame:GetScrollChild();
@@ -209,23 +176,18 @@ function ns:SetTabs (frame, numTabs, ...)
 	return unpack(contents);
 end;
 
-
-
 local buttonCount = 0;
 function ns:createButton(opts)
-	buttonCount = buttonCount + 1;		
+	buttonCount = buttonCount + 1;	
 	if opts.name == nil or opts.name == "" then
-		
 		opts.name = addon .. "GeneratedFrameNumber" .. buttonCount;
 	end;	
 	local btn = CreateFrame("Button",  opts.name, opts.parent, "GameMenuButtonTemplate");
-	
 	btn:SetSize(opts.width, opts.height);
 	btn:SetText(opts.caption);
 	btn:SetNormalFontObject("GameFontNormalLarge");
 	btn:SetHighlightFontObject("GameFontHighlightLarge");
 	btn:SetPoint(opts.anchor, opts.relFrame, opts.relPoint, opts.xOff, opts.yOff);
-	
 	if (opts.ttip ~= nil) or (opts.ttip ~= "") then 
 		btn:SetScript("OnEnter", function()
 			GameTooltip:SetOwner(btn, "LEFT");
@@ -234,7 +196,6 @@ function ns:createButton(opts)
 		end);
 		btn:SetScript("OnLeave", function() GameTooltip:Hide(); end);
 	end;
-	
 	if opts.pressFunc ~= nil then 
 		btn:SetScript("OnClick", function(self, button, down)
 			opts.pressFunc(self, button)
@@ -242,4 +203,3 @@ function ns:createButton(opts)
 	end;
 	return btn;	
 end;
-

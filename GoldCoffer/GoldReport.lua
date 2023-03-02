@@ -1,6 +1,5 @@
 local Addon, ns = ...;
 
-
 	local opts = {
 		title = "Gold Coffer",
 		name = "gcReportFrame",
@@ -17,6 +16,7 @@ local Addon, ns = ...;
 	}
 local ReportFrame = ns:createFrame(opts)
 
+ReportFrame:SetFrameStrata("DIALOG");
 ReportFrame.ScrollFrame = CreateFrame("ScrollFrame", nil, ReportFrame, "UIPanelScrollFrameTemplate");
 ReportFrame.ScrollFrame:SetPoint("TOPLEFT", gcReportFrame, "TOPLEFT", 4, -30);
 ReportFrame.ScrollFrame:SetPoint("BOTTOMRIGHT", gcReportFrame, "BOTTOMRIGHT", -8, 10);
@@ -33,16 +33,10 @@ else
 	TabServers, TabSummery, TabDaily, TabWeekly, TabYearly = ns:SetTabs (ReportFrame, 5, 
 			"Gold Report", "Gold Summery", "Daily History", "Weekly History", "Yearly History")
 end;
-
-
-
-
 function TabServers.tabShow()
-	
 	TabServers.goldTitle:SetText("Total gold = " .. ns:GetTotalGold(true));
 	local s = ns:GetServers();
 	for i=1, #s do
-		
 		if ns.srv == s[i] then TabServers.cb[i]:SetChecked(true); else TabServers.cb[i]:SetChecked(false); end;
 		TabServers.cbText[i]:SetText(s[i] .. " - " ..  ns:GoldSilverCopper(ns:GetServerGold(s[i])));
 		TabServers.cb[i]:Show();
@@ -51,18 +45,14 @@ function TabServers.tabShow()
 end;
 
 function TabServers.cbClick(index)
-	
-	
-	local idx = 1;	
-	
+	local idx = 1;
 	for i=1, 100 do					
 		TabServers.leftTxt[i]:SetText("");
 		TabServers.rightTxt[i]:SetText("");
 	end;
-	
 	for i=1, 50 do
 		if TabServers.cb[i]:GetChecked() then
-			local s = TabServers.cbText[i]:GetText();		
+			local s = TabServers.cbText[i]:GetText();
 			local g = "";
 			s,g = strsplit("-", s, 2);			
 			s = strtrim(s, " ");				
@@ -70,7 +60,6 @@ function TabServers.cbClick(index)
 			g = strtrim(g, " -");				
 			TabServers.leftTxt[idx]:SetText(s);			
 			TabServers.rightTxt[idx]:SetText(g);
-			
 			if idx > 1 then
 				TabServers.leftTxt[idx]:ClearAllPoints();
 				TabServers.leftTxt[idx]:SetPoint("TOPLEFT", TabServers.leftTxt[idx-1], "TOPLEFT", -10, -30);				
@@ -98,16 +87,13 @@ function TabServers.cbClick(index)
 				stepIn = 0;
 				stepDown = -20;
 			end; 
-		end; 
+		end;
 	end; 
 end;
-
-
 TabServers.goldTitle = TabServers:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
 TabServers.goldTitle:SetPoint("TOPLEFT", TabServers, "TOPLEFT", 0, -25);
 TabServers.goldTitle:SetWidth(700);
 TabServers.goldTitle:SetJustifyH("CENTER");
-
 
 local params = {
 	name = nil,					
@@ -145,8 +131,6 @@ for i=2, 50 do
 	TabServers.cb[i]:SetScript( "OnClick", function() TabServers.cbClick(i); end);
 	TabServers.cb[i]:Hide();
 end;
-
-
 TabServers.leftTxt[1] = TabServers:CreateFontString (nil, "OVERLAY", "GameFontNormal");
 TabServers.leftTxt[1]:SetPoint("TOPLEFT", TabServers, "TOPLEFT", 360, -65);
 TabServers.leftTxt[1]:SetWidth(150);
@@ -157,7 +141,7 @@ TabServers.rightTxt[1]:SetPoint("TOPLEFT", TabServers.leftTxt[1], "TOPRIGHT", 0,
 TabServers.rightTxt[1]:SetWidth(150);
 TabServers.rightTxt[1]:SetJustifyH("RIGHT");
 
-for i=2, 100 do			
+for i=2, 100 do	
 	TabServers.leftTxt[i] = TabServers:CreateFontString (nil, "OVERLAY", "GameFontNormal");
 	TabServers.leftTxt[i]:SetPoint("TOPLEFT", TabServers.leftTxt[i-1], "TOPLEFT", 0, -15);
 	TabServers.leftTxt[i]:SetWidth(150);
@@ -171,15 +155,6 @@ end;
 
 TabServers:SetScript( "OnShow", function() TabServers.tabShow(); end);
 ReportFrame:Hide();
-
-
-
-
-
-
-
-
-
 function TabSummery.tabShow()
 	local h = ns.player .. "  -  " .. ns:GoldSilverCopper(GetMoney())	.. "\n\n" .. 
 			ns.srv .. "  -  " .. ns:GetServerGold(ns.srv, true);			
@@ -195,7 +170,6 @@ function TabSummery.tabShow()
 	TabSummery.LeftText:SetText(l);
 	TabSummery.RightText:SetText(r);
 end;
-
 
 TabSummery.Header = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
 TabSummery.Header:SetPoint("TOPLEFT", TabSummery, "TOPLEFT", 30, -25);
@@ -216,15 +190,6 @@ TabSummery.Footer:SetText("* Last Week/Month/Year will show 0 until enough data 
 
 
 TabSummery:SetScript( "OnShow", function() TabSummery.tabShow(); end);
-
-
-
-
-
-
-
-
-
 function TabDaily.tabShow()
 	local h = "Daily History"			
 	local l, m, r = "Date\n", "Days Closing Gold\n", "Daily Gain/Loss\n"
@@ -241,7 +206,7 @@ function TabDaily.tabShow()
 			prev = g;
 		end; 
 		i = tostring(tonumber(i) + 1);
-	end;	
+	end;
 	TabDaily.Header:SetText(h);	
 	TabDaily.LeftText:SetText(l);
 	TabDaily.MiddleText:SetText(m);
@@ -276,15 +241,6 @@ TabDaily.Footer:SetText("");
 
 
 TabDaily:SetScript( "OnShow", function() TabDaily.tabShow(); end);
-
-
-
-
-
-
-
-
-
 function TabWeekly.tabShow()
 	local h = "Weekly History";	
 	local l, m, r = "Date\n", "Weeks Closing Gold\n", "Weekly Gain/Loss\n"
@@ -335,15 +291,6 @@ TabWeekly.Footer:SetJustifyH("LEFT");
 TabWeekly.Footer:SetText("* These dates may be off as you first start using this addon, also if you have gaps in your playtime.");
 
 TabWeekly:SetScript( "OnShow", function() TabWeekly.tabShow(); end);
-
-
-
-
-
-
-
-
-
 TabYearly.cbCount = 1;
 
 function TabYearly.tabShow()
@@ -396,21 +343,10 @@ TabYearly.Footer:SetJustifyH("LEFT");
 TabYearly.Footer:SetText("* The first time you use this addon the previous year is recorded as 0.");
 
 TabYearly:SetScript( "OnShow", function() TabYearly.tabShow(); end);
-
-
-
-
-
-
-
-
-
 local maxCur = 200;
 local cbLink = {};
 if select(4, GetBuildInfo()) > 99999 then
-	
 	function TabCurrencies.tabShow()
-		
 		ns.UpdateCurrency();			
 		TabCurrencies.Header:SetText( "Currency Detail");
 		TabCurrencies.QuantityText:SetText("");	
@@ -421,19 +357,17 @@ if select(4, GetBuildInfo()) > 99999 then
 		end;
 		cbLink = {};
 		
-		local cbIdx = 1;								
-		local groups = ns.GetCurrencyGroupList()		
+		local cbIdx = 1;
+		local groups = ns.GetCurrencyGroupList()
 		for k,v in ipairs(groups) do
-			
 			TabCurrencies.cbText[cbIdx]:SetFont("Fonts\\FRIZQT__.TTF", 18);
 			TabCurrencies.cbText[cbIdx]:SetTextColor(GameFontWhite:GetTextColor())
 			TabCurrencies.cbText[cbIdx]:SetText(v);
 			cbIdx = cbIdx + 1;
-			
 			local currencies = ns.GetGroupsCurrencyList(v)
 			for ck, curr in pairs(currencies) do
-				cbLink[cbIdx] = v;						
-				TabCurrencies.cb[cbIdx]:Show();			
+				cbLink[cbIdx] = v;	
+				TabCurrencies.cb[cbIdx]:Show();	
 				TabCurrencies.cbText[cbIdx]:SetFont("Fonts\\FRIZQT__.TTF", 13);
 				TabCurrencies.cbText[cbIdx]:SetTextColor(GameFontNormal:GetTextColor())
 				TabCurrencies.cbText[cbIdx]:SetText(curr);
@@ -456,9 +390,7 @@ if select(4, GetBuildInfo()) > 99999 then
 	end;
 
 	function TabCurrencies.cbClick(idx)
-		
-		for i=1, maxCur do if i ~= idx then TabCurrencies.cb[i]:SetChecked(false); end; end;		
-		
+		for i=1, maxCur do if i ~= idx then TabCurrencies.cb[i]:SetChecked(false); end; end;	
 		TabCurrencies.CurrencyText:SetText("");
 		TabCurrencies.QuantityText:SetText("");
 		TabCurrencies.NameText:SetText("");
@@ -471,8 +403,6 @@ if select(4, GetBuildInfo()) > 99999 then
 			local toons = ns.GetToonsWithCurrency(grp, cur);
 			local rlm = "";
 			for k,v in ipairs(toons) do
-				
-				
 				local r, n = strsplit("-", v);
 				if rlm == "" then rlm = r; end;
 				if r ~= rlm then								
@@ -483,24 +413,20 @@ if select(4, GetBuildInfo()) > 99999 then
 				names = names .. v .. "\n"
 				qty = qty .. addCommas(GoldCofferCurrency[grp][cur][v]) .. "\n";
 			end;	
-		end;	
+		end; 
 		TabCurrencies.QuantityText:SetText(qty);	
 		TabCurrencies.NameText:SetText(names);	
 		ReportFrame.ScrollFrame:SetVerticalScroll(0)
 	end;
-
-	
 	TabCurrencies.Header = TabCurrencies:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
 	TabCurrencies.Header:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 30, -25);
 	TabCurrencies.Header:SetWidth(600);
-
-	
 	TabCurrencies.DetailSF = CreateFrame("ScrollFrame", nil, TabCurrencies, "UIPanelScrollFrameTemplate")
 	TabCurrencies.DetailSF:SetSize(370,310)
 	TabCurrencies.DetailSF:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 300, -50)
 	TabCurrencies.DetailSF:SetClipsChildren(true);
 	TabCurrencies.DetailSW = CreateFrame("Frame", nil, TabCurrencies.DetailSF)
-	TabCurrencies.DetailSW:SetSize(350, 310)	
+	TabCurrencies.DetailSW:SetSize(350, 310)
 	TabCurrencies.DetailSF.ScrollBar:ClearAllPoints();
 	TabCurrencies.DetailSF.ScrollBar:SetPoint("TOPLEFT", TabCurrencies.DetailSF, "TOPRIGHT", -12, -18);
 	TabCurrencies.DetailSF.ScrollBar:SetPoint("BOTTOMRIGHT", TabCurrencies.DetailSF, "BOTTOMRIGHT", -7, 18);
@@ -526,7 +452,6 @@ if select(4, GetBuildInfo()) > 99999 then
 	TabCurrencies.NameText:SetWidth(260);
 	TabCurrencies.NameText:SetJustifyH("LEFT");
 
-	
 	TabCurrencies.CurrencySF = CreateFrame("ScrollFrame", nil, TabCurrencies, "UIPanelScrollFrameTemplate")
 	TabCurrencies.CurrencySF:SetSize(275,310)
 	TabCurrencies.CurrencySF:SetPoint("TOPLEFT", TabCurrencies, "TOPLEFT", 25, -50)
@@ -577,14 +502,6 @@ if select(4, GetBuildInfo()) > 99999 then
 end;
 
 
-
-
-
-
-
-
-
 function ns:ShowGoldReport()
-	
 	if ReportFrame:IsVisible() then ReportFrame:Hide(); else ReportFrame:Show(); end;
 end;

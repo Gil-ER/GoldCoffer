@@ -5,9 +5,7 @@ local mmButtonShown = GoldCofferIcon.Visible or true;
 
 ns.totalGold = 0;
 local function minimapButtonShowHide(toggle)
-	
 	if toggle then mmButtonShown = not mmButtonShown; end;
-	
 	if toggle == false then
 		if GoldCofferIcon.Visible == nil then  GoldCofferIcon.Visible = true; end;
 		mmButtonShown = GoldCofferIcon.Visible;
@@ -20,19 +18,15 @@ local function minimapButtonShowHide(toggle)
 	end;
 	GoldCofferIcon.Visible = mmButtonShown;
 end;
-
-
 local function GoldCofferMiniMap(button)
 	if button == "LeftButton" then
 		if IsShiftKeyDown() then
 			minimapButtonShowHide(true)
 		elseif IsControlKeyDown() then	
-			
 		else
 			ns:ShowGoldReport();
 		end;
 	elseif button == "RightButton" then
-		
 		ns:CenterGoldReport();
 	end;
 end
@@ -79,8 +73,6 @@ function gcLDB:OnLeave()
 	GameTooltip:Hide();
 end
 
-
-
 SLASH_GOLDCOFFER1 = "/goldcoffer";
 SLASH_GOLDCOFFER2 = "/gc";
 SlashCmdList.GOLDCOFFER = function(arg)
@@ -114,7 +106,7 @@ SlashCmdList.GOLDCOFFER = function(arg)
 		else
 			print ("Invalid input. You must enter a valid server and toon like this example.\n /gc delete Toon Server");
 		end;
-	elseif msg == "c" or msg == "center" or msg == "centre"	then		
+	elseif msg == "c" or msg == "center" or msg == "centre"	then
 		ns:CenterGoldReport();
 	else
 		local s = "/gc or /goldcoffer shows report.\n" 	
@@ -127,16 +119,13 @@ SlashCmdList.GOLDCOFFER = function(arg)
 		print (s);
 	end;
 end; 
-
-
 local f = CreateFrame("FRAME");
-f:RegisterEvent("PLAYER_ENTERING_WORLD"); 
+f:RegisterEvent("PLAYER_ENTERING_WORLD");
 f:RegisterEvent("PLAYER_MONEY");
 f:RegisterEvent("PLAYER_LOGOUT");
 
 function f:OnEvent(event, ...)
 	if event == "PLAYER_ENTERING_WORLD" then
-		
 		icon:Register(addon, gcLDB, GoldCofferIcon);
 		minimapButtonShowHide(false);
 		ns:iniData();	
