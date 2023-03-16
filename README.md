@@ -1,2 +1,2 @@
 # GoldCoffer
-World of Warcraft addon, Tracks WoW gold across your account
+World of Warcraft addon, Tracks WoW gold and other currencies across your account
