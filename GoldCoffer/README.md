@@ -10,7 +10,7 @@ You can mouse over the minimap button to get some totals and help information.
 
 There are 6 tabs across the bottom of the GoldCoffer window. 
 
-Gold Report
+## Gold Report
 The left side of this tab lists the servers you have characters on and the amount of total gold on the server. Checking a box on the left side will give you a detailed list of each character on that server and the gold that they have.
 
  
