@@ -10,32 +10,32 @@ You can mouse over the minimap button to get some totals and help information.
 
 There are 6 tabs across the bottom of the GoldCoffer window. 
 
-## Gold Report
+## Gold Report:
 The left side of this tab lists the servers you have characters on and the amount of total gold on the server. Checking a box on the left side will give you a detailed list of each character on that server and the gold that they have.
 
  
 
-Gold Summery
+## Gold Summery:
 List the gold you had on the account at various times over the past
 
  
 
-Daily History
+## Daily History:
 Lists the last 50 days you were in game in 3 columns listing the date, your total gold and the change over the previous day.
 
  
 
-Weekly History
+## Weekly History:
 Lists the last 50 Weeks you were in game in 3 columns listing the date, your total gold and the change over the previous day. The week begins on the weekly reset date (I think this is correct for any region).
 
  
 
-Yearly History
+## Yearly History:
 Lists the last few years (if you had this addon recording the data) again like above listing date, gold and gain/loss.
 
  
 
-Currencies   *NEW*
+## Currencies:   *NEW*
 The left side lists the currencies, subdivided and grouped like they are on the currency tab in game. Clicking on a currency will give you a list on the right side of all characters with that currency and the amount they have.
 
  
