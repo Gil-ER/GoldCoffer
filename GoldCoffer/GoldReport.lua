@@ -360,7 +360,6 @@ if select(4, GetBuildInfo()) > 99999 then
 		local cbIdx = 1;
 		local groups = ns.GetCurrencyGroupList()
 		for k,v in ipairs(groups) do
-			TabCurrencies.cbText[cbIdx]:SetFont("Fonts\\FRIZQT__.TTF", 18);
 			TabCurrencies.cbText[cbIdx]:SetTextColor(GameFontWhite:GetTextColor())
 			TabCurrencies.cbText[cbIdx]:SetText(v);
 			cbIdx = cbIdx + 1;
@@ -368,7 +367,6 @@ if select(4, GetBuildInfo()) > 99999 then
 			for ck, curr in pairs(currencies) do
 				cbLink[cbIdx] = v;	
 				TabCurrencies.cb[cbIdx]:Show();	
-				TabCurrencies.cbText[cbIdx]:SetFont("Fonts\\FRIZQT__.TTF", 13);
 				TabCurrencies.cbText[cbIdx]:SetTextColor(GameFontNormal:GetTextColor())
 				TabCurrencies.cbText[cbIdx]:SetText(curr);
 				cbIdx = cbIdx + 1;				
@@ -438,15 +436,13 @@ if select(4, GetBuildInfo()) > 99999 then
 	TabCurrencies.CurrencyText:SetJustifyH("LEFT");
 	TabCurrencies.CurrencyText:SetText("TITLE");
 
-	TabCurrencies.QuantityText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
-	TabCurrencies.QuantityText:SetFont("Fonts\\FRIZQT__.TTF", 13);
+	TabCurrencies.QuantityText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormal");
 	TabCurrencies.QuantityText:SetSpacing(7);
 	TabCurrencies.QuantityText:SetPoint("TOPLEFT", TabCurrencies.CurrencyText, "BOTTOMLEFT", -30, -10);
 	TabCurrencies.QuantityText:SetWidth(90);
 	TabCurrencies.QuantityText:SetJustifyH("RIGHT");
 
-	TabCurrencies.NameText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
-	TabCurrencies.NameText:SetFont("Fonts\\FRIZQT__.TTF", 13);
+	TabCurrencies.NameText = TabCurrencies.DetailSW:CreateFontString (nil, "OVERLAY", "GameFontNormal");
 	TabCurrencies.NameText:SetSpacing(7);
 	TabCurrencies.NameText:SetPoint("TOPLEFT", TabCurrencies.QuantityText, "TOPRIGHT", 10, 0);
 	TabCurrencies.NameText:SetWidth(260);
