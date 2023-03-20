@@ -1,5 +1,8 @@
-1.3.1
+1.3.2
  - Update for 10.0.7
+ 
+1.3.1
+ - Fixed broken font bug on ruRU client.
 
 1.3.0
  - Added currency tab
