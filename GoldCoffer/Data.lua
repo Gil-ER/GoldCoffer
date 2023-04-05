@@ -1,3 +1,4 @@
+-- Edited Apr 05, 2023
 
 local addon, ns = ...
 local month = {
@@ -18,7 +19,6 @@ local saveDays = 50;
 local saveWeeks = 50;
 local saveMonths = 25;
 local saveYears = 10;
-
 local function GetNextMonthTime(t)
 	local ret = t;							
 	local chunk = 1000000;					
@@ -34,7 +34,6 @@ local function GetNextMonthTime(t)
 	ret = ret + 60;	
 	return ret;
 end;
-
 local function GetNextYearTime(t)
 	local ret = t;							
 	local chunk = 10000000;					
@@ -49,7 +48,6 @@ local function GetNextYearTime(t)
 	ret = ret + 60;
 	return ret;
 end;
-
 local function UpdateDayDetail(curGold)
 	local key = month[tonumber(date("%m"))] .. date("%d");
 	local one = "1";
@@ -67,7 +65,6 @@ local function UpdateDayDetail(curGold)
 	end;
 	GoldCoffer.History.Day[one] = {[key] = curGold};
 end;
-
 local function UpdateWeekDetail(curGold)
 	local key = month[tonumber(date("%m"))] .. date("%d");
 	local one = "1";
@@ -85,7 +82,6 @@ local function UpdateWeekDetail(curGold)
 	end;
 	GoldCoffer.History.Week[one] = {[key] = curGold};
 end;
-
 local function UpdateMonthDetail(curGold)	
 	local key = month[tonumber(date("%m"))] .. date("%d");
 	local one = "1";
@@ -103,7 +99,6 @@ local function UpdateMonthDetail(curGold)
 	end;
 	GoldCoffer.History.Month[one] = {[key] = curGold};
 end;
-
 local function UpdateYearDetail(curGold)
 	local key = "December 31, " .. date("%Y");
 	local one = "1";
@@ -121,14 +116,12 @@ local function UpdateYearDetail(curGold)
 	end;
 	GoldCoffer.History.Year[one] = {[key] = curGold};
 end;
-
 local function checkResets(curGold)
 	local curTime = time();
 	local resetDay = curTime + C_DateAndTime.GetSecondsUntilDailyReset();
 	local resetWeek = curTime + C_DateAndTime.GetSecondsUntilWeeklyReset();
 	local resetMonth = GetNextMonthTime(curTime);
 	local resetYear = GetNextYearTime(curTime);	
-	
 	if GoldCoffer.History.Resets.Day < time() then
 		UpdateDayDetail(curGold);
 		GoldCoffer.History.Resets.Day = resetDay;
@@ -146,7 +139,6 @@ local function checkResets(curGold)
 		GoldCoffer.History.Resets.Year = resetYear;
 	end;
 end;
-
 function ns:iniData()
 	local t = time() - (24 * 60 * 60);
 	local key1 = month[tonumber(date("%m"))] .. date("%d");
@@ -159,8 +151,7 @@ function ns:iniData()
 	GoldCoffer.Servers = GoldCoffer.Servers or {};
 	GoldCoffer.Servers[ns.srv] = GoldCoffer.Servers[ns.srv] or {};
 	GoldCoffer.Servers[ns.srv][ns.player] = GetMoney();
-	
-	local curGold = ns:GetTotalGold(false);	
+	local curGold = ns:GetTotalGold(false);		
 	local curTime = time();
 	local resetDay = curTime + C_DateAndTime.GetSecondsUntilDailyReset();
 	local resetWeek = curTime + C_DateAndTime.GetSecondsUntilWeeklyReset();
@@ -174,7 +165,6 @@ function ns:iniData()
 	if GoldCoffer.History.Resets.Month > resetMonth then GoldCoffer.History.Resets.Month = resetMonth; end;
 	GoldCoffer.History.Resets.Year = GoldCoffer.History.Resets.Year or resetYear;
 	if GoldCoffer.History.Resets.Year > resetYear then GoldCoffer.History.Resets.Year = resetYear; end;
-
 	GoldCoffer.History.Day = GoldCoffer.History.Day or {["1"] = {[key1] = curGold}};
 	GoldCoffer.History.Week = GoldCoffer.History.Week or {["1"] = {[key1] = curGold}};
 	GoldCoffer.History.Month = GoldCoffer.History.Month or {["1"] = {[key1] = curGold}};
@@ -187,10 +177,8 @@ function ns:iniData()
 	GoldCoffer.History.Week["2"] = GoldCoffer.History.Week["2"] or {[key2] = g};
 	GoldCoffer.History.Month["2"] = GoldCoffer.History.Month["2"] or {[key2] = 0};
 	GoldCoffer.History.Year["2"] = GoldCoffer.History.Year["2"] or {[yearKey2] = 0};
-	
 	checkResets(curGold);	
 end;
-
 function ns:updateGold()
 	ns.player = UnitName("player");
 	ns.srv = GetRealmName();
@@ -200,7 +188,6 @@ function ns:updateGold()
 	GoldCoffer.Servers[ns.srv][ns.player] = GetMoney();
 	checkResets(ns:GetTotalGold(false));
 end;
-
 function ns:GetServers()
 	local s = {};
 	for k, v in pairs (GoldCoffer.Servers) do
@@ -209,8 +196,6 @@ function ns:GetServers()
 	table.sort(s);
 	return s;	
 end;
-
-
 function ns:ProfitLossColoring(gold)
 	if gold < 0 then return ns:colorString("red", ns:GoldSilverCopper(gold)); end;
 	return ns:colorString("green", ns:GoldSilverCopper(gold));
@@ -221,21 +206,19 @@ function ns:GetTotalGold(iconFlag)
 	for k, v in pairs(GoldCoffer.Servers) do
 		for t, g in pairs(GoldCoffer.Servers[k]) do
 			tg = tg + g;
-		end; 
-	end;
+		end; 	
+	end;	
 	if iconFlag then tg = ns:GoldSilverCopper(tg); end;
 	return tg;
 end;
-
 function ns:GetServerGold(s, iconFlag)
 	local sg = 0;
 	for t, g in pairs(GoldCoffer.Servers[s]) do
 		sg = sg + g;
-	end; 
+	end; 	
 	if iconFlag then sg = ns:GoldSilverCopper(sg); end;
 	return sg;
 end;
-
 function ns:GetYesterdaysGold(formatFlag)
 	for _,v in pairs (GoldCoffer.History.Day["2"]) do
 		if formatFlag then return ns:ProfitLossColoring(v)
@@ -243,7 +226,6 @@ function ns:GetYesterdaysGold(formatFlag)
 	end;
 	return 0;
 end;
-
 function ns:GetLastWeeksGold(formatFlag)
 	for _,v in pairs (GoldCoffer.History.Week["2"]) do
 		if formatFlag then return ns:ProfitLossColoring(v)
@@ -251,7 +233,6 @@ function ns:GetLastWeeksGold(formatFlag)
 	end;
 	return 0;
 end;
-
 function ns:GetLastMonthsGold(formatFlag)
 	for _,v in pairs (GoldCoffer.History.Month["2"]) do
 		if formatFlag then return ns:ProfitLossColoring(v)
@@ -259,7 +240,6 @@ function ns:GetLastMonthsGold(formatFlag)
 	end;
 	return 0;
 end;
-
 function ns:GetLastYearsGold(formatFlag)
 	for _,v in pairs (GoldCoffer.History.Year["2"]) do
 		if formatFlag then return ns:ProfitLossColoring(v)
@@ -267,30 +247,24 @@ function ns:GetLastYearsGold(formatFlag)
 	end;
 	return 0;
 end;
-
 function ns:GetSessionChange()
 	local curGold = ns:GetTotalGold(false);
 	local diff = curGold - GoldCoffer.History.Today;
 	return ns:ProfitLossColoring(diff);
 end;
-
 function ns:GetYesterdaysChange()
 	local diff = ns:GetTotalGold(false) - ns:GetYesterdaysGold(false);
 	return ns:ProfitLossColoring(diff);
 end;
-
 function ns:GetWeeksChange()
 	local diff = ns:GetTotalGold(false) - ns:GetLastWeeksGold(false);
 	return ns:ProfitLossColoring(diff);	
 end;
-
 function ns:GetMonthsChange()
 	local diff = ns:GetTotalGold(false) - ns:GetLastMonthsGold(false);
 	return ns:ProfitLossColoring(diff);	
 end;
-
 function ns:GetYearsChange()
 	local diff = ns:GetTotalGold(false) - ns:GetLastYearsGold(false);
 	return ns:ProfitLossColoring(diff);
 end;
-

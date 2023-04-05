@@ -1,8 +1,9 @@
+-- Edited Apr 05, 2023
+
 local addon, ns = ...
 local icon = LibStub("LibDBIcon-1.0", true);
 GoldCofferIcon = GoldCofferIcon or {};
 local mmButtonShown = GoldCofferIcon.Visible or true;
-
 ns.totalGold = 0;
 local function minimapButtonShowHide(toggle)
 	if toggle then mmButtonShown = not mmButtonShown; end;
@@ -38,7 +39,6 @@ local gcLDB = LibStub("LibDataBroker-1.1"):NewDataObject("GoldCofferMMButton", {
 	icon = iconFile,
 	OnClick = function(_, button) GoldCofferMiniMap(button) end,
 })
-
 function gcLDB:OnTooltipShow()
 	self:AddLine("GoldCoffer");
 	self:AddLine("\nLeft Click - Show Gold ");	
@@ -46,20 +46,16 @@ function gcLDB:OnTooltipShow()
 	self:AddLine("<shift> Left Click - Hide this button.\n\n");	
 	self:AddLine(ns.player .. " - " .. ns:GoldSilverCopper(GetMoney()));
 	self:AddLine(ns.srv .. " - " .. ns:GetServerGold(ns.srv, true) .. "\n\n");
-	
 	self:AddLine("Profit/loss this session = " .. ns:GetSessionChange());
 	self:AddLine("Today = " .. ns:GetYesterdaysChange());
 	self:AddLine("This Week = " .. ns:GetWeeksChange());
 	self:AddLine("This Month = " .. ns:GetMonthsChange());
 	self:AddLine("This Year = " .. ns:GetYearsChange() .. "\n\n");	
-	
 	self:AddLine("Total Gold Yesterday = " .. ns:GetYesterdaysGold(true));
 	self:AddLine("Last Week = " .. ns:GetLastWeeksGold(true));
 	self:AddLine("Last Month = " .. ns:GetLastMonthsGold(true));
 	self:AddLine("Last Year = " .. ns:GetLastYearsGold(true));
-	
 	self:AddLine("\nTotal gold(all servers) = " .. ns:GetTotalGold(true));
-	
 end
 function gcLDB:OnEnter()	
 	ns:updateGold();
@@ -72,7 +68,6 @@ end
 function gcLDB:OnLeave()
 	GameTooltip:Hide();
 end
-
 SLASH_GOLDCOFFER1 = "/goldcoffer";
 SLASH_GOLDCOFFER2 = "/gc";
 SlashCmdList.GOLDCOFFER = function(arg)
@@ -106,7 +101,7 @@ SlashCmdList.GOLDCOFFER = function(arg)
 		else
 			print ("Invalid input. You must enter a valid server and toon like this example.\n /gc delete Toon Server");
 		end;
-	elseif msg == "c" or msg == "center" or msg == "centre"	then
+	elseif msg == "c" or msg == "center" or msg == "centre"	then		
 		ns:CenterGoldReport();
 	else
 		local s = "/gc or /goldcoffer shows report.\n" 	
@@ -120,10 +115,9 @@ SlashCmdList.GOLDCOFFER = function(arg)
 	end;
 end; 
 local f = CreateFrame("FRAME");
-f:RegisterEvent("PLAYER_ENTERING_WORLD");
+f:RegisterEvent("PLAYER_ENTERING_WORLD"); 
 f:RegisterEvent("PLAYER_MONEY");
 f:RegisterEvent("PLAYER_LOGOUT");
-
 function f:OnEvent(event, ...)
 	if event == "PLAYER_ENTERING_WORLD" then
 		icon:Register(addon, gcLDB, GoldCofferIcon);
@@ -139,9 +133,5 @@ function f:OnEvent(event, ...)
 	if event == "PLAYER_LOGOUT" then
 		ns.UpdateCurrency();	
 	end;	
-	
 end;
 f:SetScript("OnEvent", f.OnEvent); 
-
-		
-		

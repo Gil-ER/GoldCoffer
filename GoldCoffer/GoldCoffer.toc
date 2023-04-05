@@ -1,15 +1,16 @@
 ## Interface: 100007
 ## Title: Gold Coffer
-## Notes: Tracks your currencies with gold comparisons and history.
+## Notes: Tracks your current gold on your account with comparisons and history.
 ## DefaultState: enabled
-## Version: 1.3.2
+## Version: 1.3.3a
 ## Author: Gildina
-## SavedVariables: GoldCoffer, GoldCofferIcon, GoldCofferCurrency
+## SavedVariables: GoldCoffer, GoldCofferIcon, GoldCofferCurrencies, GoldCofferCurrency, GoldCofferCurrencyIcon
 
 lib\embeds.xml
 
 Widgets.lua
 Data.lua
+CurrencyGroups.lua
 Currencies.lua
 GoldReport.lua
 GoldCoffer.lua

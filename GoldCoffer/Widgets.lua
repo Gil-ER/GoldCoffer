@@ -1,7 +1,6 @@
+-- Edited Apr 05, 2023
 
 local addon, ns = ...;
-
-
 local color = 	{
 				["red"] = "FF0000",
 				["green"]  = "00FF00",
@@ -12,7 +11,6 @@ function ns:colorString(c, str)
 	if str == nil then str = "nil"; end;
 	return string.format("|cff%s%s|r", color[c], str);
 end
-
 local function padString(s, pad, lead, len)
 	local ret = s;
 	if lead == nil then lead = false; end;
@@ -25,7 +23,6 @@ local function padString(s, pad, lead, len)
 	end;
 	return ret;
 end;
-
 function ns:GoldSilverCopper(copper)
 	copper = tonumber(copper);
 	if copper == nil then return 0; end;
@@ -34,7 +31,6 @@ function ns:GoldSilverCopper(copper)
 	local gIcon = "|TInterface\\MoneyFrame\\UI-GoldIcon:0:0:2:0|t "
 	local sIcon = "|TInterface\\MoneyFrame\\UI-SilverIcon:0:0:2:0|t "
 	local cIcon = "|TInterface\\MoneyFrame\\UI-CopperIcon:0:0:2:0|t"
-
 	local c = padString(copper % 100, "0", true, 2);
 	local s = padString(floor(copper / 100) % 100, "0", true, 2);
 	local g = floor(copper / 10000);
@@ -53,10 +49,9 @@ function ns:GoldSilverCopper(copper)
 	if neg then gt = "-" .. gt; end;
 	return strjoin("", gt, gIcon, s, sIcon, c, cIcon);
 end
-
 local frameFrameCount = 0;
 function ns:createFrame(opts)
-	frameFrameCount = frameFrameCount + 1;	
+	frameFrameCount = frameFrameCount + 1;		
 	if opts.name == nil or opts.name == "" then
 		opts.name = addon .. "GeneratedFrameNumber" .. frameFrameCount;
 	end;
@@ -86,12 +81,11 @@ function ns:createFrame(opts)
 		f:SetScript("OnSizeChanged", OnSizeChanged);
 	end;
 	f:Hide();
-	return f;
+	return f;		
 end;
-
 local cbFrameCount = 0;
 function ns:createCheckBox(opts)	
-	cbFrameCount = cbFrameCount + 1;
+	cbFrameCount = cbFrameCount + 1;		
 	if opts.name == nil or opts.name == "" then
 		opts.name = addon .. "GeneratedCheckboxNumber" .. cbFrameCount;
 	end;
@@ -106,30 +100,26 @@ function ns:createCheckBox(opts)
 end;
 function ns:CreateScrollFrame (parent)
 	local frameHolder;
-	local self = frameHolder or CreateFrame("Frame", nil, parent);
+	local self = frameHolder or CreateFrame("Frame", nil, parent); 
 	self:ClearAllPoints();
 	self:SetPoint("TOPLEFT", parent, "TOPLEFT", 10, -30);
 	self:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", -10, 10);
-	
 	self.scrollframe = self.scrollframe or CreateFrame("ScrollFrame", "ANewScrollFrame", self, "UIPanelScrollFrameTemplate");
-	self.scrollchild = self.scrollchild or CreateFrame("Frame");
+	self.scrollchild = self.scrollchild or CreateFrame("Frame"); 
 	local scrollbarName = self.scrollframe:GetName()
 	self.scrollbar = _G[scrollbarName.."ScrollBar"];
 	self.scrollupbutton = _G[scrollbarName.."ScrollBarScrollUpButton"];
 	self.scrolldownbutton = _G[scrollbarName.."ScrollBarScrollDownButton"];
 	self.scrollupbutton:ClearAllPoints();
 	self.scrollupbutton:SetPoint("TOPRIGHT", self.scrollframe, "TOPRIGHT", -2, -2);
-	 
 	self.scrolldownbutton:ClearAllPoints();
 	self.scrolldownbutton:SetPoint("BOTTOMRIGHT", self.scrollframe, "BOTTOMRIGHT", -2, 2);
-	 
 	self.scrollbar:ClearAllPoints();
 	self.scrollbar:SetPoint("TOP", self.scrollupbutton, "BOTTOM", 0, -2);
 	self.scrollbar:SetPoint("BOTTOM", self.scrolldownbutton, "TOP", 0, 2);
 	self.scrollframe:SetScrollChild(self.scrollchild);
 	self.scrollframe:SetAllPoints(self);
 	self.scrollchild:SetSize(self.scrollframe:GetWidth(), ( self.scrollframe:GetHeight() * 8 ));
-	 
 	return self.scrollchild;
 end;
 local TabedFrame;
@@ -139,14 +129,11 @@ local function Tab_OnClick (self)
 	if (scrollChild) then
 		scrollChild:Hide();
 	end;
-	
 	TabedFrame.ScrollFrame:SetScrollChild(self.content);
 	self.content:Show();
 end
-
 function ns:SetTabs (frame, numTabs, ...)
 	frame.numTabs = numTabs;
-	
 	TabedFrame = frame;
 	local FrameName = frame:GetName();
 	local contents = {};
@@ -159,11 +146,9 @@ function ns:SetTabs (frame, numTabs, ...)
 		tab:SetID(i);
 		tab:SetText(select(i, ...));
 		tab:SetScript("OnClick", Tab_OnClick);
-		
 		tab.content = CreateFrame("Frame", nil, frame.ScrollFrame);
 		tab.content:SetSize(308, 5);
 		tab.content:Hide();		
-		
 		table.insert(contents, tab.content);
 		if i == 1 then
 			tab:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 20, 5);
@@ -172,13 +157,11 @@ function ns:SetTabs (frame, numTabs, ...)
 		end;
 	end;
 	Tab_OnClick(_G[FrameName.."Tab1"]);
-	
 	return unpack(contents);
 end;
-
 local buttonCount = 0;
 function ns:createButton(opts)
-	buttonCount = buttonCount + 1;	
+	buttonCount = buttonCount + 1;		
 	if opts.name == nil or opts.name == "" then
 		opts.name = addon .. "GeneratedFrameNumber" .. buttonCount;
 	end;	
