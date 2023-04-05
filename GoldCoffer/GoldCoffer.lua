@@ -6,6 +6,7 @@ GoldCofferIcon = GoldCofferIcon or {};
 local mmButtonShown = GoldCofferIcon.Visible or true;
 ns.totalGold = 0;
 local function minimapButtonShowHide(toggle)
+	if not icon then return; end;
 	if toggle then mmButtonShown = not mmButtonShown; end;
 	if toggle == false then
 		if GoldCofferIcon.Visible == nil then  GoldCofferIcon.Visible = true; end;
@@ -20,6 +21,7 @@ local function minimapButtonShowHide(toggle)
 	GoldCofferIcon.Visible = mmButtonShown;
 end;
 local function GoldCofferMiniMap(button)
+	if not icon then return; end;
 	if button == "LeftButton" then
 		if IsShiftKeyDown() then
 			minimapButtonShowHide(true)
@@ -120,7 +122,7 @@ f:RegisterEvent("PLAYER_MONEY");
 f:RegisterEvent("PLAYER_LOGOUT");
 function f:OnEvent(event, ...)
 	if event == "PLAYER_ENTERING_WORLD" then
-		icon:Register(addon, gcLDB, GoldCofferIcon);
+		if icon then icon:Register(addon, gcLDB, GoldCofferIcon); end;
 		minimapButtonShowHide(false);
 		ns:iniData();	
 		GoldCoffer.History.Today = ns:GetTotalGold(false);

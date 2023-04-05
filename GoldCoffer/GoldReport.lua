@@ -148,6 +148,8 @@ end;
 TabServers:SetScript( "OnShow", function() TabServers.tabShow(); end);
 ReportFrame:Hide();
 function TabSummery.tabShow()
+	ns.srv = ns.srv or GetRealmName();
+	ns.player = ns.player or UnitName("player");
 	local h = ns.player .. "  -  " .. ns:GoldSilverCopper(GetMoney())	.. "\n\n" .. 
 			ns.srv .. "  -  " .. ns:GetServerGold(ns.srv, true);			
 	local l = "Profit/loss this session\n" .. ns:GetSessionChange() .. "\n\n" .. 
