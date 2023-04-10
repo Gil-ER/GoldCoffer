@@ -10,6 +10,6 @@ lib\embeds.xml
 
 Widgets.lua
 Data.lua
-Currencies.lua
+CurrencyGroups.lua
 GoldReport.lua
 GoldCoffer.lua
