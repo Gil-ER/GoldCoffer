@@ -11,6 +11,6 @@ lib\LibDBIcon-1.0\lib.xml
 
 Widgets.lua
 Data.lua
-Currencies.lua
+CurrencyGroups.lua
 GoldReport.lua
 GoldCoffer.lua
