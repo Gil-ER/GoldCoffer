@@ -1,0 +1,16 @@
+## Interface: 20504
+## Title: Gold Coffer v1.3.4
+## Notes: Tracks your currencies on your account.
+## DefaultState: enabled
+## Version: 1.3.4
+## Author: Gildina
+## SavedVariables: GoldCoffer, GoldCofferIcon, GoldCofferCurrencies
+
+lib\embeds.xml
+lib\LibDBIcon-1.0\lib.xml
+
+Widgets.lua
+Data.lua
+CurrencyGroups.lua
+GoldReport.lua
+GoldCoffer.lua
