@@ -25,6 +25,13 @@ ReportFrame:EnableMouseWheel(1)
 ReportFrame.ScrollFrame.ScrollBar:ClearAllPoints();
 ReportFrame.ScrollFrame.ScrollBar:SetPoint("TOPLEFT", ReportFrame.ScrollFrame, "TOPRIGHT", -12, -18);
 ReportFrame.ScrollFrame.ScrollBar:SetPoint("BOTTOMRIGHT", ReportFrame.ScrollFrame, "BOTTOMRIGHT", -7, 18);
+local iconFrame = CreateFrame("Frame", nil, gcReportFrame)
+iconFrame:SetPoint("TOPLEFT", gcReportFrame, "TOPLEFT");
+iconFrame:SetSize(48, 48)	
+local iconTexture = iconFrame:CreateTexture("DIALOG")
+iconTexture:SetSize(48, 48)
+iconTexture:SetPoint("TOPLEFT", gcReportFrame, "TOPLEFT", -10, 5)
+iconTexture:SetTexture("Interface\\AddOns\\GoldCoffer\\GC_Button.blp")
 local TabServers, TabSummery, TabDaily, TabWeekly, TabYearly, TabCurrencies;
 if select(4, GetBuildInfo()) > 40000 then
 	TabServers, TabSummery, TabDaily, TabWeekly, TabYearly, TabCurrencies = ns:SetTabs (ReportFrame, 6, 
