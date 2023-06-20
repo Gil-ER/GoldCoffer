@@ -150,7 +150,7 @@ function f:OnEvent(event, ...)
 		ns:updateGold();	
 	end;
 	if event == "PLAYER_LOGOUT" then
-		if select(4, GetBuildInfo) > 40000 then ns.UpdateCurrency(); end;
+		if select(4, GetBuildInfo()) > 40000 then ns.UpdateCurrency(); end;
 	end;	
 end;
 f:SetScript("OnEvent", f.OnEvent); 
