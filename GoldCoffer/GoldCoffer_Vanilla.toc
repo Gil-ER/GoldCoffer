@@ -1,8 +1,8 @@
 ## Interface: 11403
-## Title: Gold Coffer v1.3.4
+## Title: Gold Coffer
 ## Notes: Tracks your currencies on your account.
 ## DefaultState: enabled
-## Version: 1.3.4
+## Version: 1.4.0
 ## Author: Gildina
 ## SavedVariables: GoldCoffer, GoldCofferIcon, GoldCofferCurrencies
 

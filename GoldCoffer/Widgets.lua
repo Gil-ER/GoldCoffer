@@ -1,4 +1,4 @@
--- Edited May 16, 2023
+-- Edited Jun 20, 2023
 
 local addon, ns = ...;
 local color = 	{
@@ -55,12 +55,15 @@ function ns:createFrame(opts)
 	if opts.name == nil or opts.name == "" then
 		opts.name = addon .. "GeneratedFrameNumber" .. frameFrameCount;
 	end;
-	local f = CreateFrame("Frame", opts.name, opts.parent, "UIPanelDialogTemplate"); 
+	local f = CreateFrame("Frame", opts.name, opts.parent, "ButtonFrameTemplate"); 
 	f:SetSize(opts.width, opts.height);
 	f:SetPoint(opts.anchor, opts.relFrame, opts.relPoint, opts.xOff, opts,yOff);
 	if opts.title ~= nil then
-		f.Title:SetJustifyH("CENTER");
-		f.Title:SetText( opts.title );
+		local Title = f:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge");
+		Title:ClearAllPoints();
+		Title:SetPoint("TOPLEFT", f, "TOPLEFT", 0, -35)
+		Title:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, -35)
+		Title:SetText( opts.title );
 	end;
 	if opts.isMovable then
 		f:EnableMouse(true);

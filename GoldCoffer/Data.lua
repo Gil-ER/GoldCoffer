@@ -1,4 +1,4 @@
--- Edited May 16, 2023
+-- Edited Jun 20, 2023
 
 local addon, ns = ...
 local month = {
@@ -122,6 +122,27 @@ local function checkResets(curGold)
 	local resetWeek = curTime + C_DateAndTime.GetSecondsUntilWeeklyReset();
 	local resetMonth = GetNextMonthTime(curTime);
 	local resetYear = GetNextYearTime(curTime);	
+	for s, v in pairs(GoldCoffer.Servers) do
+		for t, v in pairs (v) do
+			local m = GoldCoffer.Servers[s][t].Current;
+			if GoldCoffer.History.Resets.Day < time() then 
+				GoldCoffer.Servers[s][t].Yesterday = m - GoldCoffer.Servers[s][t].DayStart;
+				GoldCoffer.Servers[s][t].DayStart = m; 
+			end;
+			if GoldCoffer.History.Resets.Week < time() then	 
+				GoldCoffer.Servers[s][t].LastWeek = m - GoldCoffer.Servers[s][t].WeekStart;
+				GoldCoffer.Servers[s][t].WeekStart = m; 
+			end;
+			if GoldCoffer.History.Resets.Month < time() then
+				GoldCoffer.Servers[s][t].LastMonth = m - GoldCoffer.Servers[s][t].MonthStart;
+				GoldCoffer.Servers[s][t].MonthStart = m; 
+			end;
+			if GoldCoffer.History.Resets.Year < time() then 
+				GoldCoffer.Servers[s][t].LastYear = m - GoldCoffer.Servers[s][t].DayStart;
+				GoldCoffer.Servers[s][t].YearStart = m; 
+			end;
+		end;
+	end;	
 	if GoldCoffer.History.Resets.Day < time() then
 		UpdateDayDetail(curGold);
 		GoldCoffer.History.Resets.Day = resetDay;
@@ -139,6 +160,19 @@ local function checkResets(curGold)
 		GoldCoffer.History.Resets.Year = resetYear;
 	end;
 end;
+local function newRecord(srv, toon, gold)
+	GoldCoffer.Servers[srv][toon] = {};
+	GoldCoffer.Servers[srv][toon].Current = gold;
+	GoldCoffer.Servers[srv][toon].SessionStart = gold;
+	GoldCoffer.Servers[srv][toon].DayStart = 0;
+	GoldCoffer.Servers[srv][toon].WeekStart = 0;
+	GoldCoffer.Servers[srv][toon].MonthStart = 0;
+	GoldCoffer.Servers[srv][toon].YearStart = 0;	
+	GoldCoffer.Servers[srv][toon].Yesterday = 0;
+	GoldCoffer.Servers[srv][toon].LastWeek = 0;
+	GoldCoffer.Servers[srv][toon].LastMonth = 0;
+	GoldCoffer.Servers[srv][toon].LastYear = 0;
+end;
 function ns:iniData()
 	local t = time() - (24 * 60 * 60);
 	local key1 = month[tonumber(date("%m"))] .. date("%d");
@@ -150,7 +184,22 @@ function ns:iniData()
 	GoldCoffer = GoldCoffer or {};
 	GoldCoffer.Servers = GoldCoffer.Servers or {};
 	GoldCoffer.Servers[ns.srv] = GoldCoffer.Servers[ns.srv] or {};
-	GoldCoffer.Servers[ns.srv][ns.player] = GetMoney();
+	GoldCoffer.Servers[ns.srv][ns.player] = GoldCoffer.Servers[ns.srv][ns.player] or {};
+	if (type(GoldCoffer.Servers[ns.srv][ns.player]) ~= "table") then 
+		for k, v in pairs(GoldCoffer.Servers) do
+			for toon, gold in pairs(v) do
+				local m = GoldCoffer.Servers[k][toon] or 0;
+				if toon == ns.player then m = GetMoney(); end;
+				newRecord(k, toon, m)				
+			end;
+		end;			
+	end;
+	if GoldCoffer.Servers[ns.srv][ns.player].Current == nil then
+		newRecord(ns.srv, ns.player, GetMoney());
+	else
+		GoldCoffer.Servers[ns.srv][ns.player].SessionStart = GetMoney();
+		GoldCoffer.Servers[ns.srv][ns.player].Current = GetMoney();
+	end;
 	local curGold = ns:GetTotalGold(false);		
 	local curTime = time();
 	local resetDay = curTime + C_DateAndTime.GetSecondsUntilDailyReset();
@@ -184,8 +233,11 @@ function ns:updateGold()
 	ns.srv = GetRealmName();
 	GoldCoffer = GoldCoffer or {};
 	GoldCoffer.Servers = GoldCoffer.Servers or {};
-	GoldCoffer.Servers[ns.srv] = GoldCoffer.Servers[ns.srv] or {};
-	GoldCoffer.Servers[ns.srv][ns.player] = GetMoney();
+	GoldCoffer.Servers[ns.srv] = GoldCoffer.Servers[ns.srv] or {};	
+	if GoldCoffer.Servers[ns.srv][ns.player] == nil then
+		newRecord(ns.srv, ns.player, GetMoney())
+	end;
+	GoldCoffer.Servers[ns.srv][ns.player].Current = GetMoney();	
 	checkResets(ns:GetTotalGold(false));
 end;
 function ns:GetServers()
@@ -200,21 +252,21 @@ function ns:ProfitLossColoring(gold)
 	if gold < 0 then return ns:colorString("red", ns:GoldSilverCopper(gold)); end;
 	return ns:colorString("green", ns:GoldSilverCopper(gold));
 end;
-function ns:GetTotalGold(iconFlag)
+function ns:GetTotalGold(iconFlag) 
 	local tg = 0;	
 	local s = ns:GetServers();
 	for k, v in pairs(GoldCoffer.Servers) do
 		for t, g in pairs(GoldCoffer.Servers[k]) do
-			tg = tg + g;
+			tg = tg + (g.Current or 0);
 		end; 	
 	end;	
 	if iconFlag then tg = ns:GoldSilverCopper(tg); end;
 	return tg;
 end;
-function ns:GetServerGold(s, iconFlag)
+function ns:GetServerGold(s, iconFlag) 
 	local sg = 0;
-	for t, g in pairs(GoldCoffer.Servers[s]) do
-		sg = sg + g;
+	for t, toon in pairs(GoldCoffer.Servers[s]) do
+		sg = sg + (toon.Current or 0);
 	end; 	
 	if iconFlag then sg = ns:GoldSilverCopper(sg); end;
 	return sg;
@@ -267,4 +319,43 @@ end;
 function ns:GetYearsChange()
 	local diff = ns:GetTotalGold(false) - ns:GetLastYearsGold(false);
 	return ns:ProfitLossColoring(diff);
+end;
+function ns:GetToonHistory(name)
+	local ret = {};
+	local temp = GoldCoffer.Servers[ns.srv][name]
+	ret.session = ns:ProfitLossColoring(GetMoney() - temp.SessionStart);
+	ret.today = ns:ProfitLossColoring(GetMoney() - temp.DayStart);
+	ret.week = ns:ProfitLossColoring(GetMoney() - temp.WeekStart);
+	ret.month = ns:ProfitLossColoring(GetMoney() - temp.MonthStart);
+	ret.yesterday = ns:ProfitLossColoring(temp.Yesterday);
+	ret.lweek = ns:ProfitLossColoring(temp.LastWeek);
+	ret.lmonth = ns:ProfitLossColoring(temp.LastMonth);
+	ret.lyear = ns:ProfitLossColoring(temp.LastYear);
+	return ret;
+end;
+function ns:GetServerHistory(srv)
+	local ret = {};
+	local current, sessionS, yesterday, dayS, weekS, monthS, yearS, lweek, lmonth, lyear = 0,0,0,0,0,0,0,0,0,0;
+	local temp = GoldCoffer.Servers[srv];
+	for k,v in pairs(temp) do
+		current = current + v.Current;
+		sessionS = sessionS + v.SessionStart;
+		yesterday = yesterday + v.Yesterday;
+		dayS  = dayS  + v.DayStart;
+		weekS = weekS + v.WeekStart;
+		monthS = monthS + v.MonthStart;
+		yearS = yearS + v.YearStart;
+		lweek = lweek + v.LastWeek;
+		lmonth = lmonth + v.LastMonth;
+		lyear = lyear + v.LastYear;
+	end;
+	ret.session = ns:ProfitLossColoring(GetMoney() - GoldCoffer.Servers[ns.srv][ns.player].SessionStart);
+	ret.today = ns:ProfitLossColoring(current - dayS);
+	ret.week = ns:ProfitLossColoring(current - weekS);
+	ret.month = ns:ProfitLossColoring(current - monthS);
+	ret.yesterday = ns:ProfitLossColoring(yesterday);
+	ret.lweek = ns:ProfitLossColoring(lweek);
+	ret.lmonth = ns:ProfitLossColoring(lmonth);
+	ret.lyear = ns:ProfitLossColoring(lyear);
+	return ret;
 end;

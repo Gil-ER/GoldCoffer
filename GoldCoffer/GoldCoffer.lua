@@ -1,15 +1,33 @@
--- Edited May 16, 2023
+-- Edited Jun 20, 2023
 
 local addon, ns = ...
 local icon = LibStub("LibDBIcon-1.0", true);
 GoldCofferIcon = GoldCofferIcon or {};
 local mmButtonShown = GoldCofferIcon.Visible or true;
 ns.totalGold = 0;
+local function fillInfoTooltip(tip)
+	tip:AddLine("GoldCoffer");
+	tip:AddLine("\n" .. "Left Click - Show Gold ");	
+	tip:AddLine("Right Click - Center Window     ");
+	tip:AddLine("<shift> Left Click - Toggle Minimap button." .. "\n\n");	
+	tip:AddLine(ns.player .. " - " .. ns:GoldSilverCopper(GetMoney()));
+	tip:AddLine(ns.srv .. " - " .. ns:GetServerGold(ns.srv, true) .. "\n\n");
+	tip:AddLine("Profit/loss this session = " .. ns:GetSessionChange());
+	tip:AddLine("Today = " .. ns:GetYesterdaysChange());
+	tip:AddLine("This Week = " .. ns:GetWeeksChange());
+	tip:AddLine("This Month = " .. ns:GetMonthsChange());
+	tip:AddLine("This Year = " .. ns:GetYearsChange() .. "\n\n");	
+	tip:AddLine("Total Gold Yesterday = " .. ns:GetYesterdaysGold(true));
+	tip:AddLine("Last Week = " .. ns:GetLastWeeksGold(true));
+	tip:AddLine("Last Month = " .. ns:GetLastMonthsGold(true));
+	tip:AddLine("Last Year = " .. ns:GetLastYearsGold(true));
+	tip:AddLine("\n" .. "Total gold(all servers) = " .. ns:GetTotalGold(true));
+end;
 local function minimapButtonShowHide(toggle)
 	if not icon then return; end;
 	if toggle then mmButtonShown = not mmButtonShown; end;
 	if toggle == false then
-		if GoldCofferIcon.Visible == nil then  GoldCofferIcon.Visible = true; end;
+		if GoldCofferIcon.Visible == nil then GoldCofferIcon.Visible = true; end;
 		mmButtonShown = GoldCofferIcon.Visible;
 	end;
 	if mmButtonShown then
@@ -42,22 +60,7 @@ local gcLDB = LibStub("LibDataBroker-1.1"):NewDataObject("GoldCofferMMButton", {
 	OnClick = function(_, button) GoldCofferMiniMap(button) end,
 })
 function gcLDB:OnTooltipShow()
-	self:AddLine("GoldCoffer");
-	self:AddLine("\n" .. "Left Click - Show Gold ");	
-	self:AddLine("Right Click - Center Window     ");
-	self:AddLine("<shift> Left Click - Hide this button." .. "\n\n");	
-	self:AddLine(ns.player .. " - " .. ns:GoldSilverCopper(GetMoney()));
-	self:AddLine(ns.srv .. " - " .. ns:GetServerGold(ns.srv, true) .. "\n\n");
-	self:AddLine("Profit/loss this session = " .. ns:GetSessionChange());
-	self:AddLine("Today = " .. ns:GetYesterdaysChange());
-	self:AddLine("This Week = " .. ns:GetWeeksChange());
-	self:AddLine("This Month = " .. ns:GetMonthsChange());
-	self:AddLine("This Year = " .. ns:GetYearsChange() .. "\n\n");	
-	self:AddLine("Total Gold Yesterday = " .. ns:GetYesterdaysGold(true));
-	self:AddLine("Last Week = " .. ns:GetLastWeeksGold(true));
-	self:AddLine("Last Month = " .. ns:GetLastMonthsGold(true));
-	self:AddLine("Last Year = " .. ns:GetLastYearsGold(true));
-	self:AddLine("\n" .. "Total gold(all servers) = " .. ns:GetTotalGold(true));
+	fillInfoTooltip(self);	
 end
 function gcLDB:OnEnter()	
 	ns:updateGold();
@@ -70,8 +73,18 @@ end
 function gcLDB:OnLeave()
 	GameTooltip:Hide();
 end
-function GoldCoffer_OnAddonCompartmentClick()
-	ns:ShowGoldReport();
+function GoldCoffer_OnAddonCompartmentClick(_, button)
+	GoldCofferMiniMap(button);
+end;
+function GoldCoffer_OnAddonCompartmentEnter()
+	GameTooltip:SetOwner(UIParent, "ANCHOR_NONE");
+	GameTooltip:SetPoint("CENTER", UIParent, "CENTER");
+	GameTooltip:ClearLines();	
+	fillInfoTooltip(GameTooltip);
+	GameTooltip:Show();
+end;
+function GoldCoffer_OnAddonCompartmentLeave()
+	GameTooltip:Hide();
 end;
 SLASH_GOLDCOFFER1 = "/goldcoffer";
 SLASH_GOLDCOFFER2 = "/gc";
@@ -131,6 +144,7 @@ function f:OnEvent(event, ...)
 		GoldCoffer.History.Today = ns:GetTotalGold(false);
 		tinsert(UISpecialFrames, "gcReportFrame");	
 		f:UnregisterEvent("PLAYER_ENTERING_WORLD");
+		ns.LoginTime = time();
 	end;	
 	if event == "PLAYER_MONEY" then
 		ns:updateGold();	

@@ -1,4 +1,4 @@
--- Edited May 16, 2023
+-- Edited Jun 20, 2023
 
 local addon, ns = ...
 ns.GroupOrder = {
@@ -234,7 +234,6 @@ local headings = {
 	},	
 }
 function ns.GetGroupFromID ( ID, lang )
-	local ret = nil;
 	if not headings then return nil; end;
 	if not headings[ID] then return nil; end;	
 	return headings[ID][lang];
