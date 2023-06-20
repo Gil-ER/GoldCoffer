@@ -170,13 +170,13 @@ function TabSummery.tabShow()
 				"Today\n" .. hist.today .. "\n\n" .. 
 				"This Week\n" .. hist.week .. "\n\n" .. 
 				"This Month\n" .. hist.month .. "\n\n" .. 
-				"
+				"------------------------------\n\n\n";		
 		r = r .. ns.player .. " Closing Totals\n\n" .. 
 				"Yesterday\n" .. hist.yesterday .. "\n\n" .. 
 				"Last Week\n" .. hist.lweek .. "\n\n" .. 
 				"Last Month\n" ..hist.lmonth .. "\n\n" .. 
 				"Last Year\n" .. hist.lyear .. "\n\n" .. 
-				"
+				"------------------------------\n\n\n";		
 	end;
 	if TabSummery.server:GetChecked() then	
 		hist = ns:GetServerHistory(ns.srv)
@@ -185,13 +185,13 @@ function TabSummery.tabShow()
 				"Today\n" .. hist.today .. "\n\n" .. 
 				"This Week\n" .. hist.week .. "\n\n" .. 
 				"This Month\n" .. hist.month .. "\n\n" .. 
-				"
+				"------------------------------\n\n\n";		
 		r = r .. ns.srv .. " Closing Totals\n\n" .. 
 				"Yesterday\n" .. hist.yesterday .. "\n\n" .. 
 				"Last Week\n" .. hist.lweek .. "\n\n" .. 
 				"Last Month\n" ..hist.lmonth .. "\n\n" .. 
 				"Last Year\n" .. hist.lyear .. "\n\n" .. 
-				"
+				"------------------------------\n\n\n";		
 	end;
 	if TabSummery.account:GetChecked() then	
 		l = l .. "Account Profit/loss Summery\n\n" .. 
@@ -199,13 +199,13 @@ function TabSummery.tabShow()
 				"Today\n" .. ns:GetYesterdaysChange() .. "\n\n" .. 
 				"This Week\n" .. ns:GetWeeksChange() .. "\n\n" .. 
 				"This Month\n" .. ns:GetYearsChange() .. "\n\n" .. 
-				"
+				"------------------------------\n\n\n";		
 		r = r .. "Account Closing Totals\n\n" .. 
 				"Yesterday\n" .. ns:GetYesterdaysGold(true) .. "\n\n" .. 
 				"Last Week\n" .. ns:GetLastWeeksGold(true) .. "\n\n" .. 
 				"Last Month\n" .. ns:GetLastMonthsGold(true) .. "\n\n" .. 
 				"Last Year\n" .. ns:GetLastYearsGold(true) .. "\n\n" .. 
-				"
+				"------------------------------\n\n\n";		
 	end;	
 	TabSummery.LeftText:SetText(l);
 	TabSummery.RightText:SetText(r);
