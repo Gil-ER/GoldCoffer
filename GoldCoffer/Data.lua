@@ -123,7 +123,7 @@ local function checkResets(curGold)
 	local resetMonth = GetNextMonthTime(curTime);
 	local resetYear = GetNextYearTime(curTime);	
 	for s, v in pairs(GoldCoffer.Servers) do
-		for t, v in pairs (v) do
+		for t, _ in pairs (v) do
 			local m = GoldCoffer.Servers[s][t].Current;
 			if GoldCoffer.History.Resets.Day < time() then 
 				GoldCoffer.Servers[s][t].Yesterday = m - GoldCoffer.Servers[s][t].DayStart;
