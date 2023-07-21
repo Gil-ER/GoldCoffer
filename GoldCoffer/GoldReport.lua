@@ -34,13 +34,13 @@ else
 	ReportFrame.ScrollFrame.ScrollBar:SetPoint("BOTTOMRIGHT", ReportFrame.ScrollFrame, "BOTTOMRIGHT", -7, 18);
 end
 _G[ReportFrame:GetName() .. "Portrait"]:SetTexture("Interface\\AddOns\\GoldCoffer\\GC_Button.blp")
-local TabServers, TabSummery, TabDaily, TabWeekly, TabYearly, TabCurrencies;
+local TabServers, TabSummary, TabDaily, TabWeekly, TabYearly, TabCurrencies;
 if select(4, GetBuildInfo()) > 40000 then
-	TabServers, TabSummery, TabDaily, TabWeekly, TabYearly, TabCurrencies = ns:SetTabs (ReportFrame, 6, 
-			"Gold Report", "Gold Summery", "Daily History", "Weekly History", "Yearly History", "Currencies")
+	TabServers, TabSummary, TabDaily, TabWeekly, TabYearly, TabCurrencies = ns:SetTabs (ReportFrame, 6, 
+			"Gold Report", "Gold Summary", "Daily History", "Weekly History", "Yearly History", "Currencies")
 else
-	TabServers, TabSummery, TabDaily, TabWeekly, TabYearly = ns:SetTabs (ReportFrame, 5, 
-			"Gold Report", "Gold Summery", "Daily History", "Weekly History", "Yearly History")
+	TabServers, TabSummary, TabDaily, TabWeekly, TabYearly = ns:SetTabs (ReportFrame, 5, 
+			"Gold Report", "Gold Summary", "Daily History", "Weekly History", "Yearly History")
 end;
 function TabServers.tabShow()
 	TabServers.goldTitle:SetText("Total gold = " .. ns:GetTotalGold(true));
@@ -156,16 +156,16 @@ for i=2, 100 do
 end;
 TabServers:SetScript( "OnShow", function() TabServers.tabShow(); end);
 ReportFrame:Hide();
-function TabSummery.tabShow()
+function TabSummary.tabShow()
 	ns.srv = ns.srv or GetRealmName();
 	ns.player = ns.player or UnitName("player");
-	getglobal(TabSummery.toon:GetName() .. 'Text'):SetText(ns.player .. " - " .. ns:GoldSilverCopper(GetMoney()));
-	getglobal(TabSummery.server:GetName() .. 'Text'):SetText(ns.srv .. " Total - " .. ns:GetServerGold(ns.srv, true));
-	getglobal(TabSummery.account:GetName() .. 'Text'):SetText("Account Total - " .. ns:GetTotalGold(true));
+	getglobal(TabSummary.toon:GetName() .. 'Text'):SetText(ns.player .. " - " .. ns:GoldSilverCopper(GetMoney()));
+	getglobal(TabSummary.server:GetName() .. 'Text'):SetText(ns.srv .. " Total - " .. ns:GetServerGold(ns.srv, true));
+	getglobal(TabSummary.account:GetName() .. 'Text'):SetText("Account Total - " .. ns:GetTotalGold(true));
 	local l,r = "","";
-	if TabSummery.toon:GetChecked() then
+	if TabSummary.toon:GetChecked() then
 		hist = ns:GetToonHistory(ns.player);
-		l = l .. ns.player .. "\nProfit/loss Summery\n\n" .. 
+		l = l .. ns.player .. "\nProfit/loss Summary\n\n" .. 
 				"This session\n" .. hist.session .. "\n\n" .. 
 				"Today\n" .. hist.today .. "\n\n" .. 
 				"This Week\n" .. hist.week .. "\n\n" .. 
@@ -178,9 +178,9 @@ function TabSummery.tabShow()
 				"Last Year\n" .. hist.lyear .. "\n\n" .. 
 				"~~~~~~~~~~~~~~~~~~~~\n\n\n";		
 	end;
-	if TabSummery.server:GetChecked() then	
+	if TabSummary.server:GetChecked() then	
 		hist = ns:GetServerHistory(ns.srv)
-		l = l .. ns.srv .. "\nProfit/loss Summery \n\n" .. 
+		l = l .. ns.srv .. "\nProfit/loss Summary \n\n" .. 
 				"This session\n" .. hist.session .. "\n\n" .. 
 				"Today\n" .. hist.today .. "\n\n" .. 
 				"This Week\n" .. hist.week .. "\n\n" .. 
@@ -193,8 +193,8 @@ function TabSummery.tabShow()
 				"Last Year\n" .. hist.lyear .. "\n\n" .. 
 				"~~~~~~~~~~~~~~~~~~~~\n\n\n";		
 	end;
-	if TabSummery.account:GetChecked() then	
-		l = l .. "Account Profit/loss Summery\n\n" .. 
+	if TabSummary.account:GetChecked() then	
+		l = l .. "Account Profit/loss Summary\n\n" .. 
 				"This session\n" .. ns:GetSessionChange() .. "\n\n" .. 
 				"Today\n" .. ns:GetYesterdaysChange() .. "\n\n" .. 
 				"This Week\n" .. ns:GetWeeksChange() .. "\n\n" .. 
@@ -207,44 +207,44 @@ function TabSummery.tabShow()
 				"Last Year\n" .. ns:GetLastYearsGold(true) .. "\n\n" .. 
 				"~~~~~~~~~~~~~~~~~~~~\n\n\n";		
 	end;	
-	TabSummery.LeftText:SetText(l);
-	TabSummery.RightText:SetText(r);
+	TabSummary.LeftText:SetText(l);
+	TabSummary.RightText:SetText(r);
 end;
-	TabSummery.toon = CreateFrame("CheckButton",Addon .. "ToonCB" , TabSummery, "ChatConfigCheckButtonTemplate");
-	TabSummery.toon:SetPoint("TOPLEFT", TabSummery, "TOPLEFT", 150, -10);
-	TabSummery.toon:SetSize(32, 32);	
-	getglobal(TabSummery.toon:GetName() .. 'Text'):SetFontObject(GameFontNormalLarge)
-	TabSummery.toon:SetScript("OnClick", 
+	TabSummary.toon = CreateFrame("CheckButton",Addon .. "ToonCB" , TabSummary, "ChatConfigCheckButtonTemplate");
+	TabSummary.toon:SetPoint("TOPLEFT", TabSummary, "TOPLEFT", 150, -10);
+	TabSummary.toon:SetSize(32, 32);	
+	getglobal(TabSummary.toon:GetName() .. 'Text'):SetFontObject(GameFontNormalLarge)
+	TabSummary.toon:SetScript("OnClick", 
 		function()
-			TabSummery.tabShow()
+			TabSummary.tabShow()
 		end); 
-	TabSummery.server = CreateFrame("CheckButton",Addon .. "ServerCB" , TabSummery, "ChatConfigCheckButtonTemplate");
-	TabSummery.server:SetPoint("TOPLEFT", TabSummery.toon, "TOPLEFT", 0, -30);
-	TabSummery.server:SetSize(32, 32);	
-	getglobal(TabSummery.server:GetName() .. 'Text'):SetFontObject(GameFontNormalLarge)
-	TabSummery.server:SetScript("OnClick", 
+	TabSummary.server = CreateFrame("CheckButton",Addon .. "ServerCB" , TabSummary, "ChatConfigCheckButtonTemplate");
+	TabSummary.server:SetPoint("TOPLEFT", TabSummary.toon, "TOPLEFT", 0, -30);
+	TabSummary.server:SetSize(32, 32);	
+	getglobal(TabSummary.server:GetName() .. 'Text'):SetFontObject(GameFontNormalLarge)
+	TabSummary.server:SetScript("OnClick", 
 		function()
-			TabSummery.tabShow()
+			TabSummary.tabShow()
 		end);
-	TabSummery.account = CreateFrame("CheckButton",Addon .. "AccountCB" , TabSummery, "ChatConfigCheckButtonTemplate");
-	TabSummery.account:SetPoint("TOPLEFT", TabSummery.server, "TOPLEFT", 0, -30);
-	TabSummery.account:SetSize(32, 32);	
-	getglobal(TabSummery.account:GetName() .. 'Text'):SetFontObject(GameFontNormalLarge)	
-	TabSummery.account:SetScript("OnClick", 
+	TabSummary.account = CreateFrame("CheckButton",Addon .. "AccountCB" , TabSummary, "ChatConfigCheckButtonTemplate");
+	TabSummary.account:SetPoint("TOPLEFT", TabSummary.server, "TOPLEFT", 0, -30);
+	TabSummary.account:SetSize(32, 32);	
+	getglobal(TabSummary.account:GetName() .. 'Text'):SetFontObject(GameFontNormalLarge)	
+	TabSummary.account:SetScript("OnClick", 
 		function()
-			TabSummery.tabShow()
+			TabSummary.tabShow()
 		end);
-TabSummery.LeftText = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
-TabSummery.LeftText:SetPoint("TOPLEFT", TabSummery.account, "BOTTOMLEFT", -125, -20);
-TabSummery.LeftText:SetWidth(300);
-TabSummery.RightText = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
-TabSummery.RightText:SetPoint("TOPLEFT", TabSummery.LeftText, "TOPRIGHT");
-TabSummery.RightText:SetWidth(300);
-TabSummery.Footer = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNormal");
-TabSummery.Footer:SetPoint("TOPLEFT", TabSummery.LeftText, "BOTTOMLEFT", 0, -5);
-TabSummery.Footer:SetWidth(600);
-TabSummery.Footer:SetText("* Last Week/Month/Year will show 0 until enough data is collected.");
-TabSummery:SetScript( "OnShow", function() TabSummery.tabShow(); end);
+TabSummary.LeftText = TabSummary:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabSummary.LeftText:SetPoint("TOPLEFT", TabSummary.account, "BOTTOMLEFT", -125, -20);
+TabSummary.LeftText:SetWidth(300);
+TabSummary.RightText = TabSummary:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabSummary.RightText:SetPoint("TOPLEFT", TabSummary.LeftText, "TOPRIGHT");
+TabSummary.RightText:SetWidth(300);
+TabSummary.Footer = TabSummary:CreateFontString (nil, "OVERLAY", "GameFontNormal");
+TabSummary.Footer:SetPoint("TOPLEFT", TabSummary.LeftText, "BOTTOMLEFT", 0, -5);
+TabSummary.Footer:SetWidth(600);
+TabSummary.Footer:SetText("* Last Week/Month/Year will show 0 until enough data is collected.");
+TabSummary:SetScript( "OnShow", function() TabSummary.tabShow(); end);
 function TabDaily.tabShow()
 	local h = "Daily History"			
 	local l, m, r = "Date", "Days Closing Gold", "Daily Gain/Loss"
