@@ -171,6 +171,7 @@ dlToons:SetScript("OnTextChanged", function(self)
 end)
 dlGuilds:SetScript("OnTextChanged", function(self)
 	if pauseReport then return; end;
+	print("dlGuilds changed")	
 	pauseReport = true;	
 	dlToons:SetText(toonDefault)
 	ns:GoldSummary(dlServers:GetText(), dlToons:GetText(), self:GetText())

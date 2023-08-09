@@ -43,8 +43,8 @@ function ns.GoldReport()
 	rText = rText .. "\n" .. ns:GoldSilverCopper(GetMoney());
 	lText = lText .. "\nTotal gold on this realm, " .. GetRealmName() .. "\n";
 	rText = rText .. "\n" .. ns:GetServerGold(GetRealmName(), true) .. "\n"	
-	lText = lText .. "
-	rText = rText .. "
+	lText = lText .. "~~~~~~~~~~~~~~~~~~~~~~~~\nCurrent Gold\n";
+	rText = rText .. "~~~~~~~~~~~~~~~~~~~~~~~~\nCharacter\n";
 	local tList = ns:GetToonsInfo(GetRealmName());
 	if tList ~= nil then
 		for k,v in ipairs(tList) do
@@ -201,8 +201,8 @@ local function ServerHistory(server)
 				"Last Year\n" .. hist.lyear .. "\n";	
 	local tList = ns:GetToonsInfo(server);
 	if tList ~= nil then
-		l = l .. "
-		r = r .. "
+		l = l .. "~~~~~~~~~~~~~~~~~~~~~~~~\nCurrent Gold\n";
+		r = r .. "~~~~~~~~~~~~~~~~~~~~~~~~\nCharacter\n";
 		for k,v in ipairs(tList) do
 			l = l .. ns:ProfitLossColoring(v.gold) .. "\n";
 			r = r .. v.name .. "\n";

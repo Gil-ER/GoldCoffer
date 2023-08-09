@@ -22,7 +22,7 @@ local function resetPage()
 	local yPos = -10;					
 	local cbIdx = 1;					
 	local tbIdx = 2;					
-	groups[1]:SetText(ns:colorString("white", "        
+	groups[1]:SetText(ns:colorString("white", "        ~~~~~~~~  Characters  ~~~~~~~~"));
 	groups[1]:ClearAllPoints()
 	groups[1]:SetPoint("TOPLEFT", leftPanel, 10, -10)
 	groups[1]:Show();
@@ -44,7 +44,7 @@ local function resetPage()
 		end;
 		tbIdx = tbIdx + 1;
 	end;
-	groups[tbIdx]:SetText(ns:colorString("white", "          
+	groups[tbIdx]:SetText(ns:colorString("white", "          ~~~~~~~~  Guilds  ~~~~~~~~"));
 	groups[tbIdx]:ClearAllPoints();
 	yPos = yPos - 55;
 	groups[tbIdx]:SetPoint("TOPLEFT", leftPanel, 10, yPos)
