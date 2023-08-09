@@ -78,7 +78,7 @@ local function CharacterData()
 		for _, toon in ipairs(toons) do					
 			ret = ret .. "\n" .. srv .. "," .. toon;
 			for _, item in ipairs (ReportItems) do		
-				ret = ret .. "," .. (GoldCoffer.Servers[srv][toon][item] or "
+				ret = ret .. "," .. (GoldCoffer.Servers[srv][toon][item] or "-");	
 			end;	
 		end;		
 	end; 			
