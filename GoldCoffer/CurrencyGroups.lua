@@ -1,4 +1,4 @@
--- Edited Jun 20, 2023
+-- Edited Aug 09, 2023
 
 local addon, ns = ...
 ns.GroupOrder = {
@@ -234,6 +234,7 @@ local headings = {
 	},	
 }
 function ns.GetGroupFromID ( ID, lang )
+	if lang == nil then lang = GetLocale(); end;
 	if not headings then return nil; end;
 	if not headings[ID] then return nil; end;	
 	return headings[ID][lang];
@@ -256,6 +257,7 @@ local function SaveCurrency(groupID, id, iconFileID, toon, qty)
 	GoldCofferCurrencies[groupID][id][toon] = qty;
 end;
 function ns.UpdateCurrency()
+	if select(4, GetBuildInfo()) <= 40000 then return; end;
 	local group = "Ungrouped";	
 	local groupID = "Ungrouped";
 	local toon = GetRealmName() .. "-" .. UnitName("player");
@@ -272,4 +274,12 @@ function ns.UpdateCurrency()
 			groupID = ns.GetGroupID(link.name)
 		end;
 	end; 
+end;
+function ns:GetOrderedGroupsList()
+	local ret = {};
+	local loc = GetLocale();
+	for _, id in ipairs(ns.GroupOrder) do
+		tinsert( ret, ns.GetGroupFromID ( id, loc ));	
+	end;
+	return ret;
 end;

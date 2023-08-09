@@ -1,4 +1,4 @@
--- Edited Jun 20, 2023
+-- Edited Aug 09, 2023
 
 local addon, ns = ...
 local month = {
@@ -50,10 +50,9 @@ local function GetNextYearTime(t)
 end;
 local function UpdateDayDetail(curGold)
 	local key = month[tonumber(date("%m"))] .. date("%d");
-	local one = "1";
 	if GoldCoffer.History.Day["1"] ~= nil then
-		for k,v in pairs(GoldCoffer.History.Day[tostring("1")]) do
-			if k == key then GoldCoffer.History.Day[tostring("1")] = {[key] = curGold};	return; end;
+		for k,v in pairs(GoldCoffer.History.Day["1"]) do
+			if k == key then GoldCoffer.History.Day["1"] = {[key] = curGold};	return; end;
 		end;
 		local i = saveDays
 		while i > 0 do
@@ -101,10 +100,9 @@ local function UpdateMonthDetail(curGold)
 end;
 local function UpdateYearDetail(curGold)
 	local key = "December 31, " .. date("%Y");
-	local one = "1";
-	if GoldCoffer.History.Year[one] ~= nil then
-		for k,v in pairs(GoldCoffer.History.Year[tostring(one)]) do
-			if k == key then GoldCoffer.History.Year[tostring(one)] = {[key] = curGold};	return; end;
+	if GoldCoffer.History.Year["1"] ~= nil then
+		for k,v in pairs(GoldCoffer.History.Year["1"]) do
+			if k == key then GoldCoffer.History.Year["1"] = {[key] = curGold};	return; end;
 		end;
 		local i = saveYears;
 		while i > 0 do
@@ -114,7 +112,7 @@ local function UpdateYearDetail(curGold)
 			i = i - 1;
 		end;
 	end;
-	GoldCoffer.History.Year[one] = {[key] = curGold};
+	GoldCoffer.History.Year["1"] = {[key] = curGold};
 end;
 local function checkResets(curGold)
 	local curTime = time();
@@ -143,6 +141,29 @@ local function checkResets(curGold)
 			end;
 		end;
 	end;	
+	if GoldCoffer.Guilds then
+		for s, v in pairs(GoldCoffer.Guilds) do
+			for t, _ in pairs (v) do
+				local m = GoldCoffer.Guilds[s][t].Current;
+				if GoldCoffer.History.Resets.Day < time() then 
+					GoldCoffer.Guilds[s][t].Yesterday = m - GoldCoffer.Guilds[s][t].DayStart;
+					GoldCoffer.Guilds[s][t].DayStart = m; 
+				end;
+				if GoldCoffer.History.Resets.Week < time() then	 
+					GoldCoffer.Guilds[s][t].LastWeek = m - GoldCoffer.Guilds[s][t].WeekStart;
+					GoldCoffer.Guilds[s][t].WeekStart = m; 
+				end;
+				if GoldCoffer.History.Resets.Month < time() then
+					GoldCoffer.Guilds[s][t].LastMonth = m - GoldCoffer.Guilds[s][t].MonthStart;
+					GoldCoffer.Guilds[s][t].MonthStart = m; 
+				end;
+				if GoldCoffer.History.Resets.Year < time() then 
+					GoldCoffer.Guilds[s][t].LastYear = m - GoldCoffer.Guilds[s][t].DayStart;
+					GoldCoffer.Guilds[s][t].YearStart = m; 
+				end;
+			end;
+		end;
+	end;
 	if GoldCoffer.History.Resets.Day < time() then
 		UpdateDayDetail(curGold);
 		GoldCoffer.History.Resets.Day = resetDay;
@@ -172,7 +193,25 @@ local function newRecord(srv, toon, gold)
 	GoldCoffer.Servers[srv][toon].LastWeek = 0;
 	GoldCoffer.Servers[srv][toon].LastMonth = 0;
 	GoldCoffer.Servers[srv][toon].LastYear = 0;
+	if toon == ns.player then 
+		GoldCoffer.Servers[srv][toon].LastUpdate = date("%m/%d/%y");
+		GoldCoffer.Servers[srv][toon].UpdateTime = time();
+	end;
 end;
+function ns:newGuild(srv, guild, gold)
+	GoldCoffer.Guilds[srv][guild] = {};
+	GoldCoffer.Guilds[srv][guild].Current = gold;
+	GoldCoffer.Guilds[srv][guild].DayStart = 0;
+	GoldCoffer.Guilds[srv][guild].WeekStart = 0;
+	GoldCoffer.Guilds[srv][guild].MonthStart = 0;
+	GoldCoffer.Guilds[srv][guild].YearStart = 0;	
+	GoldCoffer.Guilds[srv][guild].Yesterday = 0;
+	GoldCoffer.Guilds[srv][guild].LastWeek = 0;
+	GoldCoffer.Guilds[srv][guild].LastMonth = 0;
+	GoldCoffer.Guilds[srv][guild].LastYear = 0;
+	GoldCoffer.Guilds[srv][guild].LastUpdate = date("%m/%d/%y");
+	GoldCoffer.Guilds[srv][guild].UpdateTime = time();
+end
 function ns:iniData()
 	local t = time() - (24 * 60 * 60);
 	local key1 = month[tonumber(date("%m"))] .. date("%d");
@@ -199,8 +238,18 @@ function ns:iniData()
 	else
 		GoldCoffer.Servers[ns.srv][ns.player].SessionStart = GetMoney();
 		GoldCoffer.Servers[ns.srv][ns.player].Current = GetMoney();
+		GoldCoffer.Servers[ns.srv][ns.player].LastUpdate = date("%m/%d/%y");
+		GoldCoffer.Servers[ns.srv][ns.player].UpdateTime = time();
 	end;
-	local curGold = ns:GetTotalGold(false);		
+	local guild, _, _, srv = GetGuildInfo("player");
+	srv = srv or ns.srv;
+	srv = srv:gsub("%s+", "");
+	if guild then
+		GoldCoffer = GoldCoffer or {};
+		GoldCoffer.Guilds = GoldCoffer.Guilds or {};
+		GoldCoffer.Guilds[srv] = GoldCoffer.Guilds[srv] or {};
+		if GoldCoffer.Guilds[srv][guild] == nil then ns:newGuild(srv, guild, 0); end;
+	end;	
 	local curTime = time();
 	local resetDay = curTime + C_DateAndTime.GetSecondsUntilDailyReset();
 	local resetWeek = curTime + C_DateAndTime.GetSecondsUntilWeeklyReset();
@@ -214,6 +263,7 @@ function ns:iniData()
 	if GoldCoffer.History.Resets.Month > resetMonth then GoldCoffer.History.Resets.Month = resetMonth; end;
 	GoldCoffer.History.Resets.Year = GoldCoffer.History.Resets.Year or resetYear;
 	if GoldCoffer.History.Resets.Year > resetYear then GoldCoffer.History.Resets.Year = resetYear; end;
+	local curGold = ns:GetTotalGold(false);		
 	GoldCoffer.History.Day = GoldCoffer.History.Day or {["1"] = {[key1] = curGold}};
 	GoldCoffer.History.Week = GoldCoffer.History.Week or {["1"] = {[key1] = curGold}};
 	GoldCoffer.History.Month = GoldCoffer.History.Month or {["1"] = {[key1] = curGold}};
@@ -226,6 +276,10 @@ function ns:iniData()
 	GoldCoffer.History.Week["2"] = GoldCoffer.History.Week["2"] or {[key2] = g};
 	GoldCoffer.History.Month["2"] = GoldCoffer.History.Month["2"] or {[key2] = 0};
 	GoldCoffer.History.Year["2"] = GoldCoffer.History.Year["2"] or {[yearKey2] = 0};
+	GoldCoffer.Reports = GoldCoffer.Reports or {};
+	GoldCoffer.Reports["Character Data"] = GoldCoffer.Reports["Character Data"] or "1,1,1,0,1,1,1,1,1,0,0,0,0";
+	GoldCoffer.Reports["Server Data"] = GoldCoffer.Reports["Server Data"] or "1,1,0,1,1,1,1,1,0,0,0,0";
+	GoldCoffer.Reports["Guild Data"] = GoldCoffer.Reports["Guild Data"] or "1,0,1,1,1,1,1,0,0,0,0";	
 	checkResets(curGold);	
 end;
 function ns:updateGold()
@@ -237,7 +291,9 @@ function ns:updateGold()
 	if GoldCoffer.Servers[ns.srv][ns.player] == nil then
 		newRecord(ns.srv, ns.player, GetMoney())
 	end;
-	GoldCoffer.Servers[ns.srv][ns.player].Current = GetMoney();	
+	GoldCoffer.Servers[ns.srv][ns.player].Current = GetMoney();
+	GoldCoffer.Servers[ns.srv][ns.player].LastUpdate = date("%m/%d/%y");
+	GoldCoffer.Servers[ns.srv][ns.player].UpdateTime = time();
 	checkResets(ns:GetTotalGold(false));
 end;
 function ns:GetServers()
@@ -248,9 +304,55 @@ function ns:GetServers()
 	table.sort(s);
 	return s;	
 end;
-function ns:ProfitLossColoring(gold)
-	if gold < 0 then return ns:colorString("red", ns:GoldSilverCopper(gold)); end;
-	return ns:colorString("green", ns:GoldSilverCopper(gold));
+function ns:GetToons(srv)
+	local t = {};	
+	if GoldCoffer.Servers[srv] then
+		for k, v in pairs (GoldCoffer.Servers[srv]) do
+			tinsert(t, k);
+		end;
+		table.sort(t);
+	end;
+	return t;
+end;
+function ns:GetToonsInfo(srv)
+	local t = {};	
+	if GoldCoffer.Servers[srv] then
+		for k, v in pairs (GoldCoffer.Servers[srv]) do
+			local rec = {
+				["gold"] = GoldCoffer.Servers[srv][k].Current,
+				["name"] = k
+			}
+			tinsert(t, rec );
+		end;
+		sort(t, function(a,b)
+			return a.gold > b.gold 
+		end);
+	end;
+	return t;
+end;
+function ns:GetGuildServers()
+	local s = {};
+	for k, v in pairs (GoldCoffer.Guilds) do
+		table.insert(s, k);
+	end;
+	table.sort(s);
+	return s;	
+end;
+function ns:GetGuilds(srv)
+	local g = {};
+	srv = gsub(srv, " ", "");
+	if not GoldCoffer.Guilds then return g; end;
+	if GoldCoffer.Guilds[srv] then
+		for k, v in pairs(GoldCoffer.Guilds[srv]) do
+			tinsert (g, k);
+		end;
+		table.sort(g);
+	end;
+	return g;
+end;
+function ns:ProfitLossColoring(copper)
+	if copper < 0 then return ns:colorString("red", ns:GoldSilverCopper(copper)); end;
+	return ns:colorString("green", ns:GoldSilverCopper(copper));
 end;
 function ns:GetTotalGold(iconFlag) 
 	local tg = 0;	
@@ -264,6 +366,7 @@ function ns:GetTotalGold(iconFlag)
 	return tg;
 end;
 function ns:GetServerGold(s, iconFlag) 
+	if s == nil then return; end;
 	local sg = 0;
 	for t, toon in pairs(GoldCoffer.Servers[s]) do
 		sg = sg + (toon.Current or 0);
@@ -320,23 +423,48 @@ function ns:GetYearsChange()
 	local diff = ns:GetTotalGold(false) - ns:GetLastYearsGold(false);
 	return ns:ProfitLossColoring(diff);
 end;
-function ns:GetToonHistory(name)
+function ns:GetGuildHistory(srv, guild)
 	local ret = {};
-	local temp = GoldCoffer.Servers[ns.srv][name]
-	ret.session = ns:ProfitLossColoring(GetMoney() - temp.SessionStart);
-	ret.today = ns:ProfitLossColoring(GetMoney() - temp.DayStart);
-	ret.week = ns:ProfitLossColoring(GetMoney() - temp.WeekStart);
-	ret.month = ns:ProfitLossColoring(GetMoney() - temp.MonthStart);
+	srv = srv:gsub("%s+", "");	
+	if GoldCoffer.Guilds[srv] == nil then return nil; end;
+	if GoldCoffer.Guilds[srv][guild] == nil then return nil; end;
+	local temp = GoldCoffer.Guilds[srv][guild]
+	local cur = temp.Current;
+	ret.current = ns:ProfitLossColoring(cur);
+	ret.session = "n/a"
+	ret.today = ns:ProfitLossColoring(cur - temp.DayStart or 0);
+	ret.week = ns:ProfitLossColoring(cur - temp.WeekStart or 0);
+	ret.month = ns:ProfitLossColoring(cur - temp.MonthStart or 0);
+	ret.year = ns:ProfitLossColoring(cur - temp.YearStart or 0);
 	ret.yesterday = ns:ProfitLossColoring(temp.Yesterday);
 	ret.lweek = ns:ProfitLossColoring(temp.LastWeek);
 	ret.lmonth = ns:ProfitLossColoring(temp.LastMonth);
 	ret.lyear = ns:ProfitLossColoring(temp.LastYear);
+	ret.lastPlayed = temp.LastUpdate or "No data";
+	return ret;
+end;
+function ns:GetToonHistory(srv, name)
+	local ret = {};
+	if GoldCoffer.Servers[srv] == nil then return nil; end;
+	if GoldCoffer.Servers[srv][name] == nil then return nil; end;
+	local temp = GoldCoffer.Servers[srv][name]
+	ret.current = ns:ProfitLossColoring(temp.Current);
+	ret.today = ns:ProfitLossColoring(temp.Current - temp.DayStart);
+	ret.week = ns:ProfitLossColoring(temp.Current - temp.WeekStart);
+	ret.month = ns:ProfitLossColoring(temp.Current - temp.MonthStart);
+	ret.year = ns:ProfitLossColoring(temp.Current - temp.YearStart);
+	ret.yesterday = ns:ProfitLossColoring(temp.Yesterday);
+	ret.lweek = ns:ProfitLossColoring(temp.LastWeek);
+	ret.lmonth = ns:ProfitLossColoring(temp.LastMonth);
+	ret.lyear = ns:ProfitLossColoring(temp.LastYear);
+	ret.lastPlayed = temp.LastUpdate or "No data";
 	return ret;
 end;
 function ns:GetServerHistory(srv)
 	local ret = {};
 	local current, sessionS, yesterday, dayS, weekS, monthS, yearS, lweek, lmonth, lyear = 0,0,0,0,0,0,0,0,0,0;
 	local temp = GoldCoffer.Servers[srv];
+	if temp == nil then return nil; end;
 	for k,v in pairs(temp) do
 		current = current + v.Current;
 		sessionS = sessionS + v.SessionStart;
@@ -358,4 +486,12 @@ function ns:GetServerHistory(srv)
 	ret.lmonth = ns:ProfitLossColoring(lmonth);
 	ret.lyear = ns:ProfitLossColoring(lyear);
 	return ret;
+end;
+function ns:GetGPH(formatFlag)
+	local gph = (GetMoney() - GoldCoffer.Servers[ns.srv][ns.player].SessionStart) / ((time() - ns.LoginTime)/ 60 / 60 );
+	if formatFlag == false then return ns:GoldSilverCopper(floor(gph)); end;
+	return ns:ProfitLossColoring(floor(gph));
+end;
+function ns:GetToonGold(srv, toon)
+	 return ns:ProfitLossColoring(GoldCoffer.Servers[srv][toon].Current)
 end;

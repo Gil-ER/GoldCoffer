@@ -1,6 +1,14 @@
+2.0.0
+ - New UI
+ - Added export to csv
+ - Added guild bank gold tracking
+ - Added more reporting for characters
+ - Gold per hour
+ - Fixed bugs
+ 
 1.4.0
- -Added some player history
-
+ -Added Character detail to summery tab
+ 
 1.3.5
  -UI Tweaks
 

@@ -2,7 +2,7 @@
 ## Title: Gold Coffer
 ## Notes: Tracks your currencies on your account.
 ## DefaultState: enabled
-## Version: 1.4.3
+## Version: 2.0.0
 ## Author: Gildina
 ## SavedVariables: GoldCoffer, GoldCofferIcon, GoldCofferCurrencies
 
@@ -11,10 +11,16 @@
 ## AddonCompartmentFuncOnLeave: GoldCoffer_OnAddonCompartmentLeave
 ## IconTexture: Interface\Icons\inv_misc_coin_01
 
-lib\embeds.xml
+LibDBIcon-1.0\embeds.xml
 
 Widgets.lua
-Data.lua
 CurrencyGroups.lua
-GoldReport.lua
+Currency.lua
+Data.lua
+Delete.lua
+DropList.lua
+Export.lua
+Options.lua
+Output.lua
+Report.lua
 GoldCoffer.lua

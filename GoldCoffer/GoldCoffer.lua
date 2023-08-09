@@ -1,4 +1,4 @@
--- Edited Jun 20, 2023
+-- Edited Aug 09, 2023
 
 local addon, ns = ...
 local icon = LibStub("LibDBIcon-1.0", true);
@@ -13,6 +13,7 @@ local function fillInfoTooltip(tip)
 	tip:AddLine(ns.player .. " - " .. ns:GoldSilverCopper(GetMoney()));
 	tip:AddLine(ns.srv .. " - " .. ns:GetServerGold(ns.srv, true) .. "\n\n");
 	tip:AddLine("Profit/loss this session = " .. ns:GetSessionChange());
+	tip:AddLine("Gold/Hour = " .. ns:GetGPH() .. "\n\n");
 	tip:AddLine("Today = " .. ns:GetYesterdaysChange());
 	tip:AddLine("This Week = " .. ns:GetWeeksChange());
 	tip:AddLine("This Month = " .. ns:GetMonthsChange());
@@ -45,10 +46,10 @@ local function GoldCofferMiniMap(button)
 			minimapButtonShowHide(true)
 		elseif IsControlKeyDown() then	
 		else
-			ns:ShowGoldReport();
+			ns:ShowReport();
 		end;
 	elseif button == "RightButton" then
-		ns:CenterGoldReport();
+		ns:CenterReport()
 	end;
 end
 local iconFile = "Interface\\Icons\\inv_misc_coin_17"
@@ -92,7 +93,7 @@ SlashCmdList.GOLDCOFFER = function(arg)
 	local arg1, arg2, arg3, arg4 = strsplit(" ", arg);
 	msg = strlower(arg1);
 	if msg == "" then	
-		ns:ShowGoldReport();
+		ns:ShowReport();
 	elseif msg == "mm" or msg == "button" then
 		minimapButtonShowHide(true);
 		if mmButtonShown then
@@ -120,7 +121,7 @@ SlashCmdList.GOLDCOFFER = function(arg)
 			print ("Invalid input. You must enter a valid server and toon like this example.\n /gc delete Toon Server");
 		end;
 	elseif msg == "c" or msg == "center" or msg == "centre"	then		
-		ns:CenterGoldReport();
+		ns:CenterReport();
 	else
 		local s = "/gc or /goldcoffer shows report.\n" 	
 			.. "/gc delete Toon Server - Deletes a single toon.\n"
@@ -133,24 +134,61 @@ SlashCmdList.GOLDCOFFER = function(arg)
 	end;
 end; 
 local f = CreateFrame("FRAME");
-f:RegisterEvent("PLAYER_ENTERING_WORLD"); 
+f:RegisterEvent("SPELLS_CHANGED"); 
 f:RegisterEvent("PLAYER_MONEY");
 f:RegisterEvent("PLAYER_LOGOUT");
-function f:OnEvent(event, ...)
-	if event == "PLAYER_ENTERING_WORLD" then
+if select(4, GetBuildInfo()) < 30000 then 
+	f:RegisterEvent("BANKFRAME_OPENED");
+	f:RegisterEvent("BANKFRAME_CLOSED");
+else
+	f:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW");
+	f:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE");
+end;
+function f:OnEvent(event, arg1)
+	if event == "SPELLS_CHANGED" then
+		GoldCofferIcon = GoldCofferIcon or {};
 		if icon then icon:Register(addon, gcLDB, GoldCofferIcon); end;
 		minimapButtonShowHide(false);
 		ns:iniData();	
 		GoldCoffer.History.Today = ns:GetTotalGold(false);
 		tinsert(UISpecialFrames, "gcReportFrame");	
-		f:UnregisterEvent("PLAYER_ENTERING_WORLD");
+		tinsert(UISpecialFrames, "GoldCofferOutputFrame");	
+		f:UnregisterEvent("SPELLS_CHANGED");
 		ns.LoginTime = time();
 	end;	
 	if event == "PLAYER_MONEY" then
 		ns:updateGold();	
 	end;
 	if event == "PLAYER_LOGOUT" then
-		if select(4, GetBuildInfo()) > 40000 then ns.UpdateCurrency(); end;
+		ns.UpdateCurrency();	
 	end;	
+	if (event == "PLAYER_INTERACTION_MANAGER_FRAME_SHOW" and arg1 == 10)
+				or (event == "BANKFRAME_OPENED") then	
+		local gold = GetGuildBankMoney("player");			
+		local guild, _, _, server = GetGuildInfo("player");			
+		server = server or ns.srv;
+		server = server:gsub("%s+", "");
+		GoldCoffer = GoldCoffer or {};
+		GoldCoffer.Guilds = GoldCoffer.Guilds or {};
+		GoldCoffer.Guilds[server] = GoldCoffer.Guilds[server] or {};
+		GoldCoffer.Guilds[server][guild] = GoldCoffer.Guilds[server][guild] or {};
+		if GoldCoffer.Guilds[server][guild].Current == nil then
+			ns:newGuild(server, guild, gold);
+		else
+			GoldCoffer.Guilds[server][guild].Current = gold;		
+			GoldCoffer.Guilds[server][guild].LastUpdate = date("%m/%d/%y");
+			GoldCoffer.Guilds[server][guild].UpdateTime = time();
+		end;			
+	end;
+	if (event == "PLAYER_INTERACTION_MANAGER_FRAME_HIDE" and arg1 == 10) 
+				or (event == "BANKFRAME_CLOSED") then
+		local gold = GetGuildBankMoney("player");			
+		local guild, _, _, server = GetGuildInfo("player");			
+		server = server or ns.srv;
+		server = server:gsub("%s+", "");
+		GoldCoffer.Guilds[server][guild].Current = GetGuildBankMoney("player");	
+		GoldCoffer.Guilds[server][guild].UpdateTime = time();		
+		GoldCoffer.Guilds[server][guild].LastUpdate = date("%m/%d/%y");
+	end;
 end;
 f:SetScript("OnEvent", f.OnEvent); 
