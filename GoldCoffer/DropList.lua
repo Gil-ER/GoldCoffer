@@ -8,6 +8,8 @@ local buttonWidth = 60;
 local dropFrameHeight = 300;
 local dropFrameWidth = editBoxWidth + buttonWidth
 local maxEntries = 20;
+local lists = {};
+
 function ns.newDropList(parent, xOff, yOff)
 	local list = {};
 	local f = CreateFrame("EditBox", nil, parent, "InputBoxTemplate");
@@ -24,9 +26,11 @@ function ns.newDropList(parent, xOff, yOff)
 	f.ebButton:SetText("Select");
 	f.ebButton:SetScript("OnClick", function() 
 		if f.dropFrame:IsVisible() then f.dropFrame:Hide();
-			else f.dropFrame:Show();
+			else f.dropFrame:Show(); end;
+		for k,v in pairs(lists) do
+			if v ~= f then v.dropFrame:Hide(); end;
 		end;
-	end);
+	end)
 	f.dropFrame = CreateFrame("Frame", nil, parent, "InsetFrameTemplate");
 	f.dropFrame:SetSize(dropFrameWidth, dropFrameHeight);
 	f.dropFrame:SetPoint("TOPLEFT", f, "BOTTOMLEFT", 0, 0)
@@ -39,7 +43,8 @@ function ns.newDropList(parent, xOff, yOff)
 	f.sChild = CreateFrame("Frame");
 	f.sChild:SetFrameStrata("TOOLTIP");	
 	f.sChild:SetSize(dropFrameWidth, dropFrameHeight * 2)
-	f.sFrame:SetScrollChild(f.sChild);
+	f.sFrame:SetScrollChild(f.sChild);	
+	tinsert(lists, f);
 	local t = {};
 	for i = 1, maxEntries do
 		t[i] = CreateFrame("Frame",nil,f.sChild);
@@ -81,6 +86,6 @@ function ns.newDropList(parent, xOff, yOff)
 			i = i + 1;
 		end;
 		if #list >= 1 then f:SetText(list[1]); end;
-	end;	
+	end;
 	return f, list;
 end;
