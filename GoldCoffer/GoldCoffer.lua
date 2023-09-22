@@ -165,30 +165,34 @@ function f:OnEvent(event, arg1)
 	if (event == "PLAYER_INTERACTION_MANAGER_FRAME_SHOW" and arg1 == 10)
 				or (event == "BANKFRAME_OPENED") then	
 		local gold = GetGuildBankMoney("player");			
-		local guild, _, _, server = GetGuildInfo("player");			
-		server = server or ns.srv;
-		server = server:gsub("%s+", "");
-		GoldCoffer = GoldCoffer or {};
-		GoldCoffer.Guilds = GoldCoffer.Guilds or {};
-		GoldCoffer.Guilds[server] = GoldCoffer.Guilds[server] or {};
-		GoldCoffer.Guilds[server][guild] = GoldCoffer.Guilds[server][guild] or {};
-		if GoldCoffer.Guilds[server][guild].Current == nil then
-			ns:newGuild(server, guild, gold);
-		else
-			GoldCoffer.Guilds[server][guild].Current = gold;		
-			GoldCoffer.Guilds[server][guild].LastUpdate = date("%m/%d/%y");
-			GoldCoffer.Guilds[server][guild].UpdateTime = time();
-		end;			
+		local guild, _, _, server = GetGuildInfo("player");	
+		if guild then
+			server = server or ns.srv;
+			server = server:gsub("%s+", "");
+			GoldCoffer = GoldCoffer or {};
+			GoldCoffer.Guilds = GoldCoffer.Guilds or {};
+			GoldCoffer.Guilds[server] = GoldCoffer.Guilds[server] or {};
+			GoldCoffer.Guilds[server][guild] = GoldCoffer.Guilds[server][guild] or {};
+			if GoldCoffer.Guilds[server][guild].Current == nil then
+				ns:newGuild(server, guild, gold);
+			else
+				GoldCoffer.Guilds[server][guild].Current = gold;		
+				GoldCoffer.Guilds[server][guild].LastUpdate = date("%m/%d/%y");
+				GoldCoffer.Guilds[server][guild].UpdateTime = time();
+			end;	
+		end;
 	end;
 	if (event == "PLAYER_INTERACTION_MANAGER_FRAME_HIDE" and arg1 == 10) 
 				or (event == "BANKFRAME_CLOSED") then
 		local gold = GetGuildBankMoney("player");			
 		local guild, _, _, server = GetGuildInfo("player");			
-		server = server or ns.srv;
-		server = server:gsub("%s+", "");
-		GoldCoffer.Guilds[server][guild].Current = GetGuildBankMoney("player");	
-		GoldCoffer.Guilds[server][guild].UpdateTime = time();		
-		GoldCoffer.Guilds[server][guild].LastUpdate = date("%m/%d/%y");
+		if guild then
+			server = server or ns.srv;
+			server = server:gsub("%s+", "");
+			GoldCoffer.Guilds[server][guild].Current = GetGuildBankMoney("player");	
+			GoldCoffer.Guilds[server][guild].UpdateTime = time();		
+			GoldCoffer.Guilds[server][guild].LastUpdate = date("%m/%d/%y");
+		end;
 	end;
 end;
 f:SetScript("OnEvent", f.OnEvent); 
