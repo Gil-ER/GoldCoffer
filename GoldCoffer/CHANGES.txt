@@ -1,3 +1,18 @@
+v2.0.5
+   - Fixed reports to show icons not g, s, c
+
+v2.0.4
+   - Update for 3.4.3
+
+v2.0.3
+   - Bug Fix (lua error if not in a guild)
+
+2.0.2
+   - Update for 10.1.7
+
+2.0.1
+   - Update for Classic 1.14.4
+
 2.0.0
  - New UI
  - Added export to csv
