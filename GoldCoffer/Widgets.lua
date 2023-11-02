@@ -14,6 +14,7 @@ function ns:colorString(c, str)
 	return string.format("|cff%s%s|r", color[c], str);
 end
 function ns:GoldSilverCopper(copper, textureFlag)
+	if not textureFlag then textureFlag = true; end;
 	local gIcon, sIcon, cIcon = "g", "s", "c";
 	if textureFlag == true then 
 		gIcon = "|TInterface\\MoneyFrame\\UI-GoldIcon:0:0:2:0|t "
