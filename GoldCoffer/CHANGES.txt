@@ -1,3 +1,6 @@
+v2.0.6
+   - Fixed the issue where gold values over 1,000,000 were not displaying properly
+
 v2.0.5
    - Fixed reports to show icons not g, s, c
 
