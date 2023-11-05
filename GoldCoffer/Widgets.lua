@@ -30,7 +30,7 @@ function ns:GoldSilverCopper(copper, textureFlag)
 	if g == 0 then gt = "0"; end;
 	if g < 0 then neg = true; g = g * -1; end;
 	while (g > 1000) do	
-		gt = "," .. format("%03d", (g % 1000));
+		gt = "," .. format("%03d", (g % 1000)) .. gt;
 		g = floor(g / 1000);
 	end;
 	gt = g .. gt;
