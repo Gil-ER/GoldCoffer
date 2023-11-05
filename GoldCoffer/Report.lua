@@ -5,16 +5,12 @@ local TB_LIMIT = 3;
 local tRJ = {};
 for i=1, TB_LIMIT do
 	tRJ[i] = ns.sChild:CreateFontString(nil, "OVERLAY", "GameFontWhite");
-	tRJ[i]:SetJustifyV("BOTTOM");
 	tRJ[i]:SetJustifyH("RIGHT");
-	tRJ[i]:SetSpacing(8);
 end;
 local tLJ = {};
 for i=1, TB_LIMIT do
 	tLJ[i] = ns.sChild:CreateFontString(nil, "OVERLAY", "GameFontWhite");
-	tLJ[i]:SetJustifyV("BOTTOM");
 	tLJ[i]:SetJustifyH("LEFT");
-	tLJ[i]:SetSpacing(8);
 end;
 local function WipeFrame()
 	for i=1, TB_LIMIT do
