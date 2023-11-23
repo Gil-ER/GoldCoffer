@@ -1,3 +1,9 @@
+v2.0.8
+   - Update for 1.15.0
+
+v2.0.7
+   - Update for 10.2.0
+
 v2.0.6
    - Fixed the issue where gold values over 1,000,000 were not displaying properly
 
