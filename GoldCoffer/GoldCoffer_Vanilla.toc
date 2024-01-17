@@ -2,7 +2,8 @@
 ## Title: Gold Coffer
 ## Notes: Tracks your currencies on your account.
 ## DefaultState: enabled
-## Version: 2.0.8
+## Version: 2.0.6
+9
 ## Author: Gildina
 ## SavedVariables: GoldCoffer, GoldCofferIcon, GoldCofferCurrencies
 
