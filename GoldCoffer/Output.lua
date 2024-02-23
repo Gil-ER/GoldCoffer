@@ -1,4 +1,4 @@
--- Edited Aug 09, 2023
+-- Edited Feb 23, 2024
 
 local Addon, ns = ...;
 local pauseReport = true;
@@ -180,6 +180,7 @@ f:SetScript("OnSizeChanged", function()
 	sFrame:SetSize(f:GetWidth() - 35, f:GetHeight() - 15);
 end)
 function ns:CenterReport()
+	ns.output:Show(); 
 	ns.output:ClearAllPoints();
 	ns.output:SetPoint("CENTER", UIParent, "CENTER");
 end;
