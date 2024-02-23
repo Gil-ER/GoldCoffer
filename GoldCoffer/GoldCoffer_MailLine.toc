@@ -2,13 +2,10 @@
 ## Title: Gold Coffer
 ## Notes: Tracks your currencies on your account.
 ## DefaultState: enabled
-## Version: 2.0.10
+## Version: 2.0.11
 ## Author: Gildina
 ## SavedVariables: GoldCoffer, GoldCofferIcon, GoldCofferCurrencies
 
-## AddonCompartmentFunc: GoldCoffer_OnAddonCompartmentClick
-## AddonCompartmentFuncOnEnter: GoldCoffer_OnAddonCompartmentEnter
-## AddonCompartmentFuncOnLeave: GoldCoffer_OnAddonCompartmentLeave
 ## IconTexture: Interface\Icons\inv_misc_coin_01
 
 LibDBIcon-1.0\embeds.xml
