@@ -1,4 +1,4 @@
--- Edited Aug 09, 2023
+-- Edited Feb 23, 2024
 
 local addon, ns = ...
 local icon = LibStub("LibDBIcon-1.0", true);
@@ -6,7 +6,7 @@ GoldCofferIcon = GoldCofferIcon or {};
 local mmButtonShown = GoldCofferIcon.Visible or true;
 ns.totalGold = 0;
 local function fillInfoTooltip(tip)
-	tip:AddLine("GoldCoffer");
+	tip:AddLine(ns:colorString("white", "GoldCoffer"));
 	tip:AddLine("\n" .. "Left Click - Show Gold ");	
 	tip:AddLine("Right Click - Center Window     ");
 	tip:AddLine("<shift> Left Click - Toggle Minimap button." .. "\n\n");	
@@ -86,6 +86,29 @@ function GoldCoffer_OnAddonCompartmentEnter()
 end;
 function GoldCoffer_OnAddonCompartmentLeave()
 	GameTooltip:Hide();
+end;
+if select(4, GetBuildInfo()) > 100000 then
+	AddonCompartmentFrame:RegisterAddon({
+		text = "Gold Coffer",
+		icon = "Interface\\Icons\\inv_misc_coin_01",
+		notCheckable = true,
+		registerForAnyClick = true,
+		func = function(btn, arg1, arg2, checked, mouseButton)
+			if mouseButton == "LeftButton" then
+				if IsShiftKeyDown() then minimapButtonShowHide(true); else ns:ShowReport(); end;
+			elseif mouseButton == "RightButton" then			
+				ns:CenterReport();
+			end;
+		end,
+		funcOnEnter = function()
+			GameTooltip:SetOwner(AddonCompartmentFrame, "ANCHOR_TOPRIGHT");
+			fillInfoTooltip(GameTooltip);
+			GameTooltip:Show();
+		end,
+		funcOnLeave = function()
+			GameTooltip:Hide();
+		end,
+	})
 end;
 SLASH_GOLDCOFFER1 = "/goldcoffer";
 SLASH_GOLDCOFFER2 = "/gc";
